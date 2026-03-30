@@ -4,12 +4,100 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Versetal — Client Onboarding Questionnaire</title>
+
+<!--
+  ============================================================
+  Versetal Client Onboarding Questionnaire
+  ============================================================
+  PURPOSE
+    This form collects technical environment details from new
+    or prospective Versetal clients. All data entered stays
+    entirely within the browser — nothing is transmitted to
+    any server. Clicking "Generate PDF" produces a local PDF
+    using the jsPDF library; the file is saved directly to the
+    user's device and never uploaded anywhere.
+
+  PRIVACY
+    No form data is stored, logged, tracked, or transmitted.
+    There are no analytics, cookies, or session storage calls
+    in this page. The only external requests made are:
+      1. Google Fonts (for typography — purely cosmetic)
+      2. Versetal CDN (to load the company logo SVG)
+      3. cdnjs.cloudflare.com (to load the jsPDF library)
+    None of these requests receive any form data.
+
+  SECURITY NOTES FOR EXTERNAL HOSTING
+    - No CSP is set via <meta> — meta CSP breaks file:// loading
+      because browsers treat file:// as a null origin. All security
+      headers must be set at the HTTP server level when hosting.
+    - No user input is ever passed to eval(), innerHTML with
+      user data, or any server endpoint.
+    - The only innerHTML usage is for pre-defined contact block
+      templates that contain no user-supplied content.
+    - All external resources are loaded from trusted CDNs over
+      HTTPS only.
+
+  EXTERNAL HOSTING CHECKLIST
+    [ ] Serve over HTTPS with a valid TLS certificate
+    [ ] Add HTTP security headers (see below)
+    [ ] Restrict directory listing on the web server
+    [ ] No server-side scripts needed — static file only
+    [ ] Consider adding Basic Auth if access should be limited
+
+  RECOMMENDED HTTP RESPONSE HEADERS (add in nginx/Apache/CDN):
+    Content-Security-Policy: (match the meta CSP below)
+    X-Frame-Options: DENY
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: no-referrer
+    Permissions-Policy: geolocation=(), camera=(), microphone=()
+    Strict-Transport-Security: max-age=31536000; includeSubDomains
+  ============================================================
+-->
+
+<!--
+  Content Security Policy:
+  - default-src 'self'            Only this origin by default
+  - script-src cdnjs for jsPDF   Allow jsPDF from trusted CDN
+  - style-src Google Fonts        Allow Google Font CSS
+  - font-src Google Fonts         Allow font files
+  - img-src data: versetalinfo    Allow base64 + logo fetch
+  - connect-src versetalinfo      Allow logo SVG fetch
+  - frame-ancestors 'none'        Prevent iframe embedding (clickjacking)
+  - form-action 'none'            No form submissions to any server
+-->
+<!--
+  SECURITY HEADERS NOTE:
+  CSP and other security headers are intentionally NOT set via <meta> tags here.
+  When this file is opened from disk (file://) the browser treats the origin as
+  null, which causes <meta> CSP with 'self' to block all external resources
+  (fonts, jsPDF, SheetJS, logo) and break the page.
+
+  When hosting externally on a web server, add these as HTTP response headers:
+    Content-Security-Policy:
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src https://fonts.gstatic.com;
+      img-src 'self' data: https://versetalinfo.com;
+      connect-src https://cdnjs.cloudflare.com https://versetalinfo.com https://fonts.googleapis.com https://fonts.gstatic.com;
+      frame-ancestors 'none';
+      form-action 'none';
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: no-referrer
+    X-Frame-Options: DENY
+    Strict-Transport-Security: max-age=31536000; includeSubDomains
+    Permissions-Policy: geolocation=(), camera=(), microphone=()
+-->
+<meta name="robots" content="noindex, nofollow"/>
 <!-- Fonts: loads from Google when online, falls back to system fonts offline -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <!-- jsPDF loaded dynamically at PDF generation time -->
 <style>
-/* ── VARIABLES ─────────────────────────────────────────────────── */
+/* ── VARIABLES ─────────────────────────────────────────────────────
+ * Versetal brand colour palette and shared design tokens used
+ * throughout the stylesheet. Edit here to retheme the form.
+ */
 :root {
   --navy:    #0A2543;
   --navy2:   #0D3060;
@@ -27,7 +115,9 @@
   --shadow:  0 2px 12px rgba(10,37,67,.10);
 }
 
-/* ── RESET ──────────────────────────────────────────────────────── */
+/* ── RESET ──────────────────────────────────────────────────────────
+ * Minimal box-sizing reset. No external reset library is used.
+ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -38,7 +128,10 @@ body {
   scrollbar-gutter: stable;
 }
 
-/* ── TOP HEADER BAR ─────────────────────────────────────────────── */
+/* ── TOP HEADER BAR ─────────────────────────────────────────────────
+ * Sticky navy bar at the top containing the Versetal logo and the
+ * CONFIDENTIAL badge. Stays visible while scrolling.
+ */
 .site-header {
   background: var(--navy);
   padding: 18px 40px;
@@ -66,7 +159,10 @@ body {
   border-radius: 20px;
 }
 
-/* ── HERO ───────────────────────────────────────────────────────── */
+/* ── HERO ───────────────────────────────────────────────────────────
+ * Full-width navy hero section with title, tagline, and description.
+ * Purely decorative — contains no form elements.
+ */
 .hero {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, #0e3d6e 100%);
   padding: 56px 40px 48px;
@@ -88,13 +184,19 @@ body {
   content: ''; width: 24px; height: 2px; background: var(--green);
 }
 .hero h1 {
-  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
-  font-size: clamp(28px, 4vw, 44px);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 700;
   color: white;
-  line-height: 1.15;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
   margin-bottom: 16px;
 }
-.hero h1 em { color: var(--green); font-style: normal; }
+.hero h1 em {
+  color: var(--green);
+  font-style: normal;
+  font-weight: 800;
+}
 .hero p {
   color: rgba(255,255,255,.72);
   font-size: 15px; line-height: 1.7;
@@ -143,10 +245,17 @@ body {
 .psec:hover { border-color: var(--green); color: var(--green); }
 .psec.done { background: rgba(91,191,70,.15); border-color: var(--green); color: var(--green); }
 
-/* ── LAYOUT ─────────────────────────────────────────────────────── */
+/* ── LAYOUT ─────────────────────────────────────────────────────────
+ * Main content wrapper — centred, max-width 960px, with padding
+ * at the bottom to clear the fixed actions bar.
+ */
 .page-wrap { max-width: 960px; margin: 0 auto; padding: 36px 24px 80px; }
 
-/* ── SECTION CARDS ──────────────────────────────────────────────── */
+/* ── SECTION CARDS ──────────────────────────────────────────────────
+ * Each of the 17 form sections lives in a .section-card. The card
+ * has a clickable navy header that toggles the body open/closed.
+ * The .collapsed class hides the body via display:none.
+ */
 .section-card {
   background: white;
   border-radius: 10px;
@@ -190,7 +299,9 @@ body {
   margin: -28px -28px 24px;
 }
 
-/* ── SUBSECTION ─────────────────────────────────────────────────── */
+/* ── SUBSECTION ─────────────────────────────────────────────────────
+ * Smaller heading used to group related fields within a section.
+ */
 .subsection-title {
   font-size: 13px; font-weight: 600;
   letter-spacing: 1.2px; text-transform: uppercase;
@@ -200,7 +311,10 @@ body {
 }
 .subsection-title:first-child { margin-top: 0; }
 
-/* ── FIELD GRID ─────────────────────────────────────────────────── */
+/* ── FIELD GRID ─────────────────────────────────────────────────────
+ * Responsive 2-column grid for label+input pairs. Use .span2 or
+ * .span3 on a .field to make it span the full width.
+ */
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .field-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
 .field-grid.cols-1 { grid-template-columns: 1fr; }
@@ -237,7 +351,11 @@ body {
 .field.span3 { grid-column: span 3; }
 @media(max-width:640px) { .field.span2, .field.span3 { grid-column: span 1; } }
 
-/* ── YES/NO TABLE ───────────────────────────────────────────────── */
+/* ── YES/NO TABLE ───────────────────────────────────────────────────
+ * Radio button tables used for Yes / No / N/A questions.
+ * table-layout is not fixed — column widths are controlled via
+ * <colgroup> elements in the HTML for cross-browser consistency.
+ */
 .yn-table { width: 100%; border-collapse: collapse; margin: 12px 0; table-layout: fixed; }
 .yn-table thead th {
   background: var(--navy); color: white;
@@ -252,7 +370,11 @@ body {
 .yn-radio { width: 80px; text-align: center; padding: 10px 4px; border-bottom: 1px solid var(--border); vertical-align: middle; }
 .yn-radio input[type=radio] { display: block; margin: 0 auto; width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
 
-/* ── DYNAMIC TABLE ──────────────────────────────────────────────── */
+/* ── DYNAMIC TABLE ──────────────────────────────────────────────────
+ * Tables with rows that the user can add and remove at will.
+ * Inputs inside cells are styled to look like editable fields
+ * (bordered, with hover/focus states) rather than plain table cells.
+ */
 .dyn-table-wrap { overflow-x: auto; margin: 12px 0; }
 .dyn-table { width: 100%; border-collapse: collapse; min-width: 600px; }
 .dyn-table thead th {
@@ -286,7 +408,10 @@ body {
 }
 .add-row-btn:hover { color: var(--green); }
 
-/* ── CONTACT BLOCK ──────────────────────────────────────────────── */
+/* ── CONTACT BLOCK ──────────────────────────────────────────────────
+ * Card-style containers for key contact entries. Users can add
+ * multiple contacts per group and remove any they don't need.
+ */
 .contact-block {
   border: 1.5px solid var(--border);
   border-radius: 8px; padding: 20px;
@@ -343,7 +468,9 @@ body {
   color: rgb(200,50,50);
 }
 
-/* ── NOTE BOX ───────────────────────────────────────────────────── */
+/* ── NOTE BOX ───────────────────────────────────────────────────────
+ * Sky-blue left-bordered info/hint boxes used to guide the user.
+ */
 .note-box {
   border-left: 4px solid var(--sky);
   background: rgba(42,167,223,.06);
@@ -367,37 +494,51 @@ body {
   transition: all .2s; white-space: nowrap; flex-shrink: 0;
 }
 .na-btn:hover { border-color: var(--gold); color: var(--gold); }
+/* N/A active state */
 .section-card.is-na .na-btn { background: var(--gold); border-color: var(--gold); color: white; }
+.section-card.is-na .section-header {
+  background: #4a5568;
+}
+/* N/A badge — injected as real DOM span for cross-browser reliability */
+.na-badge {
+  display: none;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  background: rgba(200,146,42,.15);
+  border: 1px solid rgba(200,146,42,.4);
+  border-radius: 20px;
+  padding: 2px 10px;
+  margin-left: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.section-card.is-na .na-badge { display: inline-block; }
+/* Body still accessible if somehow expanded while N/A */
 .section-card.is-na .section-body {
-  position: relative; pointer-events: none;
+  position: relative; pointer-events: none; opacity: .45;
 }
-.section-card.is-na .section-body::after {
-  content: 'N / A';
-  position: absolute; inset: 0;
-  background: rgba(238,243,249,.82);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'DM Serif Display', serif;
-  font-size: 48px; font-weight: 400;
-  color: rgba(107,122,141,.35);
-  letter-spacing: 12px;
-  backdrop-filter: blur(1px);
-  border-radius: 0 0 10px 10px;
-  z-index: 10;
-}
-.section-card.is-na .section-header { opacity: .75; }
 
-/* ── ACTIONS ────────────────────────────────────────────────────── */
+/* ── ACTIONS ────────────────────────────────────────────────────────
+ * Fixed bottom bar containing the Clear and Generate PDF buttons,
+ * and the section completion counter. Always visible while scrolling.
+ */
 .actions-bar {
-  position: fixed; bottom: 0; left: 0; right: 0;
+  position: fixed; bottom: 0; left: 0;
+  width: calc(100% - 0px);
+  right: 0;
   background: var(--navy);
   border-top: 3px solid var(--green);
-  padding: 16px 40px 16px calc(40px + var(--sb-width, 0px));
+  padding: 16px 40px;
   display: flex; align-items: center; justify-content: space-between;
-  z-index: 99;
+  z-index: 98;
   box-shadow: 0 -4px 24px rgba(0,0,0,.25);
   box-sizing: border-box;
-  overflow: hidden;
+  clip-path: inset(0 0 0 0);
 }
+/* Scrollbar sits on top of everything at z-index 99+ so we let it */
+
 .actions-bar-left { color: rgba(255,255,255,.55); font-size: 13px; }
 .actions-bar-left strong { color: white; }
 .btn-group { display: flex; gap: 10px; }
@@ -442,19 +583,27 @@ body {
   border-left: 4px solid var(--green);
   font-size: 14px; font-weight: 500;
   box-shadow: 0 4px 20px rgba(0,0,0,.25);
-  transform: translateX(120%);
-  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  transform: translateX(calc(100% + 48px));
+  visibility: hidden;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), visibility 0s .3s;
   z-index: 200;
 }
-.toast.show { transform: translateX(0); }
+.toast.show {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), visibility 0s 0s;
+}
 
-/* ── PRINT / PDF HIDE ───────────────────────────────────────────── */
+/* ── PRINT / PDF HIDE ───────────────────────────────────────────────
+ * Hide chrome elements when printing. PDF is generated via jsPDF
+ * (not via window.print), so this only affects browser print.
+ */
 @media print { .actions-bar, .site-header, .progress-wrap, .hero { display: none !important; } }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ── SITE HEADER: sticky logo bar ──────────────────────── -->
 <header class="site-header">
   <div class="logo-mark">
     <img src="https://versetalinfo.com/wp-content/uploads/2021/09/logo.svg" alt="Versetal" style="height:36px;width:auto;display:block;" crossorigin="anonymous" onerror="this.style.display='none'"/>
@@ -462,7 +611,7 @@ body {
   <div class="header-badge">Confidential</div>
 </header>
 
-<!-- HERO -->
+<!-- ── HERO: title, description, branding ─────────────────── -->
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-eyebrow">Managed Services</div>
@@ -472,18 +621,33 @@ body {
   </div>
 </div>
 
-<!-- PROGRESS -->
+<!-- ── PROGRESS TRACKING REMOVED: now inline below ─────── -->
+<!-- ── PRIVACY NOTICE ─────────────────────────────────────── -->
+<!-- Informs the user upfront that no data leaves their device -->
+<div style="background:#1a3a5c;border-bottom:1px solid rgba(91,191,70,.3);padding:10px 40px;display:flex;align-items:center;gap:12px;">
+  <svg style="flex-shrink:0;width:16px;height:16px;fill:#5BBF46;" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 14c-2.67 0-5.04-1.37-6.43-3.44C7.55 14.11 9.68 13.5 12 13.5s4.45.61 6.43 1.56C16.96 17.13 14.67 19 12 19z"/></svg>
+  <span style="color:rgba(255,255,255,.8);font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.5;">
+    <strong style="color:white;">Your privacy is protected.</strong>
+    All information entered in this form stays entirely within your browser.
+    Nothing is transmitted, stored, or uploaded to any server.
+    Clicking <em>Generate PDF</em> saves a file directly to your device — that's it.
+  </span>
+</div>
+
+<!-- ── COMPLETION PROGRESS ───────────────────────────────── -->
 <div class="progress-wrap">
   <div class="progress-label">Completion — <span id="pct">0</span>%</div>
   <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
   <div class="progress-sections" id="progressSections"></div>
 </div>
 
-<!-- MAIN FORM -->
+<!-- ── MAIN FORM: 17 collapsible section cards ────────────── -->
 <div class="page-wrap">
 <form id="mainForm" novalidate>
 
-<!-- ═══════════════════════════════════════════════════════ S1 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 1  — Company Information & Key Contacts
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec1">
   <div class="section-header" onclick="toggleSection('sec1')">
     <div class="section-num">1</div>
@@ -501,15 +665,32 @@ body {
       <div class="field span2"><label>Additional Locations / Branches</label><input name="co_locations" placeholder="List other sites or offices"/></div>
       <div class="field"><label>Industry / Vertical</label><input name="co_industry" placeholder="e.g. Healthcare, Legal, Manufacturing"/></div>
       <div class="field"><label>Company Website</label><input name="co_website" placeholder="https://"/></div>
-      <div class="field"><label>Total Employees</label><input name="co_employees" type="number" placeholder="0"/></div>
+      <div class="field"><label>Total Employees (Current)</label><input name="co_employees" type="number" placeholder="0"/></div>
+      <div class="field"><label>Projected Headcount in 12 Months</label><input name="co_employees_12mo" type="number" placeholder="0"/></div>
+      <div class="field"><label>Full-Time Employees</label><input name="co_fte" type="number" placeholder="0"/></div>
+      <div class="field"><label>Contractors / Consultants</label><input name="co_contractors" type="number" placeholder="0"/></div>
       <div class="field"><label>Number of IT Users</label><input name="co_it_users" type="number" placeholder="0"/></div>
+      <div class="field"><label>Employees Per Location (if multi-site)</label><input name="co_per_location" placeholder="e.g. Boston: 50, NYC: 25"/></div>
       <div class="field"><label>Primary Business Hours</label><input name="co_hours" placeholder="e.g. Mon–Fri 8am–6pm EST"/></div>
       <div class="field"><label>After-Hours Support Required?</label>
         <select name="co_afterhours"><option value="">— Select —</option><option>Yes</option><option>No</option><option>On-call only</option></select>
       </div>
     </div>
 
-    <div class="subsection-title">1.2 — Key Contacts</div>
+    <div class="subsection-title">1.2 — IT Team Structure</div>
+    <div class="field-grid">
+      <div class="field"><label>Current IT Model</label>
+        <select name="it_model"><option value="">— Select —</option><option>Fully In-House</option><option>Fully Outsourced (MSP)</option><option>Blended (In-House + MSP)</option><option>No Dedicated IT</option></select>
+      </div>
+      <div class="field"><label>Number of Internal IT Staff</label><input name="it_staff_count" type="number" placeholder="0"/></div>
+      <div class="field"><label>Current MSP / IT Provider (if any)</label><input name="it_current_msp" placeholder="Company name"/></div>
+      <div class="field"><label>Current MSP Contract End Date</label><input name="it_msp_contract_end" type="date"/></div>
+      <div class="field"><label>Dedicated IT Roles / Teams</label><input name="it_roles" placeholder="e.g. Network, Security, Cloud, Helpdesk"/></div>
+      <div class="field"><label>Who Maintains Environment Day-to-Day?</label><input name="it_maintains" placeholder="e.g. Internal sysadmin, MSP, consultant"/></div>
+      <div class="field span2"><label>Decision-Making Process for IT Investments</label><input name="it_decision_process" placeholder="Who else is involved besides primary contact? Procurement, CFO, board?"/></div>
+    </div>
+
+    <div class="subsection-title">1.3 — Key Contacts</div>
     <div class="note-box">Please provide details for all relevant contacts. Primary IT contact is required.</div>
 
     <div id="contacts-it"></div>
@@ -523,7 +704,7 @@ body {
     <div id="contacts-other"></div>
     <button type="button" class="add-row-btn" onclick="addContact('contacts-other','Other Contact')">＋ Add Contact</button>
 
-    <div class="subsection-title">1.3 — Escalation &amp; Communication</div>
+    <div class="subsection-title">1.4 — Escalation &amp; Communication</div>
     <div class="field-grid">
       <div class="field"><label>Support / Ticketing Email</label><input name="esc_email" type="email" placeholder="it@company.com"/></div>
       <div class="field"><label>After-Hours Emergency Contact</label><input name="esc_emergency" placeholder="Name and phone number"/></div>
@@ -536,11 +717,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S2 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 2  — Network & On-Premises Infrastructure
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec2">
   <div class="section-header" onclick="toggleSection('sec2')">
     <div class="section-num">2</div>
-    <div class="section-title">Network &amp; On-Premises Infrastructure</div>
+    <div class="section-title">Network &amp; On-Premises Infrastructure<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec2')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -549,11 +732,23 @@ body {
     <div class="subsection-title">2.1 — Internet &amp; WAN</div>
     <div class="field-grid">
       <div class="field"><label>ISP Provider(s)</label><input name="net_isp" placeholder="e.g. Comcast, Verizon"/></div>
-      <div class="field"><label>Connection Type(s)</label><input name="net_type" placeholder="e.g. Fiber, Cable, T1"/></div>
+      <div class="field"><label>Connection Type(s)</label>
+        <select name="net_type"><option value="">—</option><option>Broadband / Cable</option><option>Fiber (DIA)</option><option>MPLS</option><option>SD-WAN</option><option>5G / LTE</option><option>DSL</option><option>Mixed</option></select>
+      </div>
       <div class="field"><label>Download / Upload Speeds (per site)</label><input name="net_speed" placeholder="e.g. 1Gbps / 500Mbps"/></div>
       <div class="field"><label>Redundant / Failover Internet?</label><select name="net_failover"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Multi-Site WAN Topology</label>
+        <select name="net_wan_topo"><option value="">—</option><option>Site-to-Site VPN</option><option>MPLS</option><option>SD-WAN</option><option>Direct Internet per site</option><option>N/A – Single site</option></select>
+      </div>
+      <div class="field"><label>Bandwidth Trends / Stats Available?</label>
+        <select name="net_bw_stats"><option value="">—</option><option>Yes – from ISP portal</option><option>Yes – from monitoring tool</option><option>No</option></select>
+      </div>
       <div class="field"><label>Static IP Addresses in Use?</label><select name="net_static"><option value="">—</option><option>Yes</option><option>No</option></select></div>
       <div class="field"><label>Who Manages DNS?</label><input name="net_dns" placeholder="e.g. Cloudflare, internal AD DNS"/></div>
+      <div class="field"><label>Network Monitoring Tool</label><input name="net_monitor_tool" placeholder="e.g. PRTG, LibreNMS, SolarWinds, none"/></div>
+      <div class="field"><label>Network Segmentation Required?</label>
+        <select name="net_segmentation"><option value="">—</option><option>Yes – currently in place</option><option>Yes – needed</option><option>No</option></select>
+      </div>
     </div>
 
     <div class="subsection-title">2.2 — Firewall &amp; Edge Devices</div>
@@ -573,6 +768,11 @@ body {
       </table>
     </div>
     <button type="button" class="add-row-btn" onclick="addRow('tbl_switches',5)">＋ Add Device</button>
+    <div class="field-grid" style="margin-top:14px;">
+      <div class="field"><label>Total Switch Port Count (approx.)</label><input name="net_switch_ports" placeholder="e.g. 96 ports across 3 switches"/></div>
+      <div class="field"><label>PoE (Power over Ethernet) Required?</label><select name="net_poe"><option value="">—</option><option>Yes</option><option>No</option><option>Partially</option></select></div>
+      <div class="field"><label>Hardware Asset Refresh Plan</label><input name="net_refresh_plan" placeholder="e.g. 3-year cycle, no formal plan, next refresh 2026"/></div>
+    </div>
 
     <div class="subsection-title">2.4 — VPN &amp; Remote Access</div>
     <div class="field-grid">
@@ -594,11 +794,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S3 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 3  — Servers & Virtualization
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec3">
   <div class="section-header" onclick="toggleSection('sec3')">
     <div class="section-num">3</div>
-    <div class="section-title">Servers &amp; Virtualization</div>
+    <div class="section-title">Servers &amp; Virtualization<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec3')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -618,8 +820,17 @@ body {
       <div class="field"><label>Hypervisor Platform</label><input name="virt_platform" placeholder="e.g. VMware ESXi, Hyper-V, Proxmox"/></div>
       <div class="field"><label>Version / Build</label><input name="virt_version" placeholder=""/></div>
       <div class="field"><label>Number of Virtual Machines</label><input name="virt_vms" type="number" placeholder="0"/></div>
-      <div class="field"><label>Shared Storage</label><input name="virt_storage" placeholder="e.g. SAN, NAS, vSAN"/></div>
+      <div class="field"><label>Cluster or Standalone Host?</label>
+        <select name="virt_cluster"><option value="">—</option><option>Cluster (2+ hosts)</option><option>Standalone host</option><option>Mixed</option></select>
+      </div>
+      <div class="field"><label>Shared Storage Type</label><input name="virt_storage" placeholder="e.g. SAN, NAS, vSAN, DAS"/></div>
       <div class="field"><label>HA / Clustering?</label><select name="virt_ha"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>VMware / Hypervisor Licenses Current?</label>
+        <select name="virt_license_status"><option value="">—</option><option>Yes – current</option><option>Expiring soon</option><option>Expired / lapsed</option><option>N/A</option></select>
+      </div>
+      <div class="field"><label>Linux Servers Present?</label><select name="virt_linux"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Co-Location Facility Used?</label><select name="virt_colo"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Co-Location Provider / Facility</label><input name="virt_colo_provider" placeholder="e.g. Equinix, CyrusOne, local DC"/></div>
       <div class="field"><label>Snapshot Policy</label><input name="virt_snap" placeholder="e.g. daily, none"/></div>
     </div>
 
@@ -634,11 +845,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S4 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 4  — Active Directory & Identity
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec4">
   <div class="section-header" onclick="toggleSection('sec4')">
     <div class="section-num">4</div>
-    <div class="section-title">Active Directory &amp; Identity</div>
+    <div class="section-title">Active Directory &amp; Identity<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec4')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -688,11 +901,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S5 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 5  — Endpoints & Device Management
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec5">
   <div class="section-header" onclick="toggleSection('sec5')">
     <div class="section-num">5</div>
-    <div class="section-title">Endpoints &amp; Device Management</div>
+    <div class="section-title">Endpoints &amp; Device Management<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec5')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -712,7 +927,14 @@ body {
     </div>
     <button type="button" class="add-row-btn" onclick="addRow('tbl_endpoints',5)">＋ Add OS / Type</button>
 
-    <div class="subsection-title">5.2 — Mobile Devices</div>
+    <div class="subsection-title">5.2 — Specialty &amp; OT Endpoints</div>
+    <div class="field-grid">
+      <div class="field"><label>SCADA / OT / ICS Devices on Network?</label><select name="ep_scada"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Lab / Manufacturing Workstations?</label><select name="ep_lab"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field span2"><label>Describe Specialty / Non-Standard Endpoints</label><input name="ep_specialty_desc" placeholder="e.g. CNC controllers, POS terminals, lab instruments, kiosks"/></div>
+    </div>
+
+    <div class="subsection-title">5.3 — Mobile Devices</div>
     <div class="field-grid">
       <div class="field"><label>iOS Devices (count)</label><input name="mob_ios" type="number" placeholder="0"/></div>
       <div class="field"><label>Android Devices (count)</label><input name="mob_android" type="number" placeholder="0"/></div>
@@ -720,7 +942,7 @@ body {
       <div class="field"><label>MDM Platform</label><input name="mob_mdm" placeholder="e.g. Intune, Jamf, Mosyle"/></div>
     </div>
 
-    <div class="subsection-title">5.3 — Endpoint Security</div>
+    <div class="subsection-title">5.4 — Endpoint Security</div>
     <table class="yn-table">
       <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>Question</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
       <tbody>
@@ -739,11 +961,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S6 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 6  — Microsoft 365 & Cloud Services
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec6">
   <div class="section-header" onclick="toggleSection('sec6')">
     <div class="section-num">6</div>
-    <div class="section-title">Microsoft 365 &amp; Cloud Services</div>
+    <div class="section-title">Microsoft 365 &amp; Cloud Services<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec6')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -771,6 +995,14 @@ body {
       </table>
     </div>
     <button type="button" class="add-row-btn" onclick="addRow('tbl_azure',5)">＋ Add Subscription</button>
+    <div class="field-grid" style="margin-top:14px;">
+      <div class="field"><label>VM / Compute Resource Count</label><input name="az_vms" placeholder="Approx. total VMs / EC2 / App Services"/></div>
+      <div class="field"><label>"As-a-Service" Offerings Used</label><input name="az_paas" placeholder="e.g. DBaaS, App Service Plans, Lambda, AKS"/></div>
+      <div class="field"><label>Cloud Migration Roadmap</label>
+        <select name="cloud_migration"><option value="">—</option><option>No plans to migrate</option><option>Partial migration planned</option><option>Full cloud migration planned</option><option>Already cloud-first</option></select>
+      </div>
+      <div class="field"><label>Migration Timeline</label><input name="cloud_migration_timeline" placeholder="e.g. 12–18 months, next fiscal year"/></div>
+    </div>
 
     <div class="subsection-title">6.3 — Other Cloud Platforms</div>
     <div class="dyn-table-wrap">
@@ -786,11 +1018,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S7 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 7  — SaaS & Line-of-Business Applications
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec7">
   <div class="section-header" onclick="toggleSection('sec7')">
     <div class="section-num">7</div>
-    <div class="section-title">SaaS &amp; Line-of-Business Applications</div>
+    <div class="section-title">SaaS &amp; Line-of-Business Applications<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec7')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -850,11 +1084,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S8 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 8  — Databases & Data Management
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec8">
   <div class="section-header" onclick="toggleSection('sec8')">
     <div class="section-num">8</div>
-    <div class="section-title">Databases &amp; Data Management</div>
+    <div class="section-title">Databases &amp; Data Management<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec8')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -896,11 +1132,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S9 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 9  — Backup, DR & Business Continuity
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec9">
   <div class="section-header" onclick="toggleSection('sec9')">
     <div class="section-num">9</div>
-    <div class="section-title">Backup, Disaster Recovery &amp; Business Continuity</div>
+    <div class="section-title">Backup, Disaster Recovery &amp; Business Continuity<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec9')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -915,6 +1153,13 @@ body {
     </div>
     <button type="button" class="add-row-btn" onclick="addRow('tbl_backup',6)">＋ Add Backup Target</button>
 
+    <div class="field-grid" style="margin-top:12px;">
+      <div class="field"><label>Total Data Volume Being Backed Up</label><input name="bk_volume" placeholder="e.g. 2TB, 500GB"/></div>
+      <div class="field"><label>Backup Testing Schedule</label>
+        <select name="bk_test_schedule"><option value="">—</option><option>Monthly</option><option>Quarterly</option><option>Annually</option><option>Ad-hoc only</option><option>Never tested</option></select>
+      </div>
+    </div>
+
     <div class="subsection-title">9.2 — Recovery Objectives</div>
     <div class="field-grid">
       <div class="field"><label>Recovery Time Objective (RTO)</label><input name="dr_rto" placeholder="e.g. 4 hours, same-day"/></div>
@@ -927,11 +1172,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S10 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 10 — Security & Monitoring
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec10">
   <div class="section-header" onclick="toggleSection('sec10')">
     <div class="section-num">10</div>
-    <div class="section-title">Security &amp; Monitoring</div>
+    <div class="section-title">Security &amp; Monitoring<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec10')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -955,6 +1202,16 @@ body {
       <div class="field"><label>DNS Filter Product</label><input name="sec_dns_product" placeholder="e.g. Cisco Umbrella, DNSFilter, Zscaler"/></div>
       <div class="field"><label>Email Security Product</label><input name="sec_email_product" placeholder="e.g. Defender, Proofpoint, Mimecast"/></div>
       <div class="field"><label>SIEM Platform</label><input name="sec_siem_product" placeholder="e.g. Wazuh, Sentinel, Splunk"/></div>
+      <div class="field"><label>What Data Feeds into SIEM?</label><input name="sec_siem_feeds" placeholder="e.g. endpoint logs, firewall, AD, O365"/></div>
+      <div class="field"><label>IDS / IPS in Use?</label><select name="sec_ids"><option value="">—</option><option>Yes – IDS only</option><option>Yes – IPS (inline)</option><option>No</option></select></div>
+      <div class="field"><label>Full Web Proxy / Proxy Server?</label><select name="sec_proxy"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Current RMM Solution</label><input name="sec_rmm" placeholder="e.g. ConnectWise, NinjaRMM, Datto RMM"/></div>
+      <div class="field"><label>SOC Coverage</label>
+        <select name="sec_soc"><option value="">—</option><option>In-house SOC</option><option>Outsourced SOC / MSSP</option><option>MDR service</option><option>None</option></select>
+      </div>
+      <div class="field"><label>Formal Incident Response Plan?</label><select name="sec_ir_plan"><option value="">—</option><option>Yes – documented &amp; tested</option><option>Yes – documented, untested</option><option>Informal only</option><option>No</option></select></div>
+      <div class="field"><label>Written Security Policies (WISP)?</label><select name="sec_wisp"><option value="">—</option><option>Yes</option><option>No</option><option>In progress</option></select></div>
+      <div class="field"><label>Ransomware Response Approach</label><input name="sec_ransomware" placeholder="e.g. isolated backups, IR retainer, cyber insurance"/></div>
       <div class="field span2"><label>Previous Incident Description (if applicable)</label><textarea name="sec_incident_desc" placeholder="Brief description of any prior incidents or breaches..."></textarea></div>
     </div>
 
@@ -968,11 +1225,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S11 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 11 — Printing, Peripherals & Hardware
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec11">
   <div class="section-header" onclick="toggleSection('sec11')">
     <div class="section-num">11</div>
-    <div class="section-title">Printing, Peripherals &amp; Misc Hardware</div>
+    <div class="section-title">Printing, Peripherals &amp; Misc Hardware<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec11')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -999,11 +1258,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S12 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 12 — Current Vendors & Contracts
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec12">
   <div class="section-header" onclick="toggleSection('sec12')">
     <div class="section-num">12</div>
-    <div class="section-title">Current Vendors &amp; Contracts</div>
+    <div class="section-title">Current Vendors &amp; Contracts<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec12')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -1020,11 +1281,13 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S13 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 13 — Documentation & Credentials
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec13">
   <div class="section-header" onclick="toggleSection('sec13')">
     <div class="section-num">13</div>
-    <div class="section-title">Documentation &amp; Credentials</div>
+    <div class="section-title">Documentation &amp; Credentials<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec13')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
@@ -1049,12 +1312,175 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ S14 -->
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 14 — IT Operations & Support
+     ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec14">
   <div class="section-header" onclick="toggleSection('sec14')">
     <div class="section-num">14</div>
-    <div class="section-title">Additional Notes &amp; Special Requirements</div>
+    <div class="section-title">IT Operations &amp; Support<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec14')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+
+    <div class="subsection-title">14.1 — Current Support Model</div>
+    <div class="field-grid">
+      <div class="field"><label>Current MSP / NOC Provider</label><input name="ops_current_msp" placeholder="Company name or 'In-house'"/></div>
+      <div class="field"><label>MSP Contract End Date</label><input name="ops_msp_end" type="date"/></div>
+      <div class="field"><label>24/7 Monitoring in Place?</label><select name="ops_247"><option value="">—</option><option>Yes – fully managed</option><option>Yes – alerts only</option><option>No</option></select></div>
+      <div class="field"><label>Support Coverage Required</label>
+        <select name="ops_coverage"><option value="">—</option><option>Mon–Fri 8am–5pm</option><option>Mon–Fri 7am–7pm</option><option>24/5</option><option>24/7/365</option></select>
+      </div>
+      <div class="field span2"><label>Current Support Gaps / Pain Points</label><textarea name="ops_gaps" placeholder="What's not working well with your current IT support situation?"></textarea></div>
+    </div>
+
+    <div class="subsection-title">14.2 — Help Desk &amp; Ticketing</div>
+    <div class="field-grid">
+      <div class="field"><label>Ticketing System in Use</label><input name="ops_ticketing" placeholder="e.g. ServiceNow, Zendesk, Freshdesk, email only"/></div>
+      <div class="field"><label>How Do Users Request Support?</label>
+        <select name="ops_support_channel"><option value="">—</option><option>Ticketing portal</option><option>Email</option><option>Phone</option><option>Walk-up / in-person</option><option>Multiple channels</option></select>
+      </div>
+      <div class="field"><label>Approximate Ticket Volume</label><input name="ops_ticket_vol" placeholder="e.g. ~50/week, ~200/month"/></div>
+      <div class="field"><label>Satisfied with Current Response Times?</label><select name="ops_response_sat"><option value="">—</option><option>Yes</option><option>Partially</option><option>No</option></select></div>
+    </div>
+
+    <div class="subsection-title">14.3 — SLA &amp; Service Expectations</div>
+    <div class="field-grid">
+      <div class="field"><label>Target Response Time (P1 Critical)</label><input name="ops_sla_p1" placeholder="e.g. 15 minutes, 1 hour"/></div>
+      <div class="field"><label>Target Resolution Time (P1 Critical)</label><input name="ops_sla_res" placeholder="e.g. 4 hours, same business day"/></div>
+      <div class="field"><label>Industry / Internal SLA Mandates?</label><input name="ops_sla_mandates" placeholder="e.g. HIPAA uptime requirements, client SLAs"/></div>
+      <div class="field"><label>Preferred Reporting Frequency</label>
+        <select name="ops_reporting"><option value="">—</option><option>Weekly</option><option>Monthly</option><option>Quarterly</option><option>On-demand only</option></select>
+      </div>
+      <div class="field"><label>Preferred Engagement Model</label>
+        <select name="ops_engagement"><option value="">—</option><option>Fully managed / all-inclusive</option><option>Co-managed (blended)</option><option>Project-based only</option><option>Retainer</option><option>Break/fix</option></select>
+      </div>
+      <div class="field"><label>Areas Most Challenging for Internal Team</label><input name="ops_challenges" placeholder="e.g. cloud, security, virtualisation, dev ops"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 15 — Strategic Goals & Future Plans
+     ═══════════════════════════════════════════════════════ -->
+<div class="section-card" id="sec15">
+  <div class="section-header" onclick="toggleSection('sec15')">
+    <div class="section-num">15</div>
+    <div class="section-title">Strategic Goals &amp; Future Plans<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec15')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+
+    <div class="subsection-title">15.1 — Upcoming Projects (6–12 Months)</div>
+    <div class="note-box">List any planned projects, initiatives, or changes in the next 6–12 months.</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_projects">
+        <thead><tr><th>Project / Initiative</th><th>Category</th><th>Estimated Timeline</th><th>Budget Allocated?</th><th>Notes / Dependencies</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_projects',5)">＋ Add Project</button>
+
+    <div class="subsection-title">15.2 — IT Goals (1–3 Years)</div>
+    <div class="field-grid">
+      <div class="field span2"><label>Primary IT Goals Over the Next 1–3 Years</label><textarea name="goals_1_3yr" placeholder="e.g. full cloud migration, zero-trust rollout, ERP upgrade, SOC 2 certification..."></textarea></div>
+      <div class="field"><label>New Software / Automation Initiatives Planned?</label><input name="goals_automation" placeholder="e.g. workflow automation, AI tools, new ERP"/></div>
+      <div class="field"><label>Office Expansions / Relocations Planned?</label><select name="goals_expansion"><option value="">—</option><option>Yes</option><option>No</option><option>Under consideration</option></select></div>
+    </div>
+
+    <div class="subsection-title">15.3 — Budget &amp; Decision Process</div>
+    <div class="field-grid">
+      <div class="field"><label>How Are IT Investment Decisions Made?</label><input name="budget_process" placeholder="e.g. annual budget cycle, CFO approval, board sign-off"/></div>
+      <div class="field"><label>Who Else Is Involved in Decision-Making?</label><input name="budget_stakeholders" placeholder="e.g. CEO, CFO, Procurement, IT steering committee"/></div>
+      <div class="field"><label>Looking for a Long-Term Strategic Partner?</label><select name="budget_partner"><option value="">—</option><option>Yes</option><option>No</option><option>Open to it</option></select></div>
+      <div class="field"><label>Services to Consolidate with Single Provider</label><input name="budget_consolidate" placeholder="e.g. currently using 3 MSPs, want to consolidate"/></div>
+      <div class="field span2"><label>How Do You Evaluate New IT Vendors / Partners?</label><textarea name="budget_eval" placeholder="e.g. RFP process, referrals, proof-of-concept, pricing..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 16 — Data & Analytics (Optional)
+     ═══════════════════════════════════════════════════════ -->
+<div class="section-card" id="sec16">
+  <div class="section-header" onclick="toggleSection('sec16')">
+    <div class="section-num">16</div>
+    <div class="section-title">Data &amp; Analytics<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec16')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="note-box">This section is optional — complete it only if your organisation has significant data engineering, analytics, or BI requirements.</div>
+
+    <div class="subsection-title">16.1 — Data Strategy &amp; Objectives</div>
+    <div class="field-grid">
+      <div class="field span2"><label>Primary Business Objectives Driving Data Initiatives</label><textarea name="da_objectives" placeholder="e.g. improve reporting, enable predictive analytics, consolidate data silos..."></textarea></div>
+      <div class="field"><label>Types of Data Managed</label><input name="da_data_types" placeholder="e.g. Structured, Unstructured, Semi-structured, Streaming"/></div>
+      <div class="field"><label>Estimated Data Volume Managed</label>
+        <select name="da_volume"><option value="">—</option><option>Under 1TB</option><option>1–10TB</option><option>10–100TB</option><option>100TB–1PB</option><option>1PB+</option></select>
+      </div>
+      <div class="field"><label>Expected Annual Data Growth</label><input name="da_growth" placeholder="e.g. 20% YoY, doubling in 2 years"/></div>
+      <div class="field"><label>Data Latency Requirements</label>
+        <select name="da_latency"><option value="">—</option><option>Real-time (sub-second)</option><option>Near real-time (minutes)</option><option>Hourly</option><option>Daily batch</option><option>Weekly / ad-hoc</option></select>
+      </div>
+    </div>
+
+    <div class="subsection-title">16.2 — Data Sources &amp; Ingestion</div>
+    <div class="field-grid">
+      <div class="field span2"><label>Primary Sources of Critical Data</label><input name="da_sources" placeholder="e.g. CRM, ERP, IoT sensors, third-party APIs, flat files, databases"/></div>
+      <div class="field"><label>Data Formats in Use</label><input name="da_formats" placeholder="e.g. CSV, JSON, XML, Parquet, database tables"/></div>
+      <div class="field"><label>Ingestion Frequency / Velocity</label>
+        <select name="da_ingestion"><option value="">—</option><option>Real-time / streaming</option><option>Micro-batch (minutes)</option><option>Hourly batch</option><option>Daily batch</option><option>Weekly / monthly</option><option>Mixed</option></select>
+      </div>
+    </div>
+
+    <div class="subsection-title">16.3 — Current Data Platform &amp; Architecture</div>
+    <div class="field-grid">
+      <div class="field"><label>Current Data Architecture</label>
+        <select name="da_architecture"><option value="">—</option><option>On-premises only</option><option>Cloud-native</option><option>Hybrid</option><option>No formal architecture</option></select>
+      </div>
+      <div class="field"><label>Data Warehouse / Lakehouse Platform</label><input name="da_warehouse" placeholder="e.g. Snowflake, Databricks, Redshift, Synapse, BigQuery, none"/></div>
+      <div class="field"><label>ETL / ELT Tools in Use</label><input name="da_etl" placeholder="e.g. Azure Data Factory, dbt, Informatica, Talend, custom scripts"/></div>
+      <div class="field"><label>Databases in Use</label><input name="da_databases" placeholder="e.g. SQL Server, PostgreSQL, Oracle, MySQL, MongoDB"/></div>
+      <div class="field"><label>BI / Analytics / Reporting Tools</label><input name="da_bi" placeholder="e.g. Power BI, Tableau, Looker, SSRS, Excel, custom"/></div>
+      <div class="field"><label>Cloud Provider(s) for Data</label><input name="da_cloud" placeholder="e.g. Azure, AWS, GCP, multi-cloud"/></div>
+    </div>
+
+    <div class="subsection-title">16.4 — Data Team &amp; Governance</div>
+    <div class="field-grid">
+      <div class="field"><label>Size of Internal Data / Analytics Team</label><input name="da_team_size" placeholder="e.g. 2 data engineers, 1 analyst, no dedicated team"/></div>
+      <div class="field"><label>Technical Skills Available</label><input name="da_skills" placeholder="e.g. SQL, Python, Spark, dbt, Power BI"/></div>
+      <div class="field"><label>Dedicated Pipeline / Platform Ops Resources?</label><select name="da_dedicated"><option value="">—</option><option>Yes – full-time</option><option>Partially</option><option>No</option></select></div>
+      <div class="field"><label>External Data Vendors / Partners</label><input name="da_vendors" placeholder="e.g. data providers, integration partners, consultants"/></div>
+      <div class="field"><label>Data Quality / Governance Maturity</label>
+        <select name="da_governance"><option value="">—</option><option>Formal program in place</option><option>Informal / ad-hoc</option><option>None</option></select>
+      </div>
+      <div class="field"><label>Data Compliance Requirements</label><input name="da_compliance" placeholder="e.g. GDPR, CCPA, HIPAA data residency, SOC 2"/></div>
+    </div>
+
+    <div class="subsection-title">16.5 — Pain Points &amp; Goals</div>
+    <div class="field-grid">
+      <div class="field span2"><label>Primary Challenges in Current Data Management</label><textarea name="da_pain" placeholder="e.g. siloed data, slow reporting, poor data quality, lack of self-service BI..."></textarea></div>
+      <div class="field span2"><label>Specific Analytics Outcomes / Use Cases Desired</label><textarea name="da_use_cases" placeholder="e.g. predictive churn, customer segmentation, real-time dashboards, supply chain visibility..."></textarea></div>
+      <div class="field"><label>Planned / Ongoing Digital Transformation Initiatives</label><input name="da_transformation" placeholder="e.g. cloud data migration, data mesh, AI/ML platform"/></div>
+      <div class="field"><label>How Is Data Initiative Success Measured?</label><input name="da_kpis" placeholder="e.g. report latency, user adoption, ROI, data quality score"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 17 — Additional Notes & Special Requirements
+     ═══════════════════════════════════════════════════════ -->
+<div class="section-card" id="sec17">
+  <div class="section-header" onclick="toggleSection('sec17')">
+    <div class="section-num">17</div>
+    <div class="section-title">Additional Notes &amp; Special Requirements<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec17')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
@@ -1069,29 +1495,59 @@ body {
   </div>
 </div>
 
-</form>
-</div><!-- /page-wrap -->
-
-<!-- ACTIONS BAR -->
+<!-- ── ACTIONS BAR: fixed bottom bar with PDF button ─────── -->
 <div class="actions-bar">
   <div class="actions-bar-left">
-    <strong id="completedCount">0</strong> of 14 sections touched
+    <strong id="completedCount">0</strong> of 17 sections touched
   </div>
   <div class="btn-group">
     <button class="btn btn-outline" onclick="clearForm()">Clear Form</button>
-    <button class="btn btn-primary" id="pdfBtn" onclick="generatePDF()">
+    <!-- Single button generates both PDF and Excel outputs -->
+    <button class="btn btn-primary" id="pdfBtn" onclick="generateReports()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-      <span id="pdfBtnText">Generate PDF</span>
+      <span id="pdfBtnText">Generate PDF &amp; Excel</span>
       <span class="spinner" id="pdfSpinner"></span>
     </button>
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- ── TOAST: notification popup (hidden by default) ─────── -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ── SECTION TOGGLE ────────────────────────────────────────────────
+/*
+ * ================================================================
+ * VERSETAL ONBOARDING QUESTIONNAIRE — CLIENT-SIDE JAVASCRIPT
+ * ================================================================
+ * All logic runs entirely in the browser. No data is sent to any
+ * server at any point. The only network requests this script makes
+ * are to load the company logo SVG and the jsPDF library.
+ *
+ * SECTIONS:
+ *   1.  Section accordion toggle & N/A marking
+ *   2.  Dynamic table row management
+ *   3.  Contact block management
+ *   4.  Progress tracking
+ *   5.  Form seeding (pre-populating default rows)
+ *   6.  Clear form
+ *   7.  Toast notifications
+ *   8.  Logo pre-fetch
+ *   9.  PDF generation
+ * ================================================================
+ */
+
+/* ── 1. SECTION ACCORDION & N/A ──────────────────────────────────
+ * toggleSection: expand / collapse a section body by toggling
+ *   the 'collapsed' CSS class on the section card element.
+ *
+ * toggleNA: mark a section as Not Applicable. Adds the 'is-na'
+ *   CSS class which greys the header and shows the "NOT APPLICABLE"
+ *   badge, then collapses the body. Toggling again restores it.
+ *
+ * isSectionNA: returns true if a section is currently marked N/A.
+ *   Used by the PDF generator to decide whether to render the
+ *   section content or a compact N/A banner instead.
+ */
 function toggleSection(id) {
   document.getElementById(id).classList.toggle('collapsed');
 }
@@ -1099,8 +1555,13 @@ function toggleSection(id) {
 function toggleNA(id) {
   const card = document.getElementById(id);
   const isNA = card.classList.toggle('is-na');
-  // Expand if being marked N/A so the overlay is visible
-  if (isNA) card.classList.remove('collapsed');
+  if (isNA) {
+    // Marking N/A: collapse the body so the grey header is visible
+    card.classList.add('collapsed');
+  } else {
+    // Un-marking N/A: expand the body so the user can fill it in
+    card.classList.remove('collapsed');
+  }
   updateProgress();
 }
 
@@ -1108,6 +1569,19 @@ function isSectionNA(id) {
   return document.getElementById(id).classList.contains('is-na');
 }
 
+/* ── 2. DYNAMIC TABLE ROW MANAGEMENT ────────────────────────────
+ * addRow: appends a new empty row to a dynamic table.
+ *   - tableId: the HTML id of the <table> element
+ *   - cols: number of input cells to create (matches thead column count)
+ *   - seeded: if true, marks inputs with data-preseed so the progress
+ *     tracker ignores them (pre-populated rows don't count as user input)
+ *
+ * Each row gets a delete button (✕) as its last cell, allowing the
+ * user to remove rows they don't need.
+ *
+ * SECURITY: inputs created here are plain <input> elements with no
+ * event handlers that accept or execute external content.
+ */
 // ── DYNAMIC TABLE ROWS ────────────────────────────────────────────
 function addRow(tableId, cols, seeded = false) {
   const tbody = document.querySelector(`#${tableId} tbody`);
@@ -1137,6 +1611,24 @@ function addRow(tableId, cols, seeded = false) {
   if (!window._seeding) updateProgress();
 }
 
+/* ── 3. CONTACT BLOCK MANAGEMENT ────────────────────────────────
+ * addContact: dynamically creates a contact information card and
+ *   appends it to the specified container div.
+ *
+ *   - containerId: target container ('contacts-it', 'contacts-exec',
+ *     or 'contacts-other')
+ *   - title: label shown at the top of the card (e.g. "Owner / CEO")
+ *   - seeded: marks fields as pre-seeded so progress tracking ignores
+ *     them until the user actually types something
+ *
+ * Each card includes a delete button (✕) so users can remove contacts
+ * that aren't relevant to their organisation.
+ *
+ * SECURITY NOTE: The innerHTML template here contains only static
+ * markup with no user-supplied values interpolated into it (only the
+ * 'title' and 'idx' variables are used, both controlled internally).
+ * No user input is ever written into innerHTML.
+ */
 // ── CONTACT BLOCKS ────────────────────────────────────────────────
 let contactIdx = 0;
 function addContact(containerId, title, seeded = false) {
@@ -1169,9 +1661,27 @@ function addContact(containerId, title, seeded = false) {
   if (!window._seeding) updateProgress();
 }
 
+/* ── 4. PROGRESS TRACKING ────────────────────────────────────────
+ * Tracks how many of the 17 sections contain at least one filled
+ * field, and updates the progress bar and section pills accordingly.
+ *
+ * sectionHasData: scans a section card for any input, select, or
+ *   textarea that has a non-empty value. Skips:
+ *     - Inputs with data-preseed (pre-populated default rows)
+ *     - Radio inputs that are not checked (radio value= is always
+ *       set to "Yes"/"No"/"NA" regardless of whether it's selected)
+ *   Sections marked N/A always count as "done" for progress purposes.
+ *
+ * updateProgress: recalculates the completion percentage, updates
+ *   the progress bar width, the % label, the section pill states,
+ *   and the "N sections touched" counter in the actions bar.
+ *
+ * NOTE: Progress state is in-memory only. It resets on page reload.
+ * No progress data is stored anywhere.
+ */
 // ── PROGRESS (declared before seeding so updateProgress is available) ──────
-const sections = ['sec1','sec2','sec3','sec4','sec5','sec6','sec7','sec8','sec9','sec10','sec11','sec12','sec13','sec14'];
-const secLabels = ['Company','Network','Servers','Identity','Endpoints','M365','SaaS','Databases','Backup','Security','Hardware','Vendors','Docs','Notes'];
+const sections = ['sec1','sec2','sec3','sec4','sec5','sec6','sec7','sec8','sec9','sec10','sec11','sec12','sec13','sec14','sec15','sec16','sec17'];
+const secLabels = ['Company','Network','Servers','Identity','Endpoints','M365','Apps / SaaS','Databases','Backup','Security','Hardware','Vendors','Docs','IT Ops','Strategy','Data & Analytics','Notes'];
 
 // Build section pills
 const psDiv = document.getElementById('progressSections');
@@ -1213,6 +1723,17 @@ function updateProgress() {
 
 document.getElementById('mainForm').addEventListener('input', updateProgress);
 
+/* ── 5. FORM SEEDING ─────────────────────────────────────────────
+ * Pre-populates the form with sensible default rows so it doesn't
+ * look empty on first load.
+ *
+ * window._seeding flag: suppresses updateProgress() calls during
+ *   seeding so the progress bar starts at 0% (pre-seeded rows don't
+ *   count as user input — they're marked with data-preseed).
+ *
+ * Contacts are seeded with one block each for IT, Exec, and Finance.
+ * Dynamic tables are seeded with two empty rows each.
+ */
 // ── SEED INITIAL DATA (after updateProgress is defined) ───────────
 window._seeding = true;
 addContact('contacts-it', 'Primary IT / Technical Contact', true);
@@ -1220,13 +1741,24 @@ addContact('contacts-exec', 'Owner / CEO', true);
 addContact('contacts-other', 'Finance / Accounts Payable Contact', true);
 
 ['tbl_firewall','tbl_switches','tbl_subnets','tbl_servers','tbl_azure',
- 'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors'].forEach(id => {
+ 'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors','tbl_projects'].forEach(id => {
   const cols = document.querySelector(`#${id} thead tr`).children.length;
   addRow(id, cols, true);
   addRow(id, cols, true);
 });
 window._seeding = false;
 
+// Section 17 (Data & Analytics) is optional — mark N/A by default
+
+
+/* ── 6. CLEAR FORM ───────────────────────────────────────────────
+ * Resets all form fields to their default state after confirmation.
+ * Clears dynamic table rows and contact blocks, then re-seeds them
+ * with the default empty rows. Progress resets to 0%.
+ *
+ * NOTE: This only affects the in-browser state — since no data is
+ * stored anywhere, there is nothing to "delete" from a server.
+ */
 // ── CLEAR FORM ────────────────────────────────────────────────────
 function clearForm() {
   if (!confirm('Clear all form data?')) return;
@@ -1236,7 +1768,7 @@ function clearForm() {
   addContact('contacts-exec', 'Owner / CEO');
   addContact('contacts-other', 'Finance / Accounts Payable Contact');
   ['tbl_firewall','tbl_switches','tbl_subnets','tbl_servers','tbl_azure',
-   'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors'].forEach(id => {
+   'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors','tbl_projects'].forEach(id => {
     const cols = document.querySelector(`#${id} thead tr`).children.length;
     addRow(id, cols);
     addRow(id, cols);
@@ -1245,6 +1777,11 @@ function clearForm() {
   showToast('Form cleared.');
 }
 
+/* ── 7. TOAST NOTIFICATIONS ──────────────────────────────────────
+ * showToast: displays a brief notification message in the bottom-right
+ *   corner of the screen (e.g. "PDF generated", "Form cleared").
+ *   The toast auto-dismisses after 3.2 seconds.
+ */
 // ── TOAST ─────────────────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1253,6 +1790,21 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3200);
 }
 
+/* ── 8. LOGO PRE-FETCH ───────────────────────────────────────────
+ * fetchLogoAsDataUri: fetches the Versetal logo SVG from the public
+ *   website and converts it to a base64 data URI. The result is
+ *   cached in _logoCached so it's only fetched once per session.
+ *   It also pre-renders the SVG to a PNG canvas and stores it in
+ *   window._logoPngCache — the PDF page header function (newPage)
+ *   is synchronous and cannot await, so it uses the pre-rendered PNG.
+ *
+ * This fetch is the only network request that directly supports PDF
+ * functionality. If it fails (e.g. offline), PDF generation continues
+ * without the logo — no data is lost.
+ *
+ * SECURITY: the fetched SVG is rendered to a canvas and converted to
+ * PNG before being embedded. It is never injected into the DOM as HTML.
+ */
 // ── PDF GENERATION ────────────────────────────────────────────────
 // Fetch and cache the logo SVG as a data URI for PDF embedding
 let _logoCached = null;
@@ -1293,15 +1845,42 @@ async function fetchLogoAsDataUri() {
   }
 }
 
-async function generatePDF() {
+/*
+ * generatePDF: the main PDF export function. Collects all form
+ * values from the DOM, builds a multi-page PDF using jsPDF, and
+ * triggers a browser download — entirely client-side.
+ *
+ * PROCESS:
+ *   1. Disable the button and show a spinner
+ *   2. Load jsPDF from cdnjs if not already loaded
+ *   3. Fetch the logo (uses cached version if already loaded)
+ *   4. Render each of the 17 sections in order:
+ *      - N/A sections render a compact grey banner
+ *      - Completed sections render their field values
+ *   5. Add page headers and footers to every page
+ *   6. Trigger download as "Versetal_Onboarding_<CompanyName>.pdf"
+ *
+ * DATA PRIVACY: getVal() reads directly from the DOM — no data is
+ * serialised, stored, or transmitted at any point during this process.
+ * The PDF is written entirely in memory and handed to the browser's
+ * native download mechanism.
+ *
+ * SECURITY: jsPDF is loaded from cdnjs.cloudflare.com over HTTPS,
+ * matching the Content-Security-Policy defined in the <head>. The
+ * library version is pinned to 2.5.1 to prevent unexpected updates.
+ */
+async function generatePDF(combinedMode = false) {
   const btn = document.getElementById('pdfBtn');
   const btnText = document.getElementById('pdfBtnText');
   const spinner = document.getElementById('pdfSpinner');
-  btn.disabled = true;
-  btnText.textContent = 'Generating…';
-  spinner.classList.add('active');
+  // Only manage button state when called standalone (not from generateReports)
+  if (!combinedMode) {
+    btn.disabled = true;
+    btnText.textContent = 'Generating PDF…';
+    spinner.classList.add('active');
+  }
 
-  await new Promise(r => setTimeout(r, 50)); // let spinner render
+  await new Promise(r => setTimeout(r, 50)); // Allow spinner to render before heavy work
 
   // Dynamically load jsPDF if not already present
   if (!window.jspdf) {
@@ -1547,35 +2126,7 @@ async function generatePDF() {
       y += 4;
     }
 
-    function getVal(name) {
-      const el = document.querySelector(`[name="${name}"]`);
-      return el ? el.value.trim() : '';
-    }
-    function getRadio(name) {
-      const el = document.querySelector(`[name="${name}"]:checked`);
-      return el ? el.value : '';
-    }
-    function getTableData(id) {
-      const rows = [];
-      document.querySelectorAll(`#${id} tbody tr`).forEach(tr => {
-        const cells = [];
-        tr.querySelectorAll('input,select').forEach(el => cells.push(el.value.trim()));
-        rows.push(cells);
-      });
-      return rows;
-    }
-    function getContactBlocks(containerId) {
-      const blocks = [];
-      document.querySelectorAll(`#${containerId} .contact-block`).forEach(block => {
-        const obj = {};
-        block.querySelectorAll('input,select').forEach(el => {
-          if (el.name) obj[el.name.split('_').slice(2).join('_')] = el.value.trim();
-        });
-        obj._title = block.querySelector('.contact-block-title').textContent.trim();
-        blocks.push(obj);
-      });
-      return blocks;
-    }
+    // Form data helpers defined in outer scope below
 
     // ── COVER PAGE ──────────────────────────────────────────────────
     doc.setFillColor(...navy);
@@ -1900,15 +2451,70 @@ async function generatePDF() {
 
     }
 
-    // ── SECTION 14 ──────────────────────────────────────────────────
-    if(isSectionNA('sec14')){sectionNA(14,'Additional Notes & Special Requirements');}else{
+    // ── SECTION 17 ──────────────────────────────────────────────────
+    if(isSectionNA('sec17')){sectionNA(17,'Additional Notes & Special Requirements');}else{
     newPage();
-    sectionHeader(14, 'Additional Notes & Special Requirements');
+    sectionHeader(17, 'Additional Notes & Special Requirements');
     fieldRow1('Known Issues / Pain Points', getVal('notes_pain'));
     fieldRow1('Upcoming Projects / Changes', getVal('notes_projects'));
     fieldRow1('Regulatory / Industry Requirements', getVal('notes_reqs'));
     fieldRow1('Anything Else We Should Know', getVal('notes_other'));
 
+    }
+
+    // ── SECTION 14 ──────────────────────────────────────────────────
+    if(isSectionNA('sec14')){sectionNA(14,'IT Operations & Support');}else{
+    newPage();
+    sectionHeader(14, 'IT Operations & Support');
+    subHeader('15.1 — Current Support Model');
+    fieldRow2('Current MSP / NOC Provider', getVal('ops_current_msp'), 'MSP Contract End Date', getVal('ops_msp_end'));
+    fieldRow2('24/7 Monitoring', getVal('ops_247'), 'Coverage Required', getVal('ops_coverage'));
+    fieldRow1('Current Support Gaps / Pain Points', getVal('ops_gaps'));
+    subHeader('15.2 — Help Desk & Ticketing');
+    fieldRow2('Ticketing System', getVal('ops_ticketing'), 'Support Channel', getVal('ops_support_channel'));
+    fieldRow2('Ticket Volume', getVal('ops_ticket_vol'), 'Satisfied with Response Times', getVal('ops_response_sat'));
+    subHeader('15.3 — SLA & Service Expectations');
+    fieldRow2('P1 Response Time Target', getVal('ops_sla_p1'), 'P1 Resolution Time Target', getVal('ops_sla_res'));
+    fieldRow2('SLA Mandates', getVal('ops_sla_mandates'), 'Reporting Frequency', getVal('ops_reporting'));
+    fieldRow2('Engagement Model', getVal('ops_engagement'), 'Challenging Areas', getVal('ops_challenges'));
+    }
+
+    // ── SECTION 15 ──────────────────────────────────────────────────
+    if(isSectionNA('sec15')){sectionNA(15,'Strategic Goals & Future Plans');}else{
+    newPage();
+    sectionHeader(15, 'Strategic Goals & Future Plans');
+    subHeader('16.1 — Upcoming Projects (6-12 Months)');
+    drawTable(['Project / Initiative','Category','Timeline','Budget?','Notes'], getTableData('tbl_projects'), [46,30,26,18,62]);
+    subHeader('16.2 — IT Goals (1-3 Years)');
+    fieldRow1('Primary IT Goals (1-3 Years)', getVal('goals_1_3yr'));
+    fieldRow2('Automation / New Software', getVal('goals_automation'), 'Expansion / Relocation', getVal('goals_expansion'));
+    subHeader('16.3 — Budget & Decision Process');
+    fieldRow2('Decision-Making Process', getVal('budget_process'), 'Key Stakeholders', getVal('budget_stakeholders'));
+    fieldRow2('Seeking Long-Term Partner', getVal('budget_partner'), 'Services to Consolidate', getVal('budget_consolidate'));
+    fieldRow1('Vendor Evaluation Process', getVal('budget_eval'));
+    }
+
+    // ── SECTION 16 ──────────────────────────────────────────────────
+    if(isSectionNA('sec16')){sectionNA(16,'Data & Analytics (Optional)');}else{
+    newPage();
+    sectionHeader(16, 'Data & Analytics');
+    subHeader('17.1 — Data Strategy & Objectives');
+    fieldRow1('Business Objectives Driving Data Initiatives', getVal('da_objectives'));
+    fieldRow2('Estimated Data Volume', getVal('da_volume'), 'Expected Growth Rate', getVal('da_growth'));
+    fieldRow2('Data Latency Requirements', getVal('da_latency'), 'Data Ingestion Frequency', getVal('da_ingestion'));
+    fieldRow2('Primary Data Sources', getVal('da_sources'), 'Data Formats', getVal('da_formats'));
+    subHeader('17.2 — Current Data Platform & Architecture');
+    fieldRow2('Data Architecture', getVal('da_architecture'), 'Data Warehouse / Lakehouse', getVal('da_warehouse'));
+    fieldRow2('ETL / ELT Tools', getVal('da_etl'), 'Databases', getVal('da_databases'));
+    fieldRow2('BI / Analytics Tools', getVal('da_bi'), 'Cloud Provider(s) for Data', getVal('da_cloud'));
+    subHeader('17.3 — Data Team & Governance');
+    fieldRow2('Data Team Size', getVal('da_team_size'), 'Technical Skills Available', getVal('da_skills'));
+    fieldRow2('Dedicated Pipeline Ops?', getVal('da_dedicated'), 'External Data Vendors', getVal('da_vendors'));
+    fieldRow2('Governance Maturity', getVal('da_governance'), 'Data Compliance Requirements', getVal('da_compliance'));
+    subHeader('17.4 — Pain Points & Goals');
+    fieldRow1('Primary Data Challenges', getVal('da_pain'));
+    fieldRow1('Analytics Use Cases Desired', getVal('da_use_cases'));
+    fieldRow2('Transformation Initiatives', getVal('da_transformation'), 'Success Metrics / KPIs', getVal('da_kpis'));
     }
 
     // ── FOOTER ON EVERY PAGE ─────────────────────────────────────────
@@ -1934,11 +2540,14 @@ async function generatePDF() {
     showToast('PDF generated and downloaded!');
   } catch(e) {
     console.error(e);
-    showToast('PDF error: ' + (e.message || e) + ' — check console.');
+    if (!combinedMode) showToast('PDF error: ' + (e.message || e) + ' — check console.');
+    else throw e; // re-throw so generateReports can handle it
   } finally {
-    btn.disabled = false;
-    btnText.textContent = 'Generate PDF';
-    spinner.classList.remove('active');
+    if (!combinedMode) {
+      btn.disabled = false;
+      btnText.textContent = 'Generate PDF & Excel';
+      spinner.classList.remove('active');
+    }
   }
 }
 
@@ -1954,6 +2563,698 @@ updateProgress();
 
 // Pre-fetch logo in background so it's ready when PDF is generated
 fetchLogoAsDataUri().catch(() => {});
+
+// Measure actual scrollbar width and expose as CSS var so actions bar lines up
+(function() {
+  const sb = window.innerWidth - document.documentElement.clientWidth;
+  document.documentElement.style.setProperty('--sb-width', sb + 'px');
+})();
+
+/* ── 9. EXCEL EXPORT ──────────────────────────────────────────────
+ * generateExcel: builds a multi-sheet Excel workbook using the
+ *   SheetJS (xlsx) library loaded dynamically from cdnjs.
+ *
+ * STRUCTURE:
+ *   - Sheet 1 "Summary"      : company name, date, completion %
+ *   - Sheets 2-18            : one sheet per questionnaire section
+ *     Each sheet has:
+ *       Row 1  : Section title (merged, navy fill)
+ *       Row 2  : Column headers "Field" | "Response" (green fill)
+ *       Rows 3+: Label / Value pairs for every field in the section
+ *              : N/A sections show a single "NOT APPLICABLE" row
+ *              : Table data appends as additional rows
+ *
+ * DATA PRIVACY: identical to PDF — all data comes from the DOM,
+ *   nothing is transmitted. The file is saved locally via SheetJS's
+ *   writeFile which triggers a browser download.
+ *
+ * FORMATTING: column widths, font styles, fill colours and borders
+ *   are applied using SheetJS cell styles (requires the full xlsx
+ *   pro build — we use the community build which supports basic
+ *   styles via the !cols width hints and cell metadata).
+ */
+/* ── FORM DATA HELPERS ────────────────────────────────────────────
+ * Shared utility functions used by both generatePDF() and
+ * generateExcel(). Defined at outer scope so both can access them.
+ *
+ * getVal        : reads a named form field's current value
+ * getRadio      : reads the checked value of a radio group
+ * getTableData  : extracts all rows from a dynamic table as a 2D array
+ * getContactBlocks : extracts all contact card data as an array of objects
+ */
+function getVal(name) {
+  const el = document.querySelector(`[name="${name}"]`);
+  return el ? el.value.trim() : '';
+}
+
+function getRadio(name) {
+  const el = document.querySelector(`[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+
+// Alias used by generateExcel — identical to getRadio
+function getRadioVal(name) { return getRadio(name); }
+
+function getTableData(id) {
+  const rows = [];
+  document.querySelectorAll(`#${id} tbody tr`).forEach(tr => {
+    const cells = [];
+    tr.querySelectorAll('input,select').forEach(el => cells.push(el.value.trim()));
+    rows.push(cells);
+  });
+  return rows;
+}
+
+function getContactBlocks(containerId) {
+  const blocks = [];
+  document.querySelectorAll(`#${containerId} .contact-block`).forEach(block => {
+    const obj = {};
+    block.querySelectorAll('input,select').forEach(el => {
+      if (el.name) obj[el.name.split('_').slice(2).join('_')] = el.value.trim();
+    });
+    obj._title = block.querySelector('.contact-block-title')?.textContent
+      ?.replace('NOT APPLICABLE','').trim() || '';
+    blocks.push(obj);
+  });
+  return blocks;
+}
+
+/* ── COMBINED REPORT GENERATOR ────────────────────────────────────
+ * generateReports: orchestrates both exports in sequence using the
+ *   shared button. Calls generatePDF() first (heavier, more complex),
+ *   then generateExcel(). Both share the same spinner/button state.
+ */
+async function generateReports() {
+  const btn = document.getElementById('pdfBtn');
+  const btnText = document.getElementById('pdfBtnText');
+  const spinner = document.getElementById('pdfSpinner');
+  btn.disabled = true;
+  spinner.classList.add('active');
+
+  try {
+    btnText.textContent = 'Generating PDF…';
+    await generatePDF(true); // true = called from combined mode, skip button state
+    btnText.textContent = 'Generating Excel…';
+    await generateExcel(true); // true = called from combined mode, skip button state
+    showToast('PDF & Excel downloaded!');
+  } catch(e) {
+    console.error('Report generation error:', e);
+    showToast('Error: ' + (e.message || e));
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'Generate PDF & Excel';
+    spinner.classList.remove('active');
+  }
+}
+
+async function generateExcel(combinedMode = false) {
+  // When called standalone (not from generateReports), manage button state here
+  let btn, btnText, spinner;
+  if (!combinedMode) {
+    btn = document.getElementById('pdfBtn');
+    btnText = document.getElementById('pdfBtnText');
+    spinner = document.getElementById('pdfSpinner');
+    btn.disabled = true;
+    btnText.textContent = 'Generating Excel…';
+    spinner.classList.add('active');
+  }
+
+  await new Promise(r => setTimeout(r, 50));
+
+  try {
+    // Load SheetJS dynamically if not already present
+    if (!window.XLSX) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+        s.onload = resolve;
+        s.onerror = () => reject(new Error('Failed to load SheetJS'));
+        document.head.appendChild(s);
+      });
+    }
+
+    const XLSX = window.XLSX;
+    const wb = XLSX.utils.book_new();
+    const company = getVal('co_legal') || 'Client';
+    const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    /* ── Helper: create a styled cell ──────────────────────────── */
+    function cell(value, type = 's', bold = false, bg = null, color = '000000', fontSize = 10) {
+      const c = { v: value, t: type };
+      c.s = {
+        font: { name: 'Arial', sz: fontSize, bold, color: { rgb: color } },
+        alignment: { vertical: 'center', wrapText: true },
+        fill: bg ? { fgColor: { rgb: bg }, patternType: 'solid' } : { patternType: 'none' },
+        border: {
+          top:    { style: 'thin', color: { rgb: 'CBD8E8' } },
+          bottom: { style: 'thin', color: { rgb: 'CBD8E8' } },
+          left:   { style: 'thin', color: { rgb: 'CBD8E8' } },
+          right:  { style: 'thin', color: { rgb: 'CBD8E8' } },
+        }
+      };
+      return c;
+    }
+
+    /* ── Helper: build a sheet from an array of [label, value] rows ──
+     * sectionTitle : displayed in the first (header) row
+     * rows         : array of [labelString, valueString] pairs
+     *                or ['__TABLE__', headerArray, ...dataRows] for tables
+     */
+    function buildSheet(sectionTitle, rows) {
+      const wsData = [];
+
+      // Row 1: section title header
+      wsData.push([
+        cell(sectionTitle, 's', true, '0A2543', 'FFFFFF', 12),
+        cell('', 's', false, '0A2543', 'FFFFFF', 12)
+      ]);
+
+      // Row 2: column headers
+      wsData.push([
+        cell('Field', 's', true, '5BBF46', 'FFFFFF', 10),
+        cell('Response', 's', true, '5BBF46', 'FFFFFF', 10)
+      ]);
+
+      let alt = false;
+      rows.forEach(row => {
+        if (!Array.isArray(row)) return;
+
+        if (row[0] === '__TABLE__') {
+          // Table section: header row + data rows
+          const [, headers, ...dataRows] = row;
+          // Table title row
+          wsData.push([
+            cell('— Table —', 's', true, 'D6E8F5', '0A2543', 9),
+            cell(headers.join('  |  '), 's', true, 'D6E8F5', '0A2543', 9)
+          ]);
+          dataRows.forEach((dataRow, ri) => {
+            if (!dataRow.some(c => c)) return; // skip blank rows
+            const bg = ri % 2 === 0 ? 'FFFFFF' : 'F4F8FC';
+            wsData.push([
+              cell(`Row ${ri + 1}`, 's', false, bg, '666666', 9),
+              cell(dataRow.filter(Boolean).join('  |  '), 's', false, bg, '333333', 9)
+            ]);
+          });
+        } else {
+          // Standard label/value pair
+          const [label, value] = row;
+          const bg = alt ? 'F4F8FC' : 'FFFFFF';
+          wsData.push([
+            cell(label || '', 's', true, bg, '0A2543', 10),
+            cell(value || '—', 's', false, bg, '333333', 10)
+          ]);
+          alt = !alt;
+        }
+      });
+
+      // Convert to worksheet
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+      // Column widths
+      ws['!cols'] = [{ wch: 38 }, { wch: 55 }];
+
+      // Row heights
+      ws['!rows'] = wsData.map((_, i) => ({ hpt: i === 0 ? 22 : i === 1 ? 16 : 18 }));
+
+      return ws;
+    }
+
+    /* ── Helper: get all rows from a dynamic table ─────────────── */
+    function tableRows(id) {
+      const rows = [];
+      document.querySelectorAll(`#${id} tbody tr`).forEach(tr => {
+        const cells = [];
+        tr.querySelectorAll('input').forEach(el => cells.push(el.value.trim()));
+        rows.push(cells);
+      });
+      return rows;
+    }
+
+    /* ── Helper: get table headers ─────────────────────────────── */
+    function tableHeaders(id) {
+      return Array.from(document.querySelectorAll(`#${id} thead th`))
+        .map(th => th.textContent.trim())
+        .filter(h => h); // remove empty delete column header
+    }
+
+    /* ── Helper: N/A sheet ─────────────────────────────────────── */
+    function naSheet(title) {
+      return buildSheet(title, [['NOT APPLICABLE', 'This section was marked as Not Applicable by the submitter.']]);
+    }
+
+    // getRadioVal: defined in outer scope — use getRadio()
+
+    /* ── Helper: get contact blocks ───────────────────────────── */
+    function contactRows(containerId) {
+      const rows = [];
+      document.querySelectorAll(`#${containerId} .contact-block`).forEach(block => {
+        const title = block.querySelector('.contact-block-title')?.textContent?.replace('NOT APPLICABLE','').trim() || '';
+        rows.push(['── ' + title + ' ──', '']);
+        block.querySelectorAll('input, select').forEach(el => {
+          const label = el.closest('.field')?.querySelector('label')?.textContent?.trim() || el.name;
+          if (el.value.trim()) rows.push([label, el.value.trim()]);
+        });
+      });
+      return rows;
+    }
+
+    /* ── SUMMARY SHEET ─────────────────────────────────────────── */
+    const summaryRows = [
+      ['Company', company],
+      ['Date Generated', dateStr],
+      ['Completion', document.getElementById('pct').textContent + '%'],
+      ['Sections Completed', document.getElementById('completedCount').textContent + ' of 17'],
+      ['Generated By', 'Versetal Client Onboarding Questionnaire'],
+      ['Data Privacy', 'All data entered this form remains in-browser only. This file was generated locally and never transmitted.'],
+    ];
+    XLSX.utils.book_append_sheet(wb, buildSheet('Versetal — Client Onboarding Summary', summaryRows), 'Summary');
+
+    /* ══════════════════════════════════════════════════════════════
+       SECTION SHEETS
+       Each section checks isSectionNA() first.
+       ══════════════════════════════════════════════════════════════ */
+
+    // ── S1: Company Information & Key Contacts ──
+    if (isSectionNA('sec1')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('1 — Company Information & Key Contacts'), '1 Company');
+    } else {
+      const rows = [
+        ['Legal Company Name', getVal('co_legal')],
+        ['Trading Name', getVal('co_trade')],
+        ['Primary Office Address', getVal('co_address')],
+        ['Additional Locations', getVal('co_locations')],
+        ['Industry / Vertical', getVal('co_industry')],
+        ['Website', getVal('co_website')],
+        ['Total Employees (Current)', getVal('co_employees')],
+        ['Projected Headcount (12 Months)', getVal('co_employees_12mo')],
+        ['Full-Time Employees', getVal('co_fte')],
+        ['Contractors / Consultants', getVal('co_contractors')],
+        ['Number of IT Users', getVal('co_it_users')],
+        ['Employees Per Location', getVal('co_per_location')],
+        ['Business Hours', getVal('co_hours')],
+        ['After-Hours Support Required', getVal('co_afterhours')],
+        ['IT Model', getVal('it_model')],
+        ['Internal IT Staff Count', getVal('it_staff_count')],
+        ['Current MSP / Provider', getVal('it_current_msp')],
+        ['MSP Contract End Date', getVal('it_msp_contract_end')],
+        ['Dedicated IT Roles', getVal('it_roles')],
+        ['Day-to-Day IT Maintenance', getVal('it_maintains')],
+        ['IT Decision-Making Process', getVal('it_decision_process')],
+        ['Support Email', getVal('esc_email')],
+        ['Emergency Contact', getVal('esc_emergency')],
+        ['Preferred Comms', getVal('esc_comms')],
+        ['Do Not Call Directly', getVal('esc_nocall')],
+        ['Maintenance Windows', getVal('esc_maintenance')],
+        ...contactRows('contacts-it'),
+        ...contactRows('contacts-exec'),
+        ...contactRows('contacts-other'),
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('1 — Company Information & Key Contacts', rows), '1 Company');
+    }
+
+    // ── S2: Network ──
+    if (isSectionNA('sec2')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('2 — Network & Infrastructure'), '2 Network');
+    } else {
+      const rows = [
+        ['ISP Provider(s)', getVal('net_isp')],
+        ['Circuit Type', getVal('net_type')],
+        ['Speeds (per site)', getVal('net_speed')],
+        ['Redundant Internet', getVal('net_failover')],
+        ['WAN Topology', getVal('net_wan_topo')],
+        ['Bandwidth Stats Available', getVal('net_bw_stats')],
+        ['Static IPs', getVal('net_static')],
+        ['DNS Management', getVal('net_dns')],
+        ['Network Monitoring Tool', getVal('net_monitor_tool')],
+        ['Network Segmentation', getVal('net_segmentation')],
+        ['VPN Solution', getVal('vpn_product')],
+        ['Site-to-Site VPNs', getVal('vpn_s2s')],
+        ['Remote Desktop / Jump', getVal('vpn_rd')],
+        ['MFA for Remote Access', getVal('vpn_mfa')],
+        ['Remote Worker Count', getVal('vpn_users')],
+        ['Switch Port Count', getVal('net_switch_ports')],
+        ['PoE Required', getVal('net_poe')],
+        ['Hardware Refresh Plan', getVal('net_refresh_plan')],
+        ['__TABLE__', tableHeaders('tbl_firewall'), ...tableRows('tbl_firewall')],
+        ['__TABLE__', tableHeaders('tbl_switches'), ...tableRows('tbl_switches')],
+        ['__TABLE__', tableHeaders('tbl_subnets'), ...tableRows('tbl_subnets')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('2 — Network & Infrastructure', rows), '2 Network');
+    }
+
+    // ── S3: Servers ──
+    if (isSectionNA('sec3')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('3 — Servers & Virtualization'), '3 Servers');
+    } else {
+      const rows = [
+        ['__TABLE__', tableHeaders('tbl_servers'), ...tableRows('tbl_servers')],
+        ['Hypervisor Platform', getVal('virt_platform')],
+        ['Version / Build', getVal('virt_version')],
+        ['VM Count', getVal('virt_vms')],
+        ['Cluster or Standalone', getVal('virt_cluster')],
+        ['Shared Storage', getVal('virt_storage')],
+        ['HA / Clustering', getVal('virt_ha')],
+        ['Hypervisor License Status', getVal('virt_license_status')],
+        ['Linux Servers Present', getVal('virt_linux')],
+        ['Co-Location Used', getVal('virt_colo')],
+        ['Co-Location Provider', getVal('virt_colo_provider')],
+        ['Snapshot Policy', getVal('virt_snap')],
+        ['NAS / SAN Device', getVal('stor_device')],
+        ['Total Capacity', getVal('stor_cap')],
+        ['RAID Config', getVal('stor_raid')],
+        ['File Share Paths', getVal('stor_shares')],
+        ['Tape / Offline Media', getVal('stor_tape')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('3 — Servers & Virtualization', rows), '3 Servers');
+    }
+
+    // ── S4: Identity ──
+    if (isSectionNA('sec4')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('4 — Active Directory & Identity'), '4 Identity');
+    } else {
+      const rows = [
+        ['AD Domain Name(s)', getVal('ad_domain')],
+        ['Domain Controllers', getVal('ad_dcs')],
+        ['Functional Level', getVal('ad_level')],
+        ['AD Sites & Services', getVal('ad_sites')],
+        ['Enabled Users', getVal('ad_users')],
+        ['Computer Objects', getVal('ad_computers')],
+        ['Service Accounts', getVal('ad_svc')],
+        ['GPO Count', getVal('ad_gpos')],
+        ['LDAP / SSO Integrations', getVal('ad_ldap')],
+        ['Entra ID Tenant', getVal('aad_use')],
+        ['Tenant Domain', getVal('aad_tenant')],
+        ['Sync Method', getVal('aad_sync')],
+        ['Device Join Method', getVal('aad_join')],
+        ['Conditional Access', getVal('aad_ca')],
+        ['PIM', getVal('aad_pim')],
+        ['MFA — All Users', getRadioVal('yn_mfa_all')],
+        ['MFA — Admins', getRadioVal('yn_mfa_admin')],
+        ['Passwordless / FIDO2', getRadioVal('yn_passkey')],
+        ['SSO Platform', getRadioVal('yn_sso')],
+        ['Org-Wide Password Manager', getRadioVal('yn_pwmgr')],
+        ['SSO Product', getVal('auth_sso_product')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('4 — Active Directory & Identity', rows), '4 Identity');
+    }
+
+    // ── S5: Endpoints ──
+    if (isSectionNA('sec5')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('5 — Endpoints & Device Management'), '5 Endpoints');
+    } else {
+      const rows = [
+        ['__TABLE__', tableHeaders('tbl_endpoints'), ...tableRows('tbl_endpoints')],
+        ['SCADA / OT Devices', getVal('ep_scada')],
+        ['Lab / Manufacturing Workstations', getVal('ep_lab')],
+        ['Specialty Endpoints Description', getVal('ep_specialty_desc')],
+        ['iOS Devices', getVal('mob_ios')],
+        ['Android Devices', getVal('mob_android')],
+        ['Ownership Model', getVal('mob_ownership')],
+        ['MDM Platform', getVal('mob_mdm')],
+        ['Intune / MDM', getRadioVal('yn_intune')],
+        ['Autopilot / DEP', getRadioVal('yn_autopilot')],
+        ['AV / EDR on All Endpoints', getRadioVal('yn_edr')],
+        ['Patch Management', getRadioVal('yn_patch')],
+        ['Disk Encryption', getRadioVal('yn_encrypt')],
+        ['AppLocker / Whitelisting', getRadioVal('yn_applocker')],
+        ['AV / EDR Product', getVal('ep_edr_product')],
+        ['Patch Management Tool', getVal('ep_patch_product')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('5 — Endpoints & Device Management', rows), '5 Endpoints');
+    }
+
+    // ── S6: M365 & Cloud ──
+    if (isSectionNA('sec6')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('6 — Microsoft 365 & Cloud'), '6 M365 Cloud');
+    } else {
+      const rows = [
+        ['M365 Tenant Domain', getVal('m365_tenant')],
+        ['License Plan(s)', getVal('m365_licenses')],
+        ['Licensed Users', getVal('m365_users')],
+        ['CSP / Reseller', getVal('m365_csp')],
+        ['Email Platform', getVal('m365_exchange')],
+        ['Intune Licensed', getVal('m365_intune')],
+        ['Defender Licensed', getVal('m365_defender')],
+        ['Shared Mailboxes', getVal('m365_shared')],
+        ['__TABLE__', tableHeaders('tbl_azure'), ...tableRows('tbl_azure')],
+        ['VM / Compute Resources', getVal('az_vms')],
+        ['As-a-Service Offerings', getVal('az_paas')],
+        ['Cloud Migration Roadmap', getVal('cloud_migration')],
+        ['Migration Timeline', getVal('cloud_migration_timeline')],
+        ['__TABLE__', tableHeaders('tbl_cloud'), ...tableRows('tbl_cloud')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('6 — Microsoft 365 & Cloud', rows), '6 M365 Cloud');
+    }
+
+    // ── S7: Apps / SaaS ──
+    if (isSectionNA('sec7')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('7 — Apps / SaaS & LOB Applications'), '7 Apps SaaS');
+    } else {
+      const rows = [
+        ['__TABLE__', tableHeaders('tbl_saas'), ...tableRows('tbl_saas')],
+        ['__TABLE__', tableHeaders('tbl_lob'), ...tableRows('tbl_lob')],
+        ['Special Port / Firewall Requirements', getVal('lob_ports')],
+        ['OS / Hardware Dependencies', getVal('lob_legacy_dep')],
+        ['Local DB Backend Apps', getVal('lob_db_dep')],
+        ['Custom / In-House Apps', getVal('lob_custom')],
+        ['CRM', getRadioVal('yn_crm')],
+        ['ERP', getRadioVal('yn_erp')],
+        ['Accounting / Finance', getRadioVal('yn_accounting')],
+        ['HR / Payroll', getRadioVal('yn_hr')],
+        ['Project Management', getRadioVal('yn_pm')],
+        ['Document Management', getRadioVal('yn_dms')],
+        ['Industry LOB App', getRadioVal('yn_lob')],
+        ['LOB Description', getVal('saas_lob_desc')],
+        ['Email Platform', getVal('comm_email')],
+        ['Video / UC', getVal('comm_uc')],
+        ['Phone System', getVal('comm_phone')],
+        ['Fax', getVal('comm_fax')],
+        ['Intranet / Portal', getVal('comm_intranet')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('7 — Apps / SaaS & LOB Applications', rows), '7 Apps SaaS');
+    }
+
+    // ── S8: Databases ──
+    if (isSectionNA('sec8')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('8 — Databases & Data Management'), '8 Databases');
+    } else {
+      const rows = [
+        ['__TABLE__', tableHeaders('tbl_db'), ...tableRows('tbl_db')],
+        ['DB Clusters / Always On', getVal('db_clusters')],
+        ['Retention Policy', getVal('db_retention')],
+        ['PII / PHI Data', getVal('db_pii')],
+        ['DB Admin Access', getVal('db_admins')],
+        ['HIPAA', getRadioVal('yn_hipaa')],
+        ['PCI-DSS', getRadioVal('yn_pci')],
+        ['SOC 2', getRadioVal('yn_soc2')],
+        ['GDPR / CCPA', getRadioVal('yn_gdpr')],
+        ['Cyber Insurance', getRadioVal('yn_cyber_ins')],
+        ['Prior Pen Test', getRadioVal('yn_pentest')],
+        ['Compliance Frameworks', getVal('comp_frameworks')],
+        ['Last Audit Date', getVal('comp_last_audit')],
+        ['Cyber Insurance Details', getVal('comp_cyber_ins')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('8 — Databases & Data Management', rows), '8 Databases');
+    }
+
+    // ── S9: Backup & DR ──
+    if (isSectionNA('sec9')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('9 — Backup, DR & Business Continuity'), '9 Backup DR');
+    } else {
+      const rows = [
+        ['__TABLE__', tableHeaders('tbl_backup'), ...tableRows('tbl_backup')],
+        ['Total Data Volume', getVal('bk_volume')],
+        ['Backup Testing Schedule', getVal('bk_test_schedule')],
+        ['RTO', getVal('dr_rto')],
+        ['RPO', getVal('dr_rpo')],
+        ['DR / BCP Plan', getVal('dr_plan')],
+        ['Offsite Standby', getVal('dr_standby')],
+        ['Immutable Backups', getVal('dr_immutable')],
+        ['M365 Cloud Backup', getVal('dr_m365backup')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('9 — Backup, DR & Business Continuity', rows), '9 Backup DR');
+    }
+
+    // ── S10: Security ──
+    if (isSectionNA('sec10')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('10 — Security & Monitoring'), '10 Security');
+    } else {
+      const rows = [
+        ['Security Awareness Training', getRadioVal('yn_sat')],
+        ['Phishing Simulation', getRadioVal('yn_phish')],
+        ['SIEM / Log Aggregation', getRadioVal('yn_siem')],
+        ['Vulnerability Scanning', getRadioVal('yn_vulnscan')],
+        ['Dark Web Monitoring', getRadioVal('yn_darkweb')],
+        ['DNS Filtering', getRadioVal('yn_dns_filter')],
+        ['3rd-Party Email Filtering', getRadioVal('yn_emailsec')],
+        ['Previous Incidents', getRadioVal('yn_breach')],
+        ['DNS Filter Product', getVal('sec_dns_product')],
+        ['Email Security Product', getVal('sec_email_product')],
+        ['SIEM Platform', getVal('sec_siem_product')],
+        ['SIEM Data Feeds', getVal('sec_siem_feeds')],
+        ['IDS / IPS', getVal('sec_ids')],
+        ['Web Proxy', getVal('sec_proxy')],
+        ['Current RMM Solution', getVal('sec_rmm')],
+        ['SOC Coverage', getVal('sec_soc')],
+        ['Incident Response Plan', getVal('sec_ir_plan')],
+        ['Written Security Policies (WISP)', getVal('sec_wisp')],
+        ['Ransomware Response', getVal('sec_ransomware')],
+        ['Incident Description', getVal('sec_incident_desc')],
+        ['Server Room Locked', getVal('phys_lock')],
+        ['Physical Access Control', getVal('phys_access')],
+        ['CCTV System', getVal('phys_cctv')],
+        ['UPS / Power Protection', getVal('phys_ups')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('10 — Security & Monitoring', rows), '10 Security');
+    }
+
+    // ── S11: Hardware ──
+    if (isSectionNA('sec11')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('11 — Printing, Peripherals & Hardware'), '11 Hardware');
+    } else {
+      const rows = [
+        ['__TABLE__', tableHeaders('tbl_printers'), ...tableRows('tbl_printers')],
+        ['Barcode / POS Hardware', getVal('hw_pos')],
+        ['IP Cameras / NVR', getVal('hw_cctv')],
+        ['Building Mgmt / HVAC', getVal('hw_bms')],
+        ['Legacy / Specialty Hardware', getVal('hw_legacy')],
+        ['UPS Unit Count', getVal('hw_ups_count')],
+        ['UPS Monitored', getVal('hw_ups_mon')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('11 — Printing, Peripherals & Hardware', rows), '11 Hardware');
+    }
+
+    // ── S12: Vendors ──
+    if (isSectionNA('sec12')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('12 — Current Vendors & Contracts'), '12 Vendors');
+    } else {
+      const rows = [['__TABLE__', tableHeaders('tbl_vendors'), ...tableRows('tbl_vendors')]];
+      XLSX.utils.book_append_sheet(wb, buildSheet('12 — Current Vendors & Contracts', rows), '12 Vendors');
+    }
+
+    // ── S13: Documentation ──
+    if (isSectionNA('sec13')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('13 — Documentation & Credentials'), '13 Docs');
+    } else {
+      const rows = [
+        ['Network Diagram Exists', getRadioVal('yn_netdiag')],
+        ['Asset / Inventory List', getRadioVal('yn_asset_inv')],
+        ['Password Manager (Shared)', getRadioVal('yn_pwmgr_shared')],
+        ['IT Runbook / SOPs', getRadioVal('yn_runbook')],
+        ['Software License Registry', getRadioVal('yn_lic_reg')],
+        ['Change Management Process', getRadioVal('yn_change_mgmt')],
+        ['Password Manager Platform', getVal('doc_pwmgr')],
+        ['Documentation Platform', getVal('doc_platform')],
+        ['Handover Notes', getVal('doc_handover')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('13 — Documentation & Credentials', rows), '13 Docs');
+    }
+
+    // ── S14: IT Operations ──
+    if (isSectionNA('sec14')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('14 — IT Operations & Support'), '14 IT Ops');
+    } else {
+      const rows = [
+        ['Current MSP / NOC', getVal('ops_current_msp')],
+        ['MSP Contract End', getVal('ops_msp_end')],
+        ['24/7 Monitoring', getVal('ops_247')],
+        ['Coverage Required', getVal('ops_coverage')],
+        ['Support Gaps / Pain Points', getVal('ops_gaps')],
+        ['Ticketing System', getVal('ops_ticketing')],
+        ['Support Channel', getVal('ops_support_channel')],
+        ['Ticket Volume', getVal('ops_ticket_vol')],
+        ['Response Time Satisfaction', getVal('ops_response_sat')],
+        ['P1 Response Time Target', getVal('ops_sla_p1')],
+        ['P1 Resolution Time Target', getVal('ops_sla_res')],
+        ['SLA Mandates', getVal('ops_sla_mandates')],
+        ['Reporting Frequency', getVal('ops_reporting')],
+        ['Engagement Model', getVal('ops_engagement')],
+        ['Challenging Areas', getVal('ops_challenges')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('14 — IT Operations & Support', rows), '14 IT Ops');
+    }
+
+    // ── S15: Strategic Goals ──
+    if (isSectionNA('sec15')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('15 — Strategic Goals & Future Plans'), '15 Strategy');
+    } else {
+      const rows = [
+        ['__TABLE__', tableHeaders('tbl_projects'), ...tableRows('tbl_projects')],
+        ['IT Goals (1-3 Years)', getVal('goals_1_3yr')],
+        ['Automation / New Software', getVal('goals_automation')],
+        ['Office Expansion / Relocation', getVal('goals_expansion')],
+        ['Decision-Making Process', getVal('budget_process')],
+        ['Key Stakeholders', getVal('budget_stakeholders')],
+        ['Seeking Long-Term Partner', getVal('budget_partner')],
+        ['Services to Consolidate', getVal('budget_consolidate')],
+        ['Vendor Evaluation Process', getVal('budget_eval')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('15 — Strategic Goals & Future Plans', rows), '15 Strategy');
+    }
+
+    // ── S16: Data & Analytics ──
+    if (isSectionNA('sec16')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('16 — Data & Analytics'), '16 Data Analytics');
+    } else {
+      const rows = [
+        ['Business Data Objectives', getVal('da_objectives')],
+        ['Data Types', getVal('da_data_types')],
+        ['Data Volume', getVal('da_volume')],
+        ['Expected Growth', getVal('da_growth')],
+        ['Latency Requirements', getVal('da_latency')],
+        ['Primary Data Sources', getVal('da_sources')],
+        ['Data Formats', getVal('da_formats')],
+        ['Ingestion Frequency', getVal('da_ingestion')],
+        ['Data Architecture', getVal('da_architecture')],
+        ['Data Warehouse / Lakehouse', getVal('da_warehouse')],
+        ['ETL / ELT Tools', getVal('da_etl')],
+        ['Databases', getVal('da_databases')],
+        ['BI / Analytics Tools', getVal('da_bi')],
+        ['Cloud Provider(s) for Data', getVal('da_cloud')],
+        ['Data Team Size', getVal('da_team_size')],
+        ['Technical Skills', getVal('da_skills')],
+        ['Dedicated Pipeline Ops', getVal('da_dedicated')],
+        ['External Data Vendors', getVal('da_vendors')],
+        ['Governance Maturity', getVal('da_governance')],
+        ['Data Compliance', getVal('da_compliance')],
+        ['Data Challenges', getVal('da_pain')],
+        ['Analytics Use Cases', getVal('da_use_cases')],
+        ['Transformation Initiatives', getVal('da_transformation')],
+        ['Success Metrics / KPIs', getVal('da_kpis')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('16 — Data & Analytics', rows), '16 Data Analytics');
+    }
+
+    // ── S17: Additional Notes ──
+    if (isSectionNA('sec17')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('17 — Additional Notes'), '17 Notes');
+    } else {
+      const rows = [
+        ['Known Issues / Pain Points', getVal('notes_pain')],
+        ['Upcoming Projects / Changes', getVal('notes_projects')],
+        ['Regulatory / Industry Requirements', getVal('notes_reqs')],
+        ['Anything Else', getVal('notes_other')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('17 — Additional Notes', rows), '17 Notes');
+    }
+
+    /* ── Write and download ──────────────────────────────────── */
+    const filename = `Versetal_Onboarding_${company.replace(/[^a-z0-9]/gi, '_')}.xlsx`;
+    XLSX.writeFile(wb, filename);
+    showToast('Excel file downloaded!');
+
+  } catch (e) {
+    console.error('Excel export error:', e);
+    if (!combinedMode) showToast('Excel error: ' + (e.message || e));
+    else throw e; // re-throw so generateReports can catch it
+  } finally {
+    if (!combinedMode && btn) {
+      btn.disabled = false;
+      btnText.textContent = 'Generate PDF & Excel';
+      spinner.classList.remove('active');
+    }
+  }
+}
 
 // Measure actual scrollbar width and expose as CSS var so actions bar lines up
 (function() {
