@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JARVIS — Project Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#F4F6F9;color:#1A2535;padding:20px}
+h1{font-size:16px;font-weight:700;color:#0A2543;border-bottom:3px solid #5BBF46;padding-bottom:8px;margin-bottom:20px}
+.section{margin-bottom:20px;background:#fff;border-radius:10px;border:0.5px solid rgba(10,37,67,0.12);overflow:hidden;box-shadow:0 1px 4px rgba(10,37,67,0.06)}
+.section-title{font-size:11px;font-weight:600;color:#fff;background:#0A2543;padding:8px 14px;letter-spacing:0.06em;text-transform:uppercase}
+.item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;border-bottom:0.5px solid rgba(10,37,67,0.08);font-size:13px}
+.item:last-child{border-bottom:none}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.bug{background:#FCEBEB;color:#791F1F}
+.feature{background:#E6F1FB;color:#0C447C}
+.migration{background:#EEEDFE;color:#3C3489}
+.done{background:#EAF3DE;color:#27500A}
+.new{background:#FAEEDA;color:#633806}
+.security{background:#F3E8FF;color:#5B21B6}
+.kb{background:#E0F2FE;color:#075985}
+.iam{background:#FEF3C7;color:#92400E}
+.item-text{flex:1;line-height:1.5}
+.item-note{font-size:11px;color:#666;margin-top:3px}
+</style>
+</head>
+<body>
+<h1>VERSETAL — J.A.R.V.I.S. &nbsp;&nbsp;Project Tracker &nbsp;<span style="font-weight:400;color:#666;font-size:12px">Updated March 24, 2026</span></h1>
+
+<div class="section">
+  <div class="section-title">✅ Recently completed</div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">AI suggest button working<div class="item-note">Confirmed — actionable next step suggestions on ticket detail</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Incremental sync loop bug fixed<div class="item-note">100 page safety limit — sync completes cleanly in 1-2 pages</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Export AI analysis to PDF<div class="item-note">Browser print with clean CSS — hides UI chrome, darkens text, preserves brand colors</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard auto-refresh every 5 minutes</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Last Activity column on ticket list</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Timeframe selector on Tickets page<div class="item-note">7 days / 30 days / 3 months / 6 months / 12 months / All time with live count</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Notes always force-refresh on ticket open</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Anthropic rate limit handling<div class="item-note">Chunk size 200, 3s delay between chunks, auto-retry on 429</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Full Versetal brand theme + J.A.R.V.I.S. branding<div class="item-note">Navy sidebar, green accents, metric cards, Arial font throughout</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Historical sync cron fixed — runs as root at 1:05am</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">nginx proxy timeouts increased to 300s</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Priority and status labels fixed — using picklists DB</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Filter by resource, client, status, priority on Tickets tab</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Clickable ticket numbers linking to Autotask</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">QBR focus mode + queue/client filter on AI Analysis</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Architecture documentation v1.0 created</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">HTTPS with self-signed cert + mixed content fixed</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🐛 Bugs remaining</div>
+  <div class="item"><span class="badge bug">Bug</span><div class="item-text">Historical sync still incomplete<div class="item-note">Cron at 1:05am — check morning: tail -30 ~/historical-sync.log. Gap 2019-2024 still filling in.</div></div></div>
+  <div class="item"><span class="badge bug">Bug</span><div class="item-text">Issue type / sub-issue type blank on older tickets<div class="item-note">Resolves as historical sync completes</div></div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🚀 Features remaining</div>
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">AI Triage review step before ticket submission<div class="item-note">Review panel with editable fields — customer/contact, resource, queue, status, priority — before creating ticket</div></div></div>
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Include/exclude closed tickets toggle on AI Analysis</div></div>
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Reassign ticket from detail view<div class="item-note">Change queue and resource without going to Autotask</div></div></div>
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Contract name on ticket detail<div class="item-note">contractID in raw JSON — needs contracts table + sync</div></div></div>
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Sync ticket time entries<div class="item-note">Hours logged per ticket — billing and utilization analysis</div></div></div>
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Code annotation — JSDoc comments on all functions</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🔐 New — Security Dashboard</div>
+  <div class="item"><span class="badge security">Security</span><div class="item-text">SentinelOne integration<div class="item-note">Threat data, incident counts, agent status, detection trends per client</div></div></div>
+  <div class="item"><span class="badge security">Security</span><div class="item-text">Rapid7 integration<div class="item-note">Vulnerability data, InsightIDR incidents, risk scores per client</div></div></div>
+  <div class="item"><span class="badge security">Security</span><div class="item-text">Security dashboard page<div class="item-note">Unified posture — active threats, vulnerability counts, incident trends, per-client health scores</div></div></div>
+  <div class="item"><span class="badge security">Security</span><div class="item-text">Security AI analysis focus mode<div class="item-note">Claude analyzes combined ticket + SentinelOne + Rapid7 data</div></div></div>
+  <div class="item"><span class="badge security">Security</span><div class="item-text">Security alerts linked on ticket detail</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🆕 New — Assets & Inventory</div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Import Autotask Configuration Items (CIs)<div class="item-note">Sync servers, workstations, network devices per client</div></div></div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Link tickets to assets via configurationItemID</div></div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Inventory management system per client<div class="item-note">Hardware, software licenses, warranties — manual + Autotask CIs</div></div></div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Asset → ticket history</div></div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Warranty expiry alerts on dashboard</div></div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Inventory context in AI analysis</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🆕 New — Employee Access & IAM</div>
+  <div class="item"><span class="badge iam">IAM</span><div class="item-text">Active employee directory with access tracking</div></div>
+  <div class="item"><span class="badge iam">IAM</span><div class="item-text">Onboarding workflow<div class="item-note">Equipment requests, account provisioning, access grants with approvals</div></div></div>
+  <div class="item"><span class="badge iam">IAM</span><div class="item-text">Offboarding workflow<div class="item-note">Account disabling, equipment recovery, access revocation</div></div></div>
+  <div class="item"><span class="badge iam">IAM</span><div class="item-text">Access request and approval workflows</div></div>
+  <div class="item"><span class="badge iam">IAM</span><div class="item-text">Device assignment tracking per user — ties into inventory</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">📚 New — Knowledge Base & Documentation</div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">Per-client environment documentation<div class="item-note">Network diagrams, server lists, escalation contacts, known issues — searchable and linked to client records</div></div></div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">Internal SOPs by department<div class="item-note">NOC, SOC, Help Desk, Infrastructure — version controlled with timestamps and author tracking</div></div></div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">Engineer help articles<div class="item-note">Runbooks, how-to guides — searchable by keyword, tag, and category</div></div></div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">KB articles linked to tickets<div class="item-note">Suggest relevant articles on ticket detail based on issue type</div></div></div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">AI-assisted article creation<div class="item-note">Claude drafts KB articles from ticket history — e.g. generate a runbook from recurring incidents</div></div></div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">Rich text editor<div class="item-note">WYSIWYG with code blocks, tables, images, and file attachments</div></div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">⚡ React Migration Prep</div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Set up Git repo on the server</div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Freeze HTML file as v1.0</div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Scaffold React + Vite frontend<div class="item-note">Same Express server, new /src folder</div></div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Components: Dashboard, TicketList, TicketDetail, Analysis, Triage, Security, Inventory, IAM, KB, Settings</div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Global state management — Zustand or Context</div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Mobile responsive mode<div class="item-note">Collapsible sidebar, touch-friendly ticket list, swipe gestures, mobile-optimized views</div></div></div>
+</div>
+
+</body>
+</html>

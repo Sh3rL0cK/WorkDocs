@@ -1,0 +1,350 @@
+DisplayName,SamAccountName,UserPrincipalName,Country_Friendly,Country_Code,Country_Number,employeeType,Department,Title,Enabled
+,krbtgt,,,,,ServiceAccount,,,False
+,Guest,,,,,ServiceAccount,,,False
+,Versadmin,Versadmin@versetalinfo.com,,,,Admin,,,True
+Administrator,Administrator,Administrator@versetalinfo.com,,,,Admin,,,True
+Chris Sorel,CSorel,CSorel@versetalinfo.com,United States,US,US,Permanent,Infrastructure & Cloud Ops,Sr. Systems/Cloud Engineer,True
+Darren Murphy,DMurphy,DMurphy@versetalinfo.com,,,,Permanent,Field Services,IT Consultant,True
+Sandeep Singh,ssingh,SSingh@versetalinfo.com,,,,Permanent,,,False
+Jupinder Bedi,JBedi,JBedi@versetalinfo.com,,,,Permanent,,,False
+Abhinav Chauhan,Achauhan,Achauhan@versetalinfo.com,India,IN,IN,Permanent,DBEngineering,Senior Solutions Architect,True
+Michael Belmarsh,MBelmarsh,mbelmarsh@versetalinfo.com,,,,Permanent,,CEO,True
+Versetal Azure,VAzure,VAzure@versetalinfo.com,,,,ServiceAccount,,,True
+Narayan Seshaddri,nseshaddri,nseshaddri@versetalinfo.com,,,,Contractor,,AX D365 Consultant,True
+Ashfaq Siddiq,asiddiq,asiddiq@versetalinfo.com,,,,Contractor,,Dynamics AX Support,False
+Thangavelan Anbalagan,tanabalagan,tanbalagan@versetalinfo.com,,,,Contractor,,AX Developer,True
+Akashprabhu Sathish Kumar,akumar1,akumar1@versetalinfo.com,,,,Contractor,,AX Developer,True
+Aswath Mohanam,amohanam,amohanam@versetalinfo.com,,,,Contractor,,D365 Consultant,False
+Arunraj Rajappan,arajappan,arajappan@versetalinfo.com,,,,Contractor,,Dynamics AX Support,True
+Srinivas Ravipaty,SRavipaty,sravipaty@versetalinfo.com,,,,,,,False
+Srinivas Gondi,SGondi,Sgondi@versetalinfo.com,,,,,,,False
+Snyder Group,SGroup,snydergroup@versetalinfo.com,,,,,,,False
+Perminder Singh,PSingh,psingh@versetalinfo.com,,,,,,,False
+Michael Downing,MDowning,mdowning@versetalinfo.com,,,,,,,False
+John Booth,JBooth,jbooth@versetalinfo.com,,,,,,,False
+Clint Logan,CLogan,clogan@versetalinfo.com,,,,,,,False
+Admin,Admin,Admin@versetalinfo.com,,,,Admin,,,True
+PWA Admin,padmin,pwa_admin@versetalinfo.com,,,,Admin,,,True
+Helpdesk,Helpdesk,Helpdesk@versetalinfo.com,,,,ServiceAccount,,,True
+Emergency Mailbox,EMailbox,emergency@versetalinfo.com,,,,ServiceAccount,,,True
+Support,Support,support@versetalinfo.com,,,,ServiceAccount,,,True
+Critical,Critical,Critical@versetalinfo.com,,,,ServiceAccount,,,True
+Arunkumar Palanisamy,apalanisamy,apalanisamy@versetalinfo.com,,,,Contractor,,Developer,False
+Dillibabu Balakrishnan,DBalakrishnan,dbalakrishnan@versetalinfo.com,,,,Contractor,,,True
+Hugo Lopez,hlopez,hlopez@versetalinfo.com,United States,US,US,Permanent,DBEngineering,Lead Database Engineer,True
+Naveen Polu,npolu,npolu@versetalinfo.com,,,,Permanent,,,False
+Priyanka Sharma,psharma,psharma@versetalinfo.com,,,,Permanent,,,False
+Chris Nichol,cnichol,cnichol@versetalinfo.com,,,,Contractor,,Sales,False
+Rajesh Vardhan,Rvardhan,rvardhan@versetalinfo.com,,,,Contractor,,Sharepoint,True
+Rajbabu Narasimhalu,RNarasimhalu,RNarasimhalu@versetalinfo.com,,,,Contractor,,,True
+Senthil Kumar,SKumar,SKumar@versetalinfo.com,,,,Contractor,,AX Developer,True
+Jay Janardhan,jjanardhan,jjanardhan@versetalinfo.com,,,,,,,False
+Vedika Thapar Gaur,Vgaur,Vgaur@versetalinfo.com,Canada,CA,CA,Permanent,PMO,PM/SDM,True
+Nichol Manfredi,nmanfredi,nmanfredi@versetalinfo.com,,,,,,,False
+Dawn Foley,Dfoley,Dfoley@versetalinfo.com,,,,,,Administrative Assistant,False
+Raymond Taylor,rtaylor,rtaylor@versetalinfo.com,,,,Contractor,,,True
+Rohini Krishna,rkrshna,rkrshna@versetalinfo.com,,,,Contractor,,,True
+Scott Shippee,SShippee,SShippee@versetalinfo.com,,,,Contractor,,Infor Syteline,False
+Manivelan Ramamoorthy,MRamamoorthy,MRamamoorthy@versetalinfo.com,,,,Contractor,,AX Developer,True
+Sonu Singh,sosingh,sosingh@versetalinfo.com,,,,Permanent,,,False
+Sahil Sehgal,ssehgal,ssehgal@versetalinfo.com,India,IN,IN,Permanent,Automation,Principal Consultant - DevOps,False
+Pradip Kumar,Pkumar,Pkumar@versetalinfo.com,,,,Permanent,,DevOps/ Middleware,False
+Vamsi Vommi,vvommi,vvommi@versetalinfo.com,India,IN,IN,,Middleware,DevOps/ Middleware,False
+Teja Venkata,tvenkata,tvenkata@versetalinfo.com,,,,Contractor,,Sharepoint Developer,True
+Harshita Bansal,HBansal,HBansal@versetalinfo.com,,,,Permanent,,Associate Consultant- Technical Support,False
+Atyab Siddiqui,asiddiqui,asiddiqui@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Team Lead - Technical Support,True
+Security Alerts,securityalerts,securityalerts@versetalinfo.com,,,,ServiceAccount,,,True
+Alerts,Alerts,Alerts@versetalinfo.com,,,,ServiceAccount,,,True
+Mohd Tauseef,mtauseef,mtauseef@versetalinfo.com,India,IN,IN,Permanent,Middleware,Sr. Consultant- DevOps,False
+Trisha Roy,troy,troy@versetalinfo.com,,,,Permanent,,SOC Analyst I,False
+Aaron Dean,adean,adean@versetalinfo.com,,,,Permanent,,Data Scientist,False
+No Reply,no-reply,no-reply@versetalinfo.com,,,,ServiceAccount,,,True
+Birru Chennaiah,bchennaiah,bchennaiah@versetalinfo.com,,,,Permanent,,,False
+Chiranjeev Mahato,cmahato,cmahato@versetalinfo.com,India,IN,IN,Permanent,SOC,SOC - Cyber Security Analyst,False
+Naveen Kumar,NKumar,NKumar@versetalinfo.com,,,,Permanent,,,False
+Prudviraj Boddula,pboddula,pboddula@versetalinfo.com,,,,Permanent,,Principal Consultant ? DevOps,False
+Sandipta Dutta Gupta,sgupta,sgupta@versetalinfo.com,India,IN,IN,Permanent,Database Team,Manager - Database Services,True
+RajaRajeswari Selvaraj,RSelvaraj,RSelvaraj@versetalinfo.com,,,,Contractor,,AX Developer,True
+Mohita Maheshwari,mmaheshwari,mmaheshwari@versetalinfo.com,India,IN,IN,Permanent,Database Team,Principal Consultant - Oracle Database Administrator,True
+Syed Masoom Raza,sraza,sraza@versetalinfo.com,India,IN,IN,Permanent,Database Team,Associate Consultant - Oracle Database Administration,True
+Saurabh Jain,sjain,sjain@versetalinfo.com,India,IN,IN,Permanent,Database Services,Associate Consultant - SQL Database Administration,False
+Muhilarasan Kumarasuriyan,MKumarasuriyan,MKumarasuriyan@versetalinfo.com,,,,Contractor,,AX Developer,True
+Sara West,swest,swest@versetalinfo.com,,,,Contractor,,,False
+Taylor Walsh,twalsh,twalsh@versetalinfo.com,,,,,,,False
+Bill Thode,bthode,bthode@versetalinfo.com,,,,,,,False
+D365 Test,d365test,d365test@versetalinfo.com,,,,ServiceAccount,,,False
+Vishvangi Sardana,VSardana,VSardana@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Manager - Helpdesk & Technical Support,True
+Maryann Carlson,mcarlson,mcarlson@versetalinfo.com,,,,Permanent,Finance,CFO,True
+Mayank Kumar,mkumar,mkumar@versetalinfo.com,,,,Permanent,,IAM Administrator,False
+Julian Lumpkin,jlumpkin,jlumpkin@versetalinfo.com,,,,Contractor,,,False
+Cliff Jackson,cjackson,cjackson@versetalinfo.com,,,,Contractor,,,False
+Karthiyapper Ulaganathan,kulaganathan,kulaganathan@versetalinfo.com,,,,Contractor,,Power BI  Contractor,False
+Hemal Kapadia,hkapadia,hkapadia@versetalinfo.com,,,,Permanent,,DBA Contractor,False
+Spotlight Service Account,spotlsvc,spotlsvc@versetalinfo.com,,,,ServiceAccount,,,True
+Bhagwat Singh,bsingh,bsingh@versetalinfo.com,India,IN,IN,,Automation,Principal Consultant - Cloud,True
+Aravind Mathialagan,AMathialagan,amathialagan@versetalinfo.com,,,,Contractor,,AX Analyst,True
+Shanthi Magesh,smagesh,smagesh@versetalinfo.com,,,,Contractor,,AX Functional - Finance,True
+Shilpi Bhatnagar,sbhatnagar,sbhatnagar@versetalinfo.com,India,IN,IN,Permanent,Application Services,Team Leader - Salesforce Administration,True
+Sunidhi Chauhan,schauhan,schauhan@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,False
+Vers Confrence,versconf,versconf@versetalinfo.com,,,,ServiceAccount,,,True
+Kamal Kakkar,KKakkar,KKakkar@versetalinfo.com,India,IN,IN,Permanent,Infrastructure & Cloud Ops,Manager - Linux & DevOps,True
+Jackson Byam,jbyam,jbyam@versetalinfo.com,,,,,,consultant,False
+Vaishali Lambat,vlambat,vlambat@versetalinfo.com,India,IN,IN,Permanent,Application Services,Senior Consultant-Salesforce,False
+Vamshikrishna Inumula,vinumula,vinumula@versetalinfo.com,India,IN,IN,Permanent,Application Services,Senior Consultant-Salesforce Administrator,False
+Kathy Burger,KBurger,kburger@versetalinfo.com,,,,Permanent,,Sr. Director Client Services and PMO,False
+Rubina Rujay Bardeskar,rbardeskar,rbardeskar@versetalinfo.com,India,IN,IN,Permanent,Salesforce Admin Team,Principal Consultant - Salesforce Administrator,True
+Kirti Gudwani,KGudwani,KGudwani@versetalinfo.com,,,,Contractor,,,True
+Wilfred Devasagayam,WDevasagayam,WDevasagayam@versetalinfo.com,India,IN,IN,Contractor,Database Services,Client Service Director - Global Application,False
+Ismail,ismail,ismail@versetalinfo.com,,,,Permanent,,,False
+Udai Varshney,uvarshney,uvarshney@versetalinfo.com,India,IN,IN,,,,False
+Pardeep Singh,psingh1,psingh1@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Consultant - Technical Support,True
+Mohd Yaseen Alibaig,Malibaig,Malibaig@versetalinfo.com,India,IN,IN,Permanent,Database Services,Principal Consultant - SQL Database Administration,True
+Siddhant Rajput,Srajput,Srajput@versetalinfo.com,,,,Permanent,,,True
+Patrick Rakers,prakers,prakers@versetalinfo.com,,,,,PMO,Project Manager,True
+Manish Kumar Sinha,msinha,msinha@versetalinfo.com,India,IN,IN,Permanent,Database Services,Senior Principal Consultant - Oracle Database Administrator,False
+Umesha B P,umeshap,umeshap@versetalinfo.com,India,IN,IN,Permanent,Application Services,Principal Consultant-Salesforce Administration,False
+Sam McDonald,smcdonald,smcdonald@versetalinfo.com,,,,Permanent,Sales and Marketing,Sales Executive,False
+Jason Manfredi,jmanfredi,jmanfredi@versetalinfo.com,,,,Contractor,Sales and Marketing,Sales Executive,True
+Akshay Naidu,anaidu,anaidu@versetalinfo.com,India,IN,IN,Permanent,Application Services,Senior Consultant-Salesforce Administration,False
+Neha Gandhi,NGandhi,NGandhi@versetalinfo.com,India,IN,IN,Permanent,Database Team,Consultant - Oracle Database Administrator,True
+Parminder Singh,psingh2,psingh2@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,True
+Greg Hoole,ghoole,ghoole@versetalinfo.com,,,,Contractor,DBEngineering,Magento Developer,True
+Abhinav Gaur,agaur,agaur@versetalinfo.com,India,IN,IN,Permanent,Database Team,Consultant - Oracle Apps Database Administrator,True
+Abdul Nasir,NasirA,ANasir@versetalinfo.com,India,IN,IN,Permanent,Database Team,Consultant - Oracle Database Administrator,True
+Jeremy Hudgin,JHudgin,JHudgin@versetalinfo.com,,,,Permanent,,SOC Director,False
+Dan Marschall,DMarschall,DMarschall@versetalinfo.com,United States,US,US,Permanent,IT Management,Director of Information Technology Operations,True
+David Coker,dcoker,dcoker@versetalinfo.com,,,,,,Consultant,True
+Bhanu Pratap,bpratap,bpratap@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,True
+,MSOL_d30c38d52c4b,,,,,ServiceAccount,,,False
+Pranith Bethi,pbethi,pbethi@versetalinfo.com,,,,Contractor,,Dynamics 365 CRM,True
+Sangamesh Koti,skoti,skoti@versetalinfo.com,,,,Permanent,DBEngineering,Consultant - Infor Syteline Developer,True
+Rahul Chauhan,rchauhan,rchauhan@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Senior Consultant - Technical Support,True
+Mayank Badola,mbadola,mbadola@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,False
+Ankit Kumar Gupta,agupta,agupta@versetalinfo.com,,,,Contractor,,Contractor,False
+Naini Ghai,nghai,nghai@versetalinfo.com,,,,Contractor,,Contractor,True
+Kishore Kottapalli,kkottapalli,kkottapalli@versetalinfo.com,United States,US,US,Permanent,DBEngineering,Director of Database Platforms,True
+Molly Armitage,marmitage,marmitage@versetalinfo.com,,,,Permanent,Finance,Sr Accountant,True
+Prabhat Kumar,pkumar1,pkumar1@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,True
+Parth Bhatt,pbhatt,pbhatt@versetalinfo.com,India,IN,IN,Permanent,Infrastructure & Cloud Ops,Senior Consultant - Cloud and Infrastructure,False
+Kishore Kumar,kkumar,kkumar@versetalinfo.com,,,,Contractor,,AX D365 Consultant,False
+Paul Lagana,Paul.Lagana,Paul.Lagana@versetalinfo.com,,,,,,AD\O365 Migration Expert,True
+Syed Mohammed Shahid,sshahid,sshahid@versetalinfo.com,India,IN,IN,,Database Team,Senior Consultant - Oracle Database Administrator,True
+P Pochi Reddy,PoReddy,Poreddy@versetalinfo.com,,,,,,,False
+Pratima Singh,Prsingh,Prsingh@versetalinfo.com,,,,,,Principal Consultant - Oracle DBA,False
+Venkatareddy Arava,varava,varava@versetalinfo.com,,,,,,,False
+Anjani Sinha,Asinha,Asinha@versetalinfo.com,,,,,,Database consultant,False
+Kartheek Kaliki,KKaliki,KKaliki@versetalinfo.com,India,IN,IN,,Dedicated Team,Senior Consultant - Cloud,True
+Areeb Imran,aimran,aimran@versetalinfo.com,,,,,,SOC Analyst 1,False
+Hayden Boal,hboal,hboal@versetalinfo.com,United States,US,US,,SOC,Security Analyst (PT),True
+John Blay,jblay,jblay@versetalinfo.com,,,,,,,False
+Austin Ruhlin,aruhlin,aruhlin@versetalinfo.com,United States,US,US,,SOC,Security Team Lead,True
+Rudy Robles-Moreno,rrobles,rrobles@versetalinfo.com,,,,,,SOC Analyst,False
+Michael Gates,mgates,mgates@versetalinfo.com,,,,,SOC,Lead Security Engineer,True
+Ulpa Makwana,umakwana,umakwana@versetalinfo.com,India,IN,IN,,SOC,SOC - Cyber Security Analyst,False
+Imaya Segara Guru Sekar,Isekar,Isekar@versetalinfo.com,India,IN,IN,,ETL Services,Senior Principal Consultant-Data Engineering,False
+Rohit Yadav,Ryadav,Ryadav@versetalinfo.com,India,IN,IN,,Database Services,Senior Principal Consultant - Oracle Database Administrator,True
+Suresh Bommineni,bsuresh,bsuresh@versetalinfo.com,India,IN,IN,,Cyber Security,SOC - Cyber Security Engineer,False
+Rajakumar Avalur,ravalur,ravalur@versetalinfo.com,India,IN,IN,,Client Services,Service Delivery Manager (SDM),False
+Manvendra Manohar Bikram,mbikram,mbikram@versetalinfo.com,India,IN,IN,,Database Team,Senior Principal Consultant - Oracle Database Administration,True
+SOC,soc,soc@versetalinfo.com,,,,,,,True
+M D Jeelan Bangadavale,MdjBangadavale,MdjBangadavale@versetalinfo.com,India,IN,IN,,Database Team,Principal Consultant - SQL Database Administrator,True
+Sreehari Dasari,sdasari,sdasari@versetalinfo.com,India,IN,IN,,Database Team,Principal Consultant - SQL Database Administration,True
+Umesh Gupta,ugupta,ugupta@versetalinfo.com,,,,,,,False
+Gudimalla Shailesh,Gshailesh,Gshailesh@versetalinfo.com,India,IN,IN,,Database Services,Senior Principal Consultant - Oracle Applications DBA,False
+Abhinav Admin,chauhan1517ra,chauhan1517ra@versetalinfo.com,,,,Admin,,,True
+Chris Admin,sorel7612sc,sorel7612sc@versetalinfo.com,,,,Admin,,,True
+Darren Admin,murphy10648d,murphy10648d@versetalinfo.com,,,,Admin,,,False
+Parth Admin,bhatt9822wp,bhatt9822wp@versetalinfo.com,,,,Admin,,,False
+James Alvord,JAlvord,JAlvord@versetalinfo.com,,,,,Sales and Marketing,Director of Consulting,True
+Yash Sawlani,ysawlani,ysawlani@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,False
+Matthew Hernandez,mhernandez,mhernandez@versetalinfo.com,,,,,SOC,Security Analyst (PT),True
+Mangilipellii Saritha,msaritha,msaritha@versetalinfo.com,,,,,,Principal Consultant - IAM Administration,False
+Santosh Kumar Fabyani,SKFabyani,SKFabyani@versetalinfo.com,India,IN,IN,,Automation,Senior Principal Consultant-Automation Engineer,False
+Vinay Milind Godankar,vgodankar,vgodankar@versetalinfo.com,India,IN,IN,,Client Services,Service Delivery Manager,False
+Vedika Admin,gaur3276tv,gaur3276tv@versetalinfo.com,,,,Admin,,,True
+Naresh Somara,nsomara,nsomara@versetalinfo.com,United States,US,US,Permanent,Infrastructure & Cloud Ops,Senior Cloud & Automation Engineer - Cloud and Infrastructure,False
+Dariel Alejos,dalejos,dalejos@versetalinfo.com,United States,US,US,,SOC,Jr. Security Engineer,True
+Naresh Admin,somara5212sn,somara5212sn@versetalinfo.com,,,,Admin,,,False
+Santosh Rao,Srao,Srao@versetalinfo.com,,,,,,,True
+maryanncarlson@versetalcloud.com,maryanncarlson,maryanncarlson@versetalcloud.com,,,,,,,True
+mollyarmitage@versetalcloud.com,mollyarmitage,mollyarmitage@versetalcloud.com,,,,,,,True
+Praveen Kumari Narwal,pkumari,pkumari@versetalinfo.com,,,,,,"Director, HR & Business Administration",False
+michaelbelmarsh@versetalcloud.com,michaelbelmarsh,michaelbelmarsh@versetalcloud.com,,,,,,,True
+Sahil Suri,SSuri,SSuri@versetalinfo.com,India,IN,IN,Permanent,Infrastructure & Cloud Ops,Senior Linux Administrator,False
+Neetu Lohia,NLohia,NLohia@versetalinfo.com,India,IN,IN,,HR,Senior Associate Consultant - HR Operations and Talent Acquisiti,True
+atl_printer,atl_printer,atl_printer@versetalinfo.com,,,,,,,False
+Sheetal Raina,sraina,sraina@versetalinfo.com,India,IN,IN,Permanent,HR,Lead Recruiter,False
+Neha Tyagi,netyagi,netyagi@versetalinfo.com,India,IN,IN,,HR,Assistant Manager - Human Resources and Talent Acquisition,False
+Nicole Quigley,nquigley,nquigley@versetalinfo.com,,,,,Sales,Content Marketing Lead,False
+Himanshu Kapoor,hkapoor,hkapoor@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,False
+Gregory Burrill,gburrill,gburrill@versetalinfo.com,,,,,,Sales Account Executive,False
+Arslan Ansari,AAnsari,AAnsari@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,False
+Abhilash Jachak,AJachak,AJachak@versetalinfo.com,India,IN,IN,,Application Services,Associate Consultant - Salesforce Administrator,False
+Anima Goswami,agoswami,agoswami@versetalinfo.com,India,IN,IN,,HR,Senior Consultant -  Talent Acquisition,False
+Roystine Machado,RMachado,RMachado@versetalinfo.com,India,IN,IN,,Automation,Senior Consultant - DevOps,False
+Mansoor Ali,MAli,MAli@versetalinfo.com,India,IN,IN,,Database Services,Consultant - Oracle Apps Database Administrator,False
+Satya Kishore Seelam,SSeelam,SSeelam@versetalinfo.com,,,,,,,False
+Manoj Kumar,manoj.kumar,manoj.kumar@versetalinfo.com,,,,Contractor,Infrastructure & Cloud Ops,Consultant - Windows and VMware,False
+Anish Sarikonda,anish.sarikonda,anish.sarikonda@versetalinfo.com,India,IN,IN,,Automation,Senior Consultant - DevOps,False
+Mohammed Manauver Alam,Mohammed.Alam,Mohammed.Alam@versetalinfo.com,India,IN,IN,,Database Services,Consultant - Oracle Database Administrator,False
+Dileep Reddy,dileep.reddy,dileep.reddy@versetalinfo.com,India,IN,IN,,Database Services,Consultant - Oracle Database Administrator,False
+,MSOL_4e7b72f8e7eb,,,,,ServiceAccount,,,True
+Saikat Sarkar,Saikat.Sarkar,Saikat.Sarkar@versetalinfo.com,,,,,,,False
+Souvik Chakraborty,Souvik.Chakraborty,Souvik.Chakraborty@versetalinfo.com,India,IN,IN,Permanent,Cyber Security,SOC - Associate Consultant,False
+Tamanna Khatter,Tamanna.khatter,Tamanna.khatter@versetalinfo.com,,,,,,,False
+Vaibhav Bhardwaj,Vaibhav.Bhardwaj,Vaibhav.Bhardwaj@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,True
+Imtiyaz Alam,Imtiyaz.Alam,Imtiyaz.Alam@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,True
+Sanskriti Ahlawat,Sanskriti.ahlawat,Sanskriti.ahlawat@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,True
+Himanshu Singh,himanshu.singh,himanshu.singh@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,False
+Vishal Singh Mehra,vishal.mehra,vishal.mehra@versetalinfo.com,,,,,,,False
+Aarti Kumari,Aarti.kumari,Aarti.kumari@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,True
+Sachin Kumar,Sachin.kumar,Sachin.kumar@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,True
+Shafquat Parvez,shafquat.parvez,shafquat.parvez@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,False
+Manoj Admin,kumar2892m,kumar2892m@versetalinfo.com,,,,Admin,,,False
+Sai Krishna Reddy,Sai.Krishna,Sai.Krishna@versetalinfo.com,,,,,,,False
+Varshant Verma,Varshant.Verma,Varshant.Verma@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,True
+Monalisa Mishra,Monalisa.Mishra,Monalisa.Mishra@versetalinfo.com,,,,,,,False
+Vaibhav Singh,vaibhav.singh,vaibhav.singh@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,False
+Sunny Ojha,sunny.ojha,sunny.ojha@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,True
+Allwin Alexander Kadaliparambil,Allwin.Kadaliparambi,Allwin.Kadaliparambil@versetalinfo.com,India,IN,IN,,Database Services,Consultant - Oracle Database Administrator,False
+John Wirtz,jwirtz,jwirtz@versetalinfo.com,,,,,,,False
+Kannan Pandian,Kannan.Pandian,Kannan.Pandian@versetalinfo.com,,,,Contractor,,,False
+Ramya Swaminathan,ramya.swaminathan,ramya.swaminathan@versetalinfo.com,,,,,,,False
+Priti Bhagwat Yenge,priti.yenge,priti.yenge@versetalinfo.com,India,IN,IN,,Infrastructure & Cloud Ops,Associate Consultant - AWS,True
+Ambuj Saxena,Ambuj.Saxena,Ambuj.Saxena@versetalinfo.com,India,IN,IN,,SOC,SOC - Cyber Security Analyst,False
+Om Gupta,om.gupta,om.gupta@versetalinfo.com,India,IN,IN,Permanent,Infrastructure & Cloud Ops,Linux Administrator,True
+Khurram Jamal,Khurram.Jamal,Khurram.Jamal@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Customer Support,True
+Kuna Nagamani,Kuna.Nagamani,Kuna.Nagamani@versetalinfo.com,India,IN,IN,,SOC,SOC - Cyber Security Analyst,False
+Urvashi Sharma,urvashi.sharma,urvashi.sharma@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Customer Support,True
+Angel Masih,angel.masih,angel.masih@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant Quality Analysis ? Customer Support,True
+Murat Atif Sayar,MuratAtif.Sayar,MuratAtif.Sayar@versetalinfo.com,,,,Permanent,,,False
+Avneet kaur,avneet.kaur,avneet.kaur@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Customer Support,True
+Bajeevali Mulla,Bajeevali.Mulla,Bajeevali.Mulla@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Consultant - Power BI Administrator,True
+Javed Bagalkot,Javed.Bagalkot,Javed.Bagalkot@versetalinfo.com,India,IN,IN,Permanent,Infrastructure & Cloud Ops,Senior Network Engineer,True
+Brahma Reddy,brahma.reddy,brahma.reddy@versetalinfo.com,India,IN,IN,,Infrastructure & Cloud Ops,IAM Specialist,False
+Ayushi Mishra,ayushi.mishra,ayushi.mishra@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Customer Support,True
+Garima Singh,Garima.Singh,Garima.Singh@versetalinfo.com,,,,,,,False
+A Rajasimha Reddy,ARajasimha.Reddy,ARajasimha.Reddy@versetalinfo.com,,,,,,,False
+Christopher Dunphy,christopher.dunphy,christopher.dunphy@versetalinfo.com,,,,,Sales and Marketing,Sales Support Contractor,True
+Tehreen Khan,tehreen.khan,tehreen.khan@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Consultant,False
+Devon Thomas,Devon.Thomas,Devon.Thomas@versetalinfo.com,United States,US,US,Permanent,Infrastructure & Cloud Ops,System Engineer I,True
+Connor Sheehan,Connor.Sheehan,Connor.Sheehan@versetalinfo.com,,,,,Field Services,Field Service Team Lead,True
+Parveen Kumar,Parveen.Kumar,Parveen.Kumar@versetalinfo.com,India,IN,IN,,Application Services,Consultant - Salesforce Developer,False
+Reena Arora,Reena.Arora,Reena.Arora@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Customer Support,True
+Ankit Yadav,ankit.yadav,ankit.yadav@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,False
+Rapid 7 Service,svc_rapid7,svc_rapid7@versetalinfo.com,,,,ServiceAccount,,,True
+Challa Meghana,challa.meghana,challa.meghana@versetalinfo.com,India,IN,IN,,Infrastructure & Cloud Ops,Principal Consultant - Cloud,True
+Aman Kumar Gupta,amankumar.gupta,amankumar.gupta@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Technical Support,False
+Santanu Mitra,santanu.mitra,santanu.mitra@versetalinfo.com,India,IN,IN,Permanent,Management,Head of India Operations,False
+Justin Butler,justin.butler,justin.butler@versetalinfo.com,,,,,SOC,Security Analyst L2,True
+Kathy Ericsson,kathy.ericsson,kathy.ericsson@versetalinfo.com,,,,,PMO,Senior Project Manager,True
+Javed Admin,bagalkot3912ja,bagalkot3912ja@versetalinfo.com,,,,Admin,,,True
+Sajan Raparthi,sajan.raparthi,sajan.raparthi@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Consultant - Power BI Administrator,False
+Mohit Rajkumar Gurbaxani,mohit.gurbaxani,mohit.gurbaxani@versetalinfo.com,India,IN,IN,,Application Services,Consultant-Salesforce Developer,False
+Penchal Reddy,penchal.reddy,penchal.reddy@versetalinfo.com,India,IN,IN,,Automation,,False
+Muktipudi Kumar,muktipudi.kumar,muktipudi.kumar@versetalinfo.com,India,IN,IN,,Application Services,Consultant - Salesforce Developer,False
+Sandiri Sai Kiran,sandiri.kiran,sandiri.kiran@versetalinfo.com,India,IN,IN,,Application Services,Associate Consultant - Salesforce Developer,False
+Priyanka Gupta,priyanka.gupta,priyanka.gupta@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant - Customer Support,False
+Thangaraj Aran,thangaraj.aran,thangaraj.aran@versetalinfo.com,,,,,,Dynamics AX,False
+Ramjee Thirupathi,ramjee.thirupathi,ramjee.thirupathi@versetalinfo.com,,,,,,Dynamics AX,False
+Shempulingm Chelladurai,shempulingm.chelladu,shempulingm.chelladurai@versetalinfo.com,,,,,,Dynamics AX,False
+Diksha Kaushik,Diksha.Kaushik,Diksha.Kaushik@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Consultant ? Customer Support,True
+Mani Balasubramanyam,mani.balasubramanyam,mani.balasubramanyam@versetalinfo.com,India,IN,IN,,Automation,Senior Consultant ? DevOps,False
+Greg Krysko,Greg.Krysko,Greg.Krysko@versetalinfo.com,,,,Permanent,,,False
+George Hardy,George.Hardy,George.Hardy@versetalinfo.com,,,,,,,True
+Prabhu Ramasamy Perumalsamy,Prabhu.Perumalsamy,Prabhu.Perumalsamy@versetalinfo.com,India,IN,IN,,,DevOps/ Middleware L3,False
+Rajesh Meka,rajesh.meka,rajesh.meka@versetalinfo.com,India,IN,IN,Permanent,Database Team,Consultant ? SQL Database Administrator,True
+Brahma Admin,reddy2801br,reddy2801br@versetalinfo.com,,,,Admin,,,False
+Devon Admin,thomas5832de,thomas5832de@versetalinfo.com,,,,Admin,,,True
+Call Sqldba,Call.sqldba,Call.sqldba@versetalinfo.com,,,,ServiceAccount,,,True
+Call Oracledba,Call.Oracledba,Call.Oracledba@versetalinfo.com,,,,ServiceAccount,,,True
+Iftekhar Alam,iftekhar.alam,iftekhar.alam@versetalinfo.com,India,IN,IN,Permanent,Database Team,Principal Consultant - SQL Database Administration,True
+Connor Smith,Connor.Smith,Connor.Smith@versetalinfo.com,,,,Permanent,,,False
+Renee Latham,renee.latham,renee.latham@versetalinfo.com,,,,,,,False
+Rajesh Selvaraj,rajesh.selvaraj,rajesh.selvaraj@versetalinfo.com,India,IN,IN,,Helpdesk,Associate Consultant- Customer Support,True
+Raeesahmed Kocharagi,raeesahmed.kocharagi,raeesahmed.kocharagi@versetalinfo.com,India,IN,IN,,Dedicated Team,Consultant,True
+Kamal Admin,kakkar51ka,kakkar51ka@versetalinfo.com,,,,Admin,,,True
+Om Admin,gupta74om,gupta74om@versetalinfo.com,,,,Admin,,,True
+Prashanth Balasubramanian,Prashanth.Balasubram,Prashanth.Balasubramanian@versetalinfo.com,,,,,,,True
+Anya Sharif,anya.sharif,anya.sharif@versetalinfo.com,,,,,,SOC Analyst,False
+Recruitment Bot,Application.Bot,Application.Bot@versetalinfo.com,,,,ServiceAccount,,,True
+Mattia Balzano,mattia.balzano,mattia.balzano@versetalinfo.com,,,,,SOC,Security Analyst L1,True
+Sharat Sasikumar Nair,sharat.nair,sharat.nair@versetalinfo.com,India,IN,IN,Permanent,Infrastructure & Cloud Ops,Senior Consultant - Linux & AWS Administrator,True
+Stacey Fernandes,stacey.fernandes,stacey.fernandes@versetalinfo.com,,,,,IT Management,CTO,True
+Saji M Markose,SajiM.Markose,SajiM.Markose@versetalinfo.com,India,IN,IN,,Infrastructure & Cloud Ops,Principal Consultant - Windows & VMware Administration,True
+Clay Belmarsh,Clay.Belmarsh,Clay.Belmarsh@versetalinfo.com,,,,,,,False
+Kendall Smith,kendall.smith,kendall.smith@versetalinfo.com,,,,,SOC,Security Analyst (PT),True
+Samuel Ridgley,samuel.ridgley,samuel.ridgley@versetalinfo.com,,,,,,,False
+Caleb Lim,caleb.lim,caleb.lim@versetalinfo.com,United States,US,US,,SOC,Security Analyst (PT),True
+Zach Johns,zach.johns,zach.johns@versetalinfo.com,,,,,SOC,Security Analyst (PT),True
+Kamal Pathania,kamal.pathania,kamal.pathania@versetalinfo.com,India,IN,IN,Permanent,Infrastructure & Cloud Ops,Team Lead - Infrastructure and Cloud Operations,True
+Saji Admin,markose99,markose99@versetalinfo.com,,,,Admin,,,True
+Gurpreet Singh,gurpreet.singh,gurpreet.singh@versetalinfo.com,United States,US,US,,Infrastructure & Cloud Ops,Sr. System Administrator - Cloud and Infrastructure,False
+Gurpreet Admin,singh5689gu,singh5689gu@versetalinfo.com,,,,Admin,,,False
+Kristopher Fogle,kristopher.fogle,kristopher.fogle@versetalinfo.com,,,,,,,False
+Hugo Admin,lopezh5589,lopezh5589@versetalinfo.com,,,,Admin,,,True
+Sambhunath Jana,Sambhunath.Jana,Sambhunath.Jana@versetalinfo.com,India,IN,IN,Permanent,Database Team,Consultant - SQL Database Administration,True
+Steve Saporito,steve.saporito,steve.saporito@versetalinfo.com,,,,,DBEngineering,Director of Data Engineering,True
+Jane Moxford,jane.moxford,jane.moxford@versetalinfo.com,,,,,PMO,Project Manager,True
+Ashok Gopalakrishnan,ashok.gopalakrishnan,ashok.gopalakrishnan@versetalinfo.com,,,,,,,True
+Leena Mani,leena.mani,leena.mani@versetalinfo.com,,,,,,,True
+Mohan Vankudoth,Mohan.Vankudoth,Mohan.Vankudoth@versetalinfo.com,,,,,,,False
+Sasi Kumar,sasi.kumar,sasi.kumar@versetalinfo.com,,,,,,,False
+Aravand Peddola,aravand.peddola,aravand.peddola@versetalinfo.com,,,,,,,False
+Kamal P admin,kpathania78,kpathania78@versetalinfo.com,,,,Admin,,,True
+John Admin,Wirtz99,Wirtz99@versetalinfo.com,,,,Admin,,,False
+Udit Bhati,udit.bhati,udit.bhati@versetalinfo.com,,,,,,,False
+Vaibhav Indani,vaibhav.indani,vaibhav.indani@versetalinfo.com,,,,,,,True
+Vishnu Prem P,vishnupremp,vishnupremp@versetalinfo.com,,,,,,,False
+Darius Davis,darius.davis,darius.davis@versetalinfo.com,,,,,,,False
+Fayssal Toufik,fayssal.toufik,fayssal.toufik@versetalinfo.com,,,,,,Helpdesk L1,False
+Daniel Munoz,daniel.munoz,daniel.munoz@versetalinfo.com,,,,,DBEngineering,Software Engineer,True
+Dildar Ahmad,dildar.ahmad,dildar.ahmad@versetalinfo.com,,,,,Infrastructure & Cloud Ops,Senior Consultant - Network Engineer,True
+Anuj Goswami,Anuj.Goswami,Anuj.Goswami@versetalinfo.com,,,,,,Cloud Architect,False
+Andrew Belmarsh,andrew.belmarsh,andrew.belmarsh@versetalinfo.com,,,,,,,False
+Justin McNamara,justin.mcnamara,justin.mcnamara@versetalinfo.com,,,,,,,False
+Everett Kiernan,everett.kiernan,everett.kiernan@versetalinfo.com,,,,,,,False
+Joe Audet,joe.audet,joe.audet@versetalinfo.com,,,,,Infrastructure & Cloud Ops,Sr. Network Consultant,True
+Michael Petrosky,Michael.Petrosky,Michael.Petrosky@versetalinfo.com,,,,,,,True
+Hodari Murray,hodari.murray,hodari.murray@versetalinfo.com,Canada,CA,CA,Permanent,Infrastructure & Cloud Ops,Sr. Network Infrastructure Solutions Architect,True
+Ismail Belmouh,ismail.belmouh,ismail.belmouh@versetalinfo.com,Canada,CA,CA,Permanent,Infrastructure & Cloud Ops,Sr. Cloud Infrastructure Solutions Architect,True
+Eshani Kuchanwar,eshani.kuchanwar,eshani.kuchanwar@versetalinfo.com,,,,,DBEngineering,Consultant - Infor Syteline Developer,True
+,DefaultAccount,,,,,ServiceAccount,,,False
+Dildar Admin,ahmad5568di,ahmad5568di@versetalinfo.com,,,,Admin,,,True
+Priyanshi Varshney,priyanshi.varshney,priyanshi.varshney@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - IT Helpdesk Dispatcher,True
+Patrick Segraves,patrick.segraves,patrick.segraves@versetalinfo.com,,,,,SOC,Security Analyst (PT),True
+Ryan McDannald,Ryan.McDannald,Ryan.McDannald@versetalinfo.com,,,,,SOC,Security Analyst (PT),True
+Muskan Singh,muskan.singh,muskan.singh@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - IT Helpdesk Dispatcher,True
+Bobby Bruce,bobby.bruce,bobby.bruce@versetalinfo.com,,,,Permanent,Finance,Payroll and Benefits Specialist,True
+Aditya Kumar Petikam Durga Shankar,aditya.kumar,aditya.kumar@versetalinfo.com,India,IN,IN,,Infrastructure & Cloud Ops,Senior Consultant -M365-Azure and Wintel Administration,False
+Ric Faitella,ric.faitella,ric.faitella@versetalinfo.com,,,,,Sales,VP Sales,True
+Carlos Rodriguez,Carlos.Rodriguez,Carlos.Rodriguez@versetalinfo.com,,,,,SOC,Contractor,True
+Aditya Admin,Aditya455tk,Aditya455tk@versetalinfo.com,,,,Admin,,,False
+Johnson Mar,Johnson.Mar,Johnson.Mar@versetalinfo.com,,,,,Field Services,Field Service L2,True
+Connor Hach,connor.hach,connor.hach@versetalinfo.com,,,,,SOC,Security Analyst (PT),True
+Evan Contreras,evan.contreras,evan.contreras@versetalinfo.com,,,,,Field Services,Field Service L2,True
+Darren Murphy1,darren.murphy1,darren.murphy1@versetalinfo.com,,,,,,IT Consultant,True
+Fayssal Admin,toufik56541fa,toufik56541fa@versetalinfo.com,,,,Admin,,,False
+Vishvangi Admin,vishvangiadmin,vishvangiadmin@versetalinfo.com,,,,Admin,,,True
+Atyab Admin,atyabadmin,atyabadmin@versetalinfo.com,,,,Admin,,,True
+Rahul Admin,rahuladmin,rahuladmin@versetalinfo.com,,,,Admin,,,True
+Pardeep Admin,pardeepadmin,pardeepadmin@versetalinfo.com,,,,Admin,,,True
+Mayank admin,mayankadmin,mayankadmin@versetalinfo.com,,,,Admin,,,False
+Brigham Boice,brigham.boice,brigham.boice@versetalinfo.com,,,,,Data Management/ Architecture,Developer,True
+Fernando Santacruz,Fernando.Santacruz,Fernando.Santacruz@versetalinfo.com,,,,,PMO,Service Delivery Manager,True
+Harold Weinman,harold.weinman,harold.weinman@versetalinfo.com,,,,,Field Services,Field Service L2,True
+Shailesh Rawat,shailesh.rawat,shailesh.rawat@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,True
+Ally Costa,Ally.Costa,Ally.Costa@versetalinfo.com,,,,,,Senior Data Engineer,True
+Pentest Admin,pentadmin,pentadmin@versetalinfo.com,,,,Admin,,,True
+Prateek Chauhan,prateek.chauhan,prateek.chauhan@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Associate Consultant - Technical Support,True
+Pentest2 Admin,pent2admin,pent2admin@versetalinfo.com,,,,Admin,,,True
+Ajith Kumar,ajith.kumar,ajith.kumar@versetalinfo.com,,,,,,Senior Data Engineer,True
+Vinicius Mello,Vinicius.Mello,Vinicius.Mello@versetalinfo.com,,,,,Field Services,Field Service L2,True
+Rahul Sachdeva,rahul.sachdeva,rahul.sachdeva@versetalinfo.com,India,IN,IN,Permanent,Helpdesk,Consultant - Technical Support,True
+Scott Zadina,scott.zadina,scott.zadina@versetalinfo.com,,,,Permanent,Sales,Sales,True
+Michelle Bingham,michelle.bingham,michelle.bingham@versetalinfo.com,,,,Permanent,Sales,Sales,True
+Hodari Admin,murray5548ho,murray5548ho@versetalinfo.com,,,,Admin,,,True
+Jevon Witherspoon,jevon.witherspoon,jevon.witherspoon@versetalinfo.com,,,,,Helpdesk Team,Field Service L1,True
+Robert Ward,Robert.Ward,Robert.Ward@versetalinfo.com,,,,,SOC,,True
+Garrett Dunn,garrett.dunn,garrett.dunn@versetalinfo.com,,,,,Field Services,Associate Systems Engineer,True
+Mark Bushey,mark.bushey,mark.bushey@versetalinfo.com,,,,Permanent,Sales and Marketing,,True

@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Versetal — Client Onboarding Questionnaire</title>
+<!-- Fonts: loads from Google when online, falls back to system fonts offline -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<!-- jsPDF loaded dynamically at PDF generation time -->
+<style>
+/* ── VARIABLES ─────────────────────────────────────────────────── */
+:root {
+  --navy:    #0A2543;
+  --navy2:   #0D3060;
+  --green:   #5BBF46;
+  --sky:     #2AA7DF;
+  --gold:    #C8922A;
+  --ltblue:  #D6E8F5;
+  --ctag:    #7AC559;
+  --white:   #FFFFFF;
+  --ink:     #1a1a2e;
+  --muted:   #6b7a8d;
+  --border:  #CBD8E8;
+  --input-bg:#F4F8FC;
+  --radius:  6px;
+  --shadow:  0 2px 12px rgba(10,37,67,.10);
+}
+
+/* ── RESET ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #EEF3F9;
+  color: var(--ink);
+  min-height: 100vh;
+  scrollbar-gutter: stable;
+}
+
+/* ── TOP HEADER BAR ─────────────────────────────────────────────── */
+.site-header {
+  background: var(--navy);
+  padding: 18px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,.3);
+}
+.logo-mark {
+  display: flex;
+  align-items: center;
+}
+.header-badge {
+  background: rgba(91,191,70,.15);
+  border: 1px solid rgba(91,191,70,.4);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+/* ── HERO ───────────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, #0e3d6e 100%);
+  padding: 56px 40px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235BBF46' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-inner { max-width: 860px; position: relative; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--green); font-size: 12px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 24px; height: 2px; background: var(--green);
+}
+.hero h1 {
+  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+  font-size: clamp(28px, 4vw, 44px);
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.hero h1 em { color: var(--green); font-style: normal; }
+.hero p {
+  color: rgba(255,255,255,.72);
+  font-size: 15px; line-height: 1.7;
+  max-width: 620px;
+}
+.hero-rule {
+  width: 60px; height: 3px;
+  background: var(--green);
+  margin: 20px 0;
+  border-radius: 2px;
+}
+
+/* ── PROGRESS ───────────────────────────────────────────────────── */
+.progress-wrap {
+  background: var(--navy);
+  padding: 0 40px 20px;
+  border-bottom: 3px solid var(--green);
+}
+.progress-label {
+  color: rgba(255,255,255,.55);
+  font-size: 11px; letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-top: 8px;
+  margin-bottom: 8px;
+}
+.progress-bar-outer {
+  height: 6px; background: rgba(255,255,255,.12);
+  border-radius: 3px; overflow: hidden;
+}
+.progress-bar-inner {
+  height: 100%; background: var(--green);
+  border-radius: 3px;
+  transition: width .4s ease;
+  width: 0%;
+}
+.progress-sections {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 12px;
+}
+.psec {
+  font-size: 11px; padding: 3px 10px; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.15);
+  color: rgba(255,255,255,.45);
+  cursor: pointer; transition: all .2s;
+}
+.psec:hover { border-color: var(--green); color: var(--green); }
+.psec.done { background: rgba(91,191,70,.15); border-color: var(--green); color: var(--green); }
+
+/* ── LAYOUT ─────────────────────────────────────────────────────── */
+.page-wrap { max-width: 960px; margin: 0 auto; padding: 36px 24px 80px; }
+
+/* ── SECTION CARDS ──────────────────────────────────────────────── */
+.section-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin-bottom: 28px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.section-header {
+  background: var(--navy);
+  padding: 18px 28px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.section-num {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--green);
+  color: white; font-weight: 700; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.section-title {
+  color: white; font-size: 16px; font-weight: 600;
+  flex: 1;
+}
+.section-chevron {
+  color: rgba(255,255,255,.5); font-size: 18px;
+  transition: transform .3s;
+}
+.section-card.collapsed .section-chevron { transform: rotate(-90deg); }
+.section-body {
+  padding: 28px;
+  transition: all .2s;
+}
+.section-card.collapsed .section-body {
+  display: none;
+}
+.section-rule {
+  height: 3px; background: var(--green);
+  margin: -28px -28px 24px;
+}
+
+/* ── SUBSECTION ─────────────────────────────────────────────────── */
+.subsection-title {
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--sky);
+  border-bottom: 1px solid var(--ltblue);
+  padding-bottom: 8px; margin: 24px 0 16px;
+}
+.subsection-title:first-child { margin-top: 0; }
+
+/* ── FIELD GRID ─────────────────────────────────────────────────── */
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.field-grid.cols-1 { grid-template-columns: 1fr; }
+@media(max-width:640px) {
+  .field-grid, .field-grid.cols-3 { grid-template-columns: 1fr; }
+}
+
+.field {
+  display: flex; flex-direction: column; gap: 5px;
+}
+.field label {
+  font-size: 12px; font-weight: 600;
+  color: var(--navy); letter-spacing: .3px;
+  text-transform: uppercase;
+}
+.field input, .field select, .field textarea {
+  background: var(--input-bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  font-family: 'DM Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 14px; color: var(--ink);
+  transition: border-color .2s, box-shadow .2s;
+  width: 100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--sky);
+  box-shadow: 0 0 0 3px rgba(42,167,223,.12);
+  background: white;
+}
+.field textarea { resize: vertical; min-height: 80px; }
+.field.span2 { grid-column: span 2; }
+.field.span3 { grid-column: span 3; }
+@media(max-width:640px) { .field.span2, .field.span3 { grid-column: span 1; } }
+
+/* ── YES/NO TABLE ───────────────────────────────────────────────── */
+.yn-table { width: 100%; border-collapse: collapse; margin: 12px 0; table-layout: fixed; }
+.yn-table thead th {
+  background: var(--navy); color: white;
+  font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  padding: 10px 12px; text-align: left;
+}
+.yn-table thead th:first-child { width: auto; }
+.yn-table thead th:not(:first-child) { width: 80px; text-align: center; }
+.yn-table tbody tr:nth-child(even) { background: var(--input-bg); }
+.yn-table tbody tr:hover { background: var(--ltblue); }
+.yn-table td:first-child { padding: 10px 12px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.yn-radio { width: 80px; text-align: center; padding: 10px 4px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.yn-radio input[type=radio] { display: block; margin: 0 auto; width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+
+/* ── DYNAMIC TABLE ──────────────────────────────────────────────── */
+.dyn-table-wrap { overflow-x: auto; margin: 12px 0; }
+.dyn-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+.dyn-table thead th {
+  background: var(--navy); color: white;
+  font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  padding: 10px 10px; white-space: nowrap;
+}
+.dyn-table tbody tr:nth-child(even) { background: var(--input-bg); }
+.dyn-table td { padding: 5px 5px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.dyn-table td input {
+  width: 100%;
+  font-family: 'DM Sans', 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 13px;
+  padding: 5px 8px; color: var(--ink);
+  border-radius: 4px;
+  background: white;
+  border: 1.5px solid var(--border);
+  transition: border-color .15s, box-shadow .15s;
+}
+.dyn-table td input:hover { border-color: var(--sky); }
+.dyn-table td input:focus { outline: none; border-color: var(--sky); box-shadow: 0 0 0 3px rgba(42,167,223,.15); background: white; }
+.dyn-table tbody tr:nth-child(even) td input { background: #f0f6fb; }
+.dyn-table tbody tr:nth-child(even) td input:focus { background: white; }
+.add-row-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--sky); font-size: 12px; font-weight: 600;
+  cursor: pointer; margin-top: 6px;
+  border: none; background: none;
+  padding: 4px 0;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+.add-row-btn:hover { color: var(--green); }
+
+/* ── CONTACT BLOCK ──────────────────────────────────────────────── */
+.contact-block {
+  border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 20px;
+  margin: 12px 0;
+  background: var(--input-bg);
+  position: relative;
+}
+.contact-block-title {
+  font-size: 13px; font-weight: 700;
+  color: var(--navy2); letter-spacing: .5px;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.contact-block-title::before {
+  content: '';
+  width: 4px; height: 20px;
+  background: var(--green);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+/* ── DELETE BUTTONS ─────────────────────────────────────────────── */
+.delete-btn {
+  margin-left: auto;
+  background: none;
+  border: 1.5px solid rgba(200,50,50,.25);
+  color: rgba(200,50,50,.5);
+  border-radius: 4px;
+  width: 26px; height: 26px;
+  font-size: 15px; line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .15s;
+  font-family: sans-serif;
+}
+.delete-btn:hover {
+  background: rgba(200,50,50,.08);
+  border-color: rgba(200,50,50,.6);
+  color: rgb(200,50,50);
+}
+.dyn-table .delete-cell {
+  width: 32px; text-align: center;
+  padding: 4px 2px;
+}
+.dyn-table .delete-cell button {
+  background: none; border: none;
+  color: rgba(200,50,50,.4);
+  font-size: 16px; cursor: pointer;
+  padding: 2px 6px; border-radius: 3px;
+  transition: all .15s; line-height: 1;
+}
+.dyn-table .delete-cell button:hover {
+  background: rgba(200,50,50,.08);
+  color: rgb(200,50,50);
+}
+
+/* ── NOTE BOX ───────────────────────────────────────────────────── */
+.note-box {
+  border-left: 4px solid var(--sky);
+  background: rgba(42,167,223,.06);
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+  font-size: 13px; color: var(--muted);
+  margin: 12px 0;
+  font-style: italic;
+}
+
+/* ── N/A SECTION OVERLAY ────────────────────────────────────────── */
+.na-btn {
+  margin-left: auto;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,.25);
+  color: rgba(255,255,255,.6);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .8px; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all .2s; white-space: nowrap; flex-shrink: 0;
+}
+.na-btn:hover { border-color: var(--gold); color: var(--gold); }
+/* N/A active state */
+.section-card.is-na .na-btn { background: var(--gold); border-color: var(--gold); color: white; }
+.section-card.is-na .section-header {
+  background: #4a5568;
+}
+/* N/A badge — injected as real DOM span for cross-browser reliability */
+.na-badge {
+  display: none;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  background: rgba(200,146,42,.15);
+  border: 1px solid rgba(200,146,42,.4);
+  border-radius: 20px;
+  padding: 2px 10px;
+  margin-left: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.section-card.is-na .na-badge { display: inline-block; }
+/* Body still accessible if somehow expanded while N/A */
+.section-card.is-na .section-body {
+  position: relative; pointer-events: none; opacity: .45;
+}
+
+/* ── ACTIONS ────────────────────────────────────────────────────── */
+.actions-bar {
+  position: fixed; bottom: 0; left: 0;
+  width: calc(100% - 0px);
+  right: 0;
+  background: var(--navy);
+  border-top: 3px solid var(--green);
+  padding: 16px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 98;
+  box-shadow: 0 -4px 24px rgba(0,0,0,.25);
+  box-sizing: border-box;
+  clip-path: inset(0 0 0 0);
+}
+/* Scrollbar sits on top of everything at z-index 99+ so we let it */
+
+.actions-bar-left { color: rgba(255,255,255,.55); font-size: 13px; }
+.actions-bar-left strong { color: white; }
+.btn-group { display: flex; gap: 10px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 24px; border-radius: 6px;
+  font-family: 'DM Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; border: none;
+  transition: all .2s;
+  letter-spacing: .2px;
+}
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,.25);
+  color: rgba(255,255,255,.75);
+}
+.btn-outline:hover { border-color: white; color: white; }
+.btn-primary {
+  background: var(--green);
+  color: white;
+}
+.btn-primary:hover { background: var(--ctag); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(91,191,70,.35); }
+.btn-primary:active { transform: none; }
+.btn svg { width: 16px; height: 16px; }
+
+/* ── SPINNER ────────────────────────────────────────────────────── */
+.spinner { display: none; }
+.spinner.active {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,.3);
+  border-top-color: white; border-radius: 50%;
+  animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── TOAST ──────────────────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 90px; right: 24px;
+  background: var(--navy); color: white;
+  padding: 14px 20px; border-radius: 8px;
+  border-left: 4px solid var(--green);
+  font-size: 14px; font-weight: 500;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+  transform: translateX(calc(100% + 48px));
+  visibility: hidden;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), visibility 0s .3s;
+  z-index: 200;
+}
+.toast.show {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), visibility 0s 0s;
+}
+
+/* ── PRINT / PDF HIDE ───────────────────────────────────────────── */
+@media print { .actions-bar, .site-header, .progress-wrap, .hero { display: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo-mark">
+    <img src="https://versetalinfo.com/wp-content/uploads/2021/09/logo.svg" alt="Versetal" style="height:36px;width:auto;display:block;" crossorigin="anonymous" onerror="this.style.display='none'"/>
+  </div>
+  <div class="header-badge">Confidential</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Managed Services</div>
+    <h1>Client <em>Onboarding</em><br/>Questionnaire</h1>
+    <div class="hero-rule"></div>
+    <p>Please complete this form as thoroughly as possible. All information is kept strictly confidential and used solely to onboard and support your environment. Leave any unknown fields blank — we'll work through them together on your discovery call.</p>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-label">Completion — <span id="pct">0</span>%</div>
+  <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+  <div class="progress-sections" id="progressSections"></div>
+</div>
+
+<!-- MAIN FORM -->
+<div class="page-wrap">
+<form id="mainForm" novalidate>
+
+<!-- ═══════════════════════════════════════════════════════ S1 -->
+<div class="section-card" id="sec1">
+  <div class="section-header" onclick="toggleSection('sec1')">
+    <div class="section-num">1</div>
+    <div class="section-title">Company Information &amp; Key Contacts</div>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+
+    <div class="subsection-title">1.1 — General Company Details</div>
+    <div class="field-grid">
+      <div class="field"><label>Legal Company Name *</label><input name="co_legal" placeholder="Acme Corporation LLC"/></div>
+      <div class="field"><label>Trading Name (if different)</label><input name="co_trade" placeholder="Acme Corp"/></div>
+      <div class="field span2"><label>Primary Office Address</label><input name="co_address" placeholder="123 Main St, Suite 100, Boston, MA 02101"/></div>
+      <div class="field span2"><label>Additional Locations / Branches</label><input name="co_locations" placeholder="List other sites or offices"/></div>
+      <div class="field"><label>Industry / Vertical</label><input name="co_industry" placeholder="e.g. Healthcare, Legal, Manufacturing"/></div>
+      <div class="field"><label>Company Website</label><input name="co_website" placeholder="https://"/></div>
+      <div class="field"><label>Total Employees (Current)</label><input name="co_employees" type="number" placeholder="0"/></div>
+      <div class="field"><label>Projected Headcount in 12 Months</label><input name="co_employees_12mo" type="number" placeholder="0"/></div>
+      <div class="field"><label>Full-Time Employees</label><input name="co_fte" type="number" placeholder="0"/></div>
+      <div class="field"><label>Contractors / Consultants</label><input name="co_contractors" type="number" placeholder="0"/></div>
+      <div class="field"><label>Number of IT Users</label><input name="co_it_users" type="number" placeholder="0"/></div>
+      <div class="field"><label>Employees Per Location (if multi-site)</label><input name="co_per_location" placeholder="e.g. Boston: 50, NYC: 25"/></div>
+      <div class="field"><label>Primary Business Hours</label><input name="co_hours" placeholder="e.g. Mon–Fri 8am–6pm EST"/></div>
+      <div class="field"><label>After-Hours Support Required?</label>
+        <select name="co_afterhours"><option value="">— Select —</option><option>Yes</option><option>No</option><option>On-call only</option></select>
+      </div>
+    </div>
+
+    <div class="subsection-title">1.2 — IT Team Structure</div>
+    <div class="field-grid">
+      <div class="field"><label>Current IT Model</label>
+        <select name="it_model"><option value="">— Select —</option><option>Fully In-House</option><option>Fully Outsourced (MSP)</option><option>Blended (In-House + MSP)</option><option>No Dedicated IT</option></select>
+      </div>
+      <div class="field"><label>Number of Internal IT Staff</label><input name="it_staff_count" type="number" placeholder="0"/></div>
+      <div class="field"><label>Current MSP / IT Provider (if any)</label><input name="it_current_msp" placeholder="Company name"/></div>
+      <div class="field"><label>Current MSP Contract End Date</label><input name="it_msp_contract_end" type="date"/></div>
+      <div class="field"><label>Dedicated IT Roles / Teams</label><input name="it_roles" placeholder="e.g. Network, Security, Cloud, Helpdesk"/></div>
+      <div class="field"><label>Who Maintains Environment Day-to-Day?</label><input name="it_maintains" placeholder="e.g. Internal sysadmin, MSP, consultant"/></div>
+      <div class="field span2"><label>Decision-Making Process for IT Investments</label><input name="it_decision_process" placeholder="Who else is involved besides primary contact? Procurement, CFO, board?"/></div>
+    </div>
+
+    <div class="subsection-title">1.3 — Key Contacts</div>
+    <div class="note-box">Please provide details for all relevant contacts. Primary IT contact is required.</div>
+
+    <div id="contacts-it"></div>
+    <button type="button" class="add-row-btn" onclick="addContact('contacts-it','IT / Technical Contact')">＋ Add IT Contact</button>
+
+    <div class="subsection-title" style="margin-top:20px;">Executive / Decision Makers</div>
+    <div id="contacts-exec"></div>
+    <button type="button" class="add-row-btn" onclick="addContact('contacts-exec','Executive / Decision Maker')">＋ Add Executive Contact</button>
+
+    <div class="subsection-title" style="margin-top:20px;">Finance, HR &amp; Other</div>
+    <div id="contacts-other"></div>
+    <button type="button" class="add-row-btn" onclick="addContact('contacts-other','Other Contact')">＋ Add Contact</button>
+
+    <div class="subsection-title">1.4 — Escalation &amp; Communication</div>
+    <div class="field-grid">
+      <div class="field"><label>Support / Ticketing Email</label><input name="esc_email" type="email" placeholder="it@company.com"/></div>
+      <div class="field"><label>After-Hours Emergency Contact</label><input name="esc_emergency" placeholder="Name and phone number"/></div>
+      <div class="field"><label>Preferred Communication Method</label>
+        <select name="esc_comms"><option value="">— Select —</option><option>Email</option><option>Phone</option><option>Text / SMS</option><option>Microsoft Teams</option><option>Slack</option></select>
+      </div>
+      <div class="field"><label>Contacts NOT to Call Directly</label><input name="esc_nocall" placeholder="Any restrictions?"/></div>
+      <div class="field span2"><label>Scheduled Maintenance Windows</label><input name="esc_maintenance" placeholder="e.g. Sundays 2am–6am EST"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S2 -->
+<div class="section-card" id="sec2">
+  <div class="section-header" onclick="toggleSection('sec2')">
+    <div class="section-num">2</div>
+    <div class="section-title">Network &amp; On-Premises Infrastructure<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec2')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">2.1 — Internet &amp; WAN</div>
+    <div class="field-grid">
+      <div class="field"><label>ISP Provider(s)</label><input name="net_isp" placeholder="e.g. Comcast, Verizon"/></div>
+      <div class="field"><label>Connection Type(s)</label>
+        <select name="net_type"><option value="">—</option><option>Broadband / Cable</option><option>Fiber (DIA)</option><option>MPLS</option><option>SD-WAN</option><option>5G / LTE</option><option>DSL</option><option>Mixed</option></select>
+      </div>
+      <div class="field"><label>Download / Upload Speeds (per site)</label><input name="net_speed" placeholder="e.g. 1Gbps / 500Mbps"/></div>
+      <div class="field"><label>Redundant / Failover Internet?</label><select name="net_failover"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Multi-Site WAN Topology</label>
+        <select name="net_wan_topo"><option value="">—</option><option>Site-to-Site VPN</option><option>MPLS</option><option>SD-WAN</option><option>Direct Internet per site</option><option>N/A – Single site</option></select>
+      </div>
+      <div class="field"><label>Bandwidth Trends / Stats Available?</label>
+        <select name="net_bw_stats"><option value="">—</option><option>Yes – from ISP portal</option><option>Yes – from monitoring tool</option><option>No</option></select>
+      </div>
+      <div class="field"><label>Static IP Addresses in Use?</label><select name="net_static"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Who Manages DNS?</label><input name="net_dns" placeholder="e.g. Cloudflare, internal AD DNS"/></div>
+      <div class="field"><label>Network Monitoring Tool</label><input name="net_monitor_tool" placeholder="e.g. PRTG, LibreNMS, SolarWinds, none"/></div>
+      <div class="field"><label>Network Segmentation Required?</label>
+        <select name="net_segmentation"><option value="">—</option><option>Yes – currently in place</option><option>Yes – needed</option><option>No</option></select>
+      </div>
+    </div>
+
+    <div class="subsection-title">2.2 — Firewall &amp; Edge Devices</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_firewall">
+        <thead><tr><th>Make / Model</th><th>Location / Site</th><th>Firmware Version</th><th>Managed By</th><th>Warranty / EOL</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_firewall',5)">＋ Add Device</button>
+
+    <div class="subsection-title">2.3 — Switches &amp; Access Points</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_switches">
+        <thead><tr><th>Make / Model</th><th>Qty</th><th>Location</th><th>VLAN Configured?</th><th>Managed By</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_switches',5)">＋ Add Device</button>
+    <div class="field-grid" style="margin-top:14px;">
+      <div class="field"><label>Total Switch Port Count (approx.)</label><input name="net_switch_ports" placeholder="e.g. 96 ports across 3 switches"/></div>
+      <div class="field"><label>PoE (Power over Ethernet) Required?</label><select name="net_poe"><option value="">—</option><option>Yes</option><option>No</option><option>Partially</option></select></div>
+      <div class="field"><label>Hardware Asset Refresh Plan</label><input name="net_refresh_plan" placeholder="e.g. 3-year cycle, no formal plan, next refresh 2026"/></div>
+    </div>
+
+    <div class="subsection-title">2.4 — VPN &amp; Remote Access</div>
+    <div class="field-grid">
+      <div class="field"><label>VPN Solution</label><input name="vpn_product" placeholder="e.g. Meraki, OpenVPN, SSLVPN"/></div>
+      <div class="field"><label>Site-to-Site VPNs?</label><input name="vpn_s2s" placeholder="List connected sites"/></div>
+      <div class="field"><label>Remote Desktop / Jump Server?</label><input name="vpn_rd" placeholder="Product or hostname"/></div>
+      <div class="field"><label>MFA for Remote Access?</label><select name="vpn_mfa"><option value="">—</option><option>Yes</option><option>No</option><option>Partially</option></select></div>
+      <div class="field"><label>Number of Regular Remote Workers</label><input name="vpn_users" type="number" placeholder="0"/></div>
+    </div>
+
+    <div class="subsection-title">2.5 — IP Addressing &amp; Subnets</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_subnets">
+        <thead><tr><th>Network / VLAN Name</th><th>Subnet</th><th>Gateway</th><th>DHCP Server</th><th>Notes</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_subnets',5)">＋ Add Subnet</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S3 -->
+<div class="section-card" id="sec3">
+  <div class="section-header" onclick="toggleSection('sec3')">
+    <div class="section-num">3</div>
+    <div class="section-title">Servers &amp; Virtualization<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec3')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">3.1 — Physical Servers</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_servers">
+        <thead><tr><th>Server Name / Role</th><th>Make &amp; Model</th><th>OS / Version</th><th>RAM / CPU</th><th>Warranty / EOL</th><th>Location</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_servers',6)">＋ Add Server</button>
+
+    <div class="subsection-title">3.2 — Virtualization</div>
+    <div class="field-grid">
+      <div class="field"><label>Hypervisor Platform</label><input name="virt_platform" placeholder="e.g. VMware ESXi, Hyper-V, Proxmox"/></div>
+      <div class="field"><label>Version / Build</label><input name="virt_version" placeholder=""/></div>
+      <div class="field"><label>Number of Virtual Machines</label><input name="virt_vms" type="number" placeholder="0"/></div>
+      <div class="field"><label>Cluster or Standalone Host?</label>
+        <select name="virt_cluster"><option value="">—</option><option>Cluster (2+ hosts)</option><option>Standalone host</option><option>Mixed</option></select>
+      </div>
+      <div class="field"><label>Shared Storage Type</label><input name="virt_storage" placeholder="e.g. SAN, NAS, vSAN, DAS"/></div>
+      <div class="field"><label>HA / Clustering?</label><select name="virt_ha"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>VMware / Hypervisor Licenses Current?</label>
+        <select name="virt_license_status"><option value="">—</option><option>Yes – current</option><option>Expiring soon</option><option>Expired / lapsed</option><option>N/A</option></select>
+      </div>
+      <div class="field"><label>Linux Servers Present?</label><select name="virt_linux"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Co-Location Facility Used?</label><select name="virt_colo"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Co-Location Provider / Facility</label><input name="virt_colo_provider" placeholder="e.g. Equinix, CyrusOne, local DC"/></div>
+      <div class="field"><label>Snapshot Policy</label><input name="virt_snap" placeholder="e.g. daily, none"/></div>
+    </div>
+
+    <div class="subsection-title">3.3 — Storage</div>
+    <div class="field-grid">
+      <div class="field"><label>NAS / SAN Make &amp; Model</label><input name="stor_device" placeholder="e.g. Synology DS923+, Isilon"/></div>
+      <div class="field"><label>Total Usable Capacity</label><input name="stor_cap" placeholder="e.g. 20TB usable"/></div>
+      <div class="field"><label>RAID Configuration</label><input name="stor_raid" placeholder="e.g. RAID 6, SHR2"/></div>
+      <div class="field"><label>File Server Share Names</label><input name="stor_shares" placeholder="\\server\share1, ..."/></div>
+      <div class="field"><label>Tape / Offline Media?</label><select name="stor_tape"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S4 -->
+<div class="section-card" id="sec4">
+  <div class="section-header" onclick="toggleSection('sec4')">
+    <div class="section-num">4</div>
+    <div class="section-title">Active Directory &amp; Identity<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec4')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">4.1 — On-Premises Active Directory</div>
+    <div class="field-grid">
+      <div class="field"><label>AD Domain Name(s)</label><input name="ad_domain" placeholder="corp.company.local"/></div>
+      <div class="field"><label>Number of Domain Controllers</label><input name="ad_dcs" type="number" placeholder="0"/></div>
+      <div class="field"><label>Forest / Domain Functional Level</label><input name="ad_level" placeholder="e.g. Windows Server 2016"/></div>
+      <div class="field"><label>AD Sites &amp; Services Configured?</label><select name="ad_sites"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Enabled User Accounts</label><input name="ad_users" type="number" placeholder="0"/></div>
+      <div class="field"><label>Computer Objects</label><input name="ad_computers" type="number" placeholder="0"/></div>
+      <div class="field"><label>Admin / Service Accounts</label><input name="ad_svc" placeholder="Describe or list"/></div>
+      <div class="field"><label>Approx. GPO Count</label><input name="ad_gpos" type="number" placeholder="0"/></div>
+      <div class="field span2"><label>3rd-Party LDAP / SSO Integrations</label><input name="ad_ldap" placeholder="e.g. Okta, Duo, Azure AD Connect"/></div>
+    </div>
+
+    <div class="subsection-title">4.2 — Azure AD / Entra ID</div>
+    <div class="field-grid">
+      <div class="field"><label>Entra ID Tenant in Use?</label><select name="aad_use"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Tenant Name / Primary Domain</label><input name="aad_tenant" placeholder="company.onmicrosoft.com"/></div>
+      <div class="field"><label>Sync Method</label>
+        <select name="aad_sync"><option value="">—</option><option>Entra Connect (Azure AD Connect)</option><option>Entra Cloud Sync</option><option>Cloud-Only (no sync)</option><option>Other</option></select>
+      </div>
+      <div class="field"><label>Device Join Method</label>
+        <select name="aad_join"><option value="">—</option><option>Hybrid Azure AD Joined</option><option>Entra Joined (Cloud-Only)</option><option>Both</option><option>Domain Joined only</option></select>
+      </div>
+      <div class="field"><label>Conditional Access Policies?</label><select name="aad_ca"><option value="">—</option><option>Yes</option><option>No</option><option>Basic / Default only</option></select></div>
+      <div class="field"><label>Privileged Identity Management (PIM)?</label><select name="aad_pim"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+    </div>
+
+    <div class="subsection-title">4.3 — MFA &amp; Authentication</div>
+    <table class="yn-table">
+      <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>Question</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
+      <tbody>
+        <tr><td>MFA enforced for all users?</td><td class="yn-radio"><input type="radio" name="yn_mfa_all" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_mfa_all" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_mfa_all" value="NA"/></td></tr>
+        <tr><td>MFA enforced for admin accounts?</td><td class="yn-radio"><input type="radio" name="yn_mfa_admin" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_mfa_admin" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_mfa_admin" value="NA"/></td></tr>
+        <tr><td>Passwordless / Passkey / FIDO2 in use?</td><td class="yn-radio"><input type="radio" name="yn_passkey" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_passkey" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_passkey" value="NA"/></td></tr>
+        <tr><td>Single Sign-On (SSO) platform in use?</td><td class="yn-radio"><input type="radio" name="yn_sso" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_sso" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_sso" value="NA"/></td></tr>
+        <tr><td>Organisation-wide password manager deployed?</td><td class="yn-radio"><input type="radio" name="yn_pwmgr" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_pwmgr" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_pwmgr" value="NA"/></td></tr>
+      </tbody>
+    </table>
+    <div class="field-grid" style="margin-top:12px;">
+      <div class="field"><label>SSO Platform / Identity Provider</label><input name="auth_sso_product" placeholder="e.g. Okta, Azure AD, Duo"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S5 -->
+<div class="section-card" id="sec5">
+  <div class="section-header" onclick="toggleSection('sec5')">
+    <div class="section-num">5</div>
+    <div class="section-title">Endpoints &amp; Device Management<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec5')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">5.1 — Workstations &amp; Laptops</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_endpoints">
+        <thead><tr><th>OS / Version</th><th>Approx. Count</th><th>Managed By</th><th>Domain Joined?</th><th>Avg. Age (Yrs)</th><th style="width:32px"></th></tr></thead>
+        <tbody>
+          <tr><td><input value="Windows 10" data-preseed="1"/></td><td><input type="number" placeholder="0" data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input placeholder="Yes/No" data-preseed="1"/></td><td><input type="number" placeholder="0" data-preseed="1"/></td><td class="delete-cell"><button type="button" onclick="this.closest('tr').remove();updateProgress();" title="Remove row">✕</button></td></tr>
+          <tr><td><input value="Windows 11" data-preseed="1"/></td><td><input type="number" placeholder="0" data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input placeholder="Yes/No" data-preseed="1"/></td><td><input type="number" placeholder="0" data-preseed="1"/></td><td class="delete-cell"><button type="button" onclick="this.closest('tr').remove();updateProgress();" title="Remove row">✕</button></td></tr>
+          <tr><td><input value="macOS" data-preseed="1"/></td><td><input type="number" placeholder="0" data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input placeholder="Yes/No" data-preseed="1"/></td><td><input type="number" placeholder="0" data-preseed="1"/></td><td class="delete-cell"><button type="button" onclick="this.closest('tr').remove();updateProgress();" title="Remove row">✕</button></td></tr>
+          <tr><td><input value="Linux" data-preseed="1"/></td><td><input type="number" placeholder="0" data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input placeholder="Yes/No" data-preseed="1"/></td><td><input type="number" placeholder="0" data-preseed="1"/></td><td class="delete-cell"><button type="button" onclick="this.closest('tr').remove();updateProgress();" title="Remove row">✕</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_endpoints',5)">＋ Add OS / Type</button>
+
+    <div class="subsection-title">5.2 — Specialty &amp; OT Endpoints</div>
+    <div class="field-grid">
+      <div class="field"><label>SCADA / OT / ICS Devices on Network?</label><select name="ep_scada"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Lab / Manufacturing Workstations?</label><select name="ep_lab"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field span2"><label>Describe Specialty / Non-Standard Endpoints</label><input name="ep_specialty_desc" placeholder="e.g. CNC controllers, POS terminals, lab instruments, kiosks"/></div>
+    </div>
+
+    <div class="subsection-title">5.3 — Mobile Devices</div>
+    <div class="field-grid">
+      <div class="field"><label>iOS Devices (count)</label><input name="mob_ios" type="number" placeholder="0"/></div>
+      <div class="field"><label>Android Devices (count)</label><input name="mob_android" type="number" placeholder="0"/></div>
+      <div class="field"><label>Ownership Model</label><select name="mob_ownership"><option value="">—</option><option>Company-owned</option><option>BYOD</option><option>Mixed</option></select></div>
+      <div class="field"><label>MDM Platform</label><input name="mob_mdm" placeholder="e.g. Intune, Jamf, Mosyle"/></div>
+    </div>
+
+    <div class="subsection-title">5.4 — Endpoint Security</div>
+    <table class="yn-table">
+      <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>Question</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
+      <tbody>
+        <tr><td>Microsoft Intune / MDM in use?</td><td class="yn-radio"><input type="radio" name="yn_intune" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_intune" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_intune" value="NA"/></td></tr>
+        <tr><td>Autopilot / DEP enrollment configured?</td><td class="yn-radio"><input type="radio" name="yn_autopilot" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_autopilot" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_autopilot" value="NA"/></td></tr>
+        <tr><td>Antivirus / EDR deployed on all endpoints?</td><td class="yn-radio"><input type="radio" name="yn_edr" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_edr" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_edr" value="NA"/></td></tr>
+        <tr><td>Patch management solution in place?</td><td class="yn-radio"><input type="radio" name="yn_patch" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_patch" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_patch" value="NA"/></td></tr>
+        <tr><td>BitLocker / FileVault encryption enforced?</td><td class="yn-radio"><input type="radio" name="yn_encrypt" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_encrypt" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_encrypt" value="NA"/></td></tr>
+        <tr><td>Application whitelisting / AppLocker?</td><td class="yn-radio"><input type="radio" name="yn_applocker" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_applocker" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_applocker" value="NA"/></td></tr>
+      </tbody>
+    </table>
+    <div class="field-grid" style="margin-top:12px;">
+      <div class="field"><label>AV / EDR Product Name &amp; Vendor</label><input name="ep_edr_product" placeholder="e.g. SentinelOne, Defender for Endpoint"/></div>
+      <div class="field"><label>Patch Management Tool</label><input name="ep_patch_product" placeholder="e.g. NinjaRMM, WSUS, Intune"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S6 -->
+<div class="section-card" id="sec6">
+  <div class="section-header" onclick="toggleSection('sec6')">
+    <div class="section-num">6</div>
+    <div class="section-title">Microsoft 365 &amp; Cloud Services<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec6')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">6.1 — Microsoft 365</div>
+    <div class="field-grid">
+      <div class="field"><label>Tenant Name / Primary Domain</label><input name="m365_tenant" placeholder="company.onmicrosoft.com"/></div>
+      <div class="field"><label>License Plan(s)</label><input name="m365_licenses" placeholder="e.g. Microsoft 365 Business Premium"/></div>
+      <div class="field"><label>Number of Licensed Users</label><input name="m365_users" type="number" placeholder="0"/></div>
+      <div class="field"><label>Current CSP / Reseller</label><input name="m365_csp" placeholder="Who do you buy M365 through?"/></div>
+      <div class="field"><label>Email Platform</label>
+        <select name="m365_exchange"><option value="">—</option><option>Exchange Online</option><option>On-Prem Exchange</option><option>Hybrid</option><option>Google Workspace</option><option>Other</option></select>
+      </div>
+      <div class="field"><label>Intune Included in License?</label><select name="m365_intune"><option value="">—</option><option>Yes</option><option>No</option><option>Not configured</option></select></div>
+      <div class="field"><label>Defender for Business/Endpoint Licensed?</label><select name="m365_defender"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Shared / Resource Mailboxes (approx.)</label><input name="m365_shared" type="number" placeholder="0"/></div>
+    </div>
+
+    <div class="subsection-title">6.2 — Azure Subscriptions</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_azure">
+        <thead><tr><th>Subscription Name</th><th>Subscription ID</th><th>Purpose</th><th>Spend/mo (approx.)</th><th>Admin Contact</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_azure',5)">＋ Add Subscription</button>
+    <div class="field-grid" style="margin-top:14px;">
+      <div class="field"><label>VM / Compute Resource Count</label><input name="az_vms" placeholder="Approx. total VMs / EC2 / App Services"/></div>
+      <div class="field"><label>"As-a-Service" Offerings Used</label><input name="az_paas" placeholder="e.g. DBaaS, App Service Plans, Lambda, AKS"/></div>
+      <div class="field"><label>Cloud Migration Roadmap</label>
+        <select name="cloud_migration"><option value="">—</option><option>No plans to migrate</option><option>Partial migration planned</option><option>Full cloud migration planned</option><option>Already cloud-first</option></select>
+      </div>
+      <div class="field"><label>Migration Timeline</label><input name="cloud_migration_timeline" placeholder="e.g. 12–18 months, next fiscal year"/></div>
+    </div>
+
+    <div class="subsection-title">6.3 — Other Cloud Platforms</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_cloud">
+        <thead><tr><th>Cloud Platform</th><th>Services Used</th><th># Resources</th><th>Admin Contact</th><th>Monthly Cost</th><th style="width:32px"></th></tr></thead>
+        <tbody>
+          <tr><td><input value="AWS" data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input data-preseed="1"/></td><td class="delete-cell"><button type="button" onclick="this.closest('tr').remove();updateProgress();" title="Remove row">✕</button></td></tr>
+          <tr><td><input value="Google Cloud (GCP)" data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input data-preseed="1"/></td><td class="delete-cell"><button type="button" onclick="this.closest('tr').remove();updateProgress();" title="Remove row">✕</button></td></tr>
+          <tr><td><input placeholder="Other"/></td><td><input data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input data-preseed="1"/></td><td><input data-preseed="1"/></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S7 -->
+<div class="section-card" id="sec7">
+  <div class="section-header" onclick="toggleSection('sec7')">
+    <div class="section-num">7</div>
+    <div class="section-title">SaaS &amp; Line-of-Business Applications<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec7')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">7.1 — SaaS Application Inventory</div>
+    <div class="note-box">List all cloud/SaaS applications used by the business.</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_saas">
+        <thead><tr><th>Application Name</th><th>Vendor</th><th>Purpose / Category</th><th># Users</th><th>SSO Integrated?</th><th>Admin Contact</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_saas',6)">＋ Add Application</button>
+
+    <div class="subsection-title">7.2 — Locally-Installed / Line-of-Business Applications</div>
+    <div class="note-box">List applications installed locally on servers or workstations — <strong>not</strong> cloud/SaaS. Examples: practice management software, CAD tools, ERP clients, custom in-house apps, legacy line-of-business software.</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_lob">
+        <thead><tr><th>Application Name</th><th>Vendor / Developer</th><th>Version</th><th>Installed On</th><th># Users</th><th>Business Critical?</th><th>Support / Maintenance</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_lob',7)">＋ Add Application</button>
+    <div class="field-grid" style="margin-top:14px;">
+      <div class="field"><label>Any Applications Requiring Special Ports / Firewall Rules?</label><input name="lob_ports" placeholder="App name and port(s)"/></div>
+      <div class="field"><label>Any Applications Tied to Specific OS / Hardware?</label><input name="lob_legacy_dep" placeholder="e.g. must run on Windows 10, requires physical dongle"/></div>
+      <div class="field"><label>Any Applications Using SQL / Local Database Backend?</label><input name="lob_db_dep" placeholder="App name and DB type"/></div>
+      <div class="field"><label>Any Custom / In-House Developed Applications?</label><select name="lob_custom"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+    </div>
+
+    <div class="subsection-title">7.3 — Key Business Systems</div>
+    <table class="yn-table">
+      <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>System Category</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
+      <tbody>
+        <tr><td>CRM (e.g. Salesforce, HubSpot)</td><td class="yn-radio"><input type="radio" name="yn_crm" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_crm" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_crm" value="NA"/></td></tr>
+        <tr><td>ERP (e.g. SAP, Dynamics, NetSuite)</td><td class="yn-radio"><input type="radio" name="yn_erp" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_erp" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_erp" value="NA"/></td></tr>
+        <tr><td>Accounting / Finance (e.g. QuickBooks, Sage, Xero)</td><td class="yn-radio"><input type="radio" name="yn_accounting" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_accounting" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_accounting" value="NA"/></td></tr>
+        <tr><td>HR / Payroll (e.g. ADP, BambooHR, Paychex)</td><td class="yn-radio"><input type="radio" name="yn_hr" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_hr" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_hr" value="NA"/></td></tr>
+        <tr><td>Project Management (e.g. Asana, Monday, Jira)</td><td class="yn-radio"><input type="radio" name="yn_pm" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_pm" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_pm" value="NA"/></td></tr>
+        <tr><td>Document Management / DMS</td><td class="yn-radio"><input type="radio" name="yn_dms" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_dms" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_dms" value="NA"/></td></tr>
+        <tr><td>Industry-Specific LOB Application</td><td class="yn-radio"><input type="radio" name="yn_lob" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_lob" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_lob" value="NA"/></td></tr>
+      </tbody>
+    </table>
+    <div class="field-grid" style="margin-top:12px;">
+      <div class="field span2"><label>Describe Any Critical LOB / Industry-Specific Applications</label><textarea name="saas_lob_desc" placeholder="Application name, vendor, version, purpose..."></textarea></div>
+    </div>
+
+    <div class="subsection-title">7.4 — Communications &amp; Collaboration</div>
+    <div class="field-grid">
+      <div class="field"><label>Primary Email Platform</label><input name="comm_email" placeholder="e.g. M365, Google Workspace"/></div>
+      <div class="field"><label>Video / UC Platform</label><input name="comm_uc" placeholder="e.g. Teams, Zoom, Webex"/></div>
+      <div class="field"><label>Phone System</label><input name="comm_phone" placeholder="e.g. Teams Voice, RingCentral, PBX make/model"/></div>
+      <div class="field"><label>Fax Still in Use?</label><select name="comm_fax"><option value="">—</option><option>No</option><option>Yes – Physical</option><option>Yes – eFax</option></select></div>
+      <div class="field"><label>Intranet / Internal Portal</label><input name="comm_intranet" placeholder="e.g. SharePoint, Confluence"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S8 -->
+<div class="section-card" id="sec8">
+  <div class="section-header" onclick="toggleSection('sec8')">
+    <div class="section-num">8</div>
+    <div class="section-title">Databases &amp; Data Management<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec8')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">8.1 — Database Servers</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_db">
+        <thead><tr><th>DB Engine</th><th>Version</th><th>Hosting</th><th># Databases</th><th>Size (approx.)</th><th>Backup Method</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_db',6)">＋ Add Database</button>
+
+    <div class="field-grid" style="margin-top:16px;">
+      <div class="field"><label>Database Clusters / Always On AGs?</label><select name="db_clusters"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Data Retention Policy?</label><select name="db_retention"><option value="">—</option><option>Yes – documented</option><option>Informal only</option><option>No</option></select></div>
+      <div class="field"><label>PII / PHI / Regulated Data Stored?</label><select name="db_pii"><option value="">—</option><option>Yes</option><option>No</option><option>Unsure</option></select></div>
+      <div class="field"><label>Database Admin Access</label><input name="db_admins" placeholder="Who holds DB admin rights?"/></div>
+    </div>
+
+    <div class="subsection-title">8.2 — Compliance</div>
+    <table class="yn-table">
+      <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>Framework / Requirement</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
+      <tbody>
+        <tr><td>HIPAA / Healthcare data handled?</td><td class="yn-radio"><input type="radio" name="yn_hipaa" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_hipaa" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_hipaa" value="NA"/></td></tr>
+        <tr><td>PCI-DSS / Payment card data handled?</td><td class="yn-radio"><input type="radio" name="yn_pci" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_pci" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_pci" value="NA"/></td></tr>
+        <tr><td>SOC 2 compliance required?</td><td class="yn-radio"><input type="radio" name="yn_soc2" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_soc2" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_soc2" value="NA"/></td></tr>
+        <tr><td>GDPR / CCPA obligations apply?</td><td class="yn-radio"><input type="radio" name="yn_gdpr" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_gdpr" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_gdpr" value="NA"/></td></tr>
+        <tr><td>Cyber insurance policy in place?</td><td class="yn-radio"><input type="radio" name="yn_cyber_ins" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_cyber_ins" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_cyber_ins" value="NA"/></td></tr>
+        <tr><td>Prior security assessment / pen test performed?</td><td class="yn-radio"><input type="radio" name="yn_pentest" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_pentest" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_pentest" value="NA"/></td></tr>
+      </tbody>
+    </table>
+    <div class="field-grid" style="margin-top:12px;">
+      <div class="field"><label>Compliance Frameworks Followed</label><input name="comp_frameworks" placeholder="e.g. NIST CSF, ISO 27001, CIS Controls"/></div>
+      <div class="field"><label>Last Audit / Assessment Date</label><input name="comp_last_audit" type="date"/></div>
+      <div class="field"><label>Cyber Insurance Carrier &amp; Policy #</label><input name="comp_cyber_ins" placeholder="Carrier name and policy number"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S9 -->
+<div class="section-card" id="sec9">
+  <div class="section-header" onclick="toggleSection('sec9')">
+    <div class="section-num">9</div>
+    <div class="section-title">Backup, Disaster Recovery &amp; Business Continuity<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec9')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">9.1 — Backup Configuration</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_backup">
+        <thead><tr><th>What Is Backed Up</th><th>Backup Tool / Vendor</th><th>Frequency</th><th>Retention</th><th>Offsite / Cloud?</th><th>Last Tested</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_backup',6)">＋ Add Backup Target</button>
+
+    <div class="field-grid" style="margin-top:12px;">
+      <div class="field"><label>Total Data Volume Being Backed Up</label><input name="bk_volume" placeholder="e.g. 2TB, 500GB"/></div>
+      <div class="field"><label>Backup Testing Schedule</label>
+        <select name="bk_test_schedule"><option value="">—</option><option>Monthly</option><option>Quarterly</option><option>Annually</option><option>Ad-hoc only</option><option>Never tested</option></select>
+      </div>
+    </div>
+
+    <div class="subsection-title">9.2 — Recovery Objectives</div>
+    <div class="field-grid">
+      <div class="field"><label>Recovery Time Objective (RTO)</label><input name="dr_rto" placeholder="e.g. 4 hours, same-day"/></div>
+      <div class="field"><label>Recovery Point Objective (RPO)</label><input name="dr_rpo" placeholder="e.g. 1 hour, overnight"/></div>
+      <div class="field"><label>Documented DR / BCP Plan?</label><select name="dr_plan"><option value="">—</option><option>Yes – fully tested</option><option>Yes – untested</option><option>In progress</option><option>No</option></select></div>
+      <div class="field"><label>Offsite / Warm Standby Available?</label><select name="dr_standby"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Immutable / Air-Gapped Backups?</label><select name="dr_immutable"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>M365 / Cloud Data Backed Up Separately?</label><select name="dr_m365backup"><option value="">—</option><option>Yes</option><option>No</option><option>Partially</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S10 -->
+<div class="section-card" id="sec10">
+  <div class="section-header" onclick="toggleSection('sec10')">
+    <div class="section-num">10</div>
+    <div class="section-title">Security &amp; Monitoring<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec10')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">10.1 — Security Posture</div>
+    <table class="yn-table">
+      <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>Question</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
+      <tbody>
+        <tr><td>Security awareness training provided?</td><td class="yn-radio"><input type="radio" name="yn_sat" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_sat" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_sat" value="NA"/></td></tr>
+        <tr><td>Phishing simulation program in place?</td><td class="yn-radio"><input type="radio" name="yn_phish" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_phish" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_phish" value="NA"/></td></tr>
+        <tr><td>SIEM / log aggregation platform in use?</td><td class="yn-radio"><input type="radio" name="yn_siem" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_siem" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_siem" value="NA"/></td></tr>
+        <tr><td>Vulnerability scanning performed regularly?</td><td class="yn-radio"><input type="radio" name="yn_vulnscan" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_vulnscan" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_vulnscan" value="NA"/></td></tr>
+        <tr><td>Dark web monitoring in use?</td><td class="yn-radio"><input type="radio" name="yn_darkweb" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_darkweb" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_darkweb" value="NA"/></td></tr>
+        <tr><td>DNS filtering / web proxy deployed?</td><td class="yn-radio"><input type="radio" name="yn_dns_filter" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_dns_filter" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_dns_filter" value="NA"/></td></tr>
+        <tr><td>3rd-party email filtering beyond M365 defaults?</td><td class="yn-radio"><input type="radio" name="yn_emailsec" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_emailsec" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_emailsec" value="NA"/></td></tr>
+        <tr><td>Previous security incidents / breaches?</td><td class="yn-radio"><input type="radio" name="yn_breach" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_breach" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_breach" value="NA"/></td></tr>
+      </tbody>
+    </table>
+    <div class="field-grid" style="margin-top:12px;">
+      <div class="field"><label>DNS Filter Product</label><input name="sec_dns_product" placeholder="e.g. Cisco Umbrella, DNSFilter, Zscaler"/></div>
+      <div class="field"><label>Email Security Product</label><input name="sec_email_product" placeholder="e.g. Defender, Proofpoint, Mimecast"/></div>
+      <div class="field"><label>SIEM Platform</label><input name="sec_siem_product" placeholder="e.g. Wazuh, Sentinel, Splunk"/></div>
+      <div class="field"><label>What Data Feeds into SIEM?</label><input name="sec_siem_feeds" placeholder="e.g. endpoint logs, firewall, AD, O365"/></div>
+      <div class="field"><label>IDS / IPS in Use?</label><select name="sec_ids"><option value="">—</option><option>Yes – IDS only</option><option>Yes – IPS (inline)</option><option>No</option></select></div>
+      <div class="field"><label>Full Web Proxy / Proxy Server?</label><select name="sec_proxy"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Current RMM Solution</label><input name="sec_rmm" placeholder="e.g. ConnectWise, NinjaRMM, Datto RMM"/></div>
+      <div class="field"><label>SOC Coverage</label>
+        <select name="sec_soc"><option value="">—</option><option>In-house SOC</option><option>Outsourced SOC / MSSP</option><option>MDR service</option><option>None</option></select>
+      </div>
+      <div class="field"><label>Formal Incident Response Plan?</label><select name="sec_ir_plan"><option value="">—</option><option>Yes – documented &amp; tested</option><option>Yes – documented, untested</option><option>Informal only</option><option>No</option></select></div>
+      <div class="field"><label>Written Security Policies (WISP)?</label><select name="sec_wisp"><option value="">—</option><option>Yes</option><option>No</option><option>In progress</option></select></div>
+      <div class="field"><label>Ransomware Response Approach</label><input name="sec_ransomware" placeholder="e.g. isolated backups, IR retainer, cyber insurance"/></div>
+      <div class="field span2"><label>Previous Incident Description (if applicable)</label><textarea name="sec_incident_desc" placeholder="Brief description of any prior incidents or breaches..."></textarea></div>
+    </div>
+
+    <div class="subsection-title">10.2 — Physical Security</div>
+    <div class="field-grid">
+      <div class="field"><label>Server Room / Closet Locked?</label><select name="phys_lock"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Physical Access Control System?</label><input name="phys_access" placeholder="e.g. badge reader, keypad, none"/></div>
+      <div class="field"><label>CCTV / Camera System?</label><select name="phys_cctv"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>UPS / Power Protection for Servers?</label><select name="phys_ups"><option value="">—</option><option>Yes</option><option>No</option><option>Partial</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S11 -->
+<div class="section-card" id="sec11">
+  <div class="section-header" onclick="toggleSection('sec11')">
+    <div class="section-num">11</div>
+    <div class="section-title">Printing, Peripherals &amp; Misc Hardware<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec11')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">11.1 — Printers &amp; Copiers</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_printers">
+        <thead><tr><th>Make / Model</th><th>Location</th><th>Network or Local?</th><th>Managed Print / Lease?</th><th>Support Contact</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_printers',5)">＋ Add Printer</button>
+
+    <div class="subsection-title">11.2 — Other Hardware</div>
+    <div class="field-grid">
+      <div class="field"><label>Barcode Scanners / POS Hardware?</label><input name="hw_pos" placeholder="Make, model, quantity"/></div>
+      <div class="field"><label>IP Cameras / NVR Systems?</label><input name="hw_cctv" placeholder="Make, model, quantity"/></div>
+      <div class="field"><label>Building Management / HVAC Integration?</label><input name="hw_bms" placeholder="Describe if applicable"/></div>
+      <div class="field"><label>Legacy / Specialty Hardware</label><input name="hw_legacy" placeholder="Anything unusual we should know?"/></div>
+      <div class="field"><label>UPS Units (count)</label><input name="hw_ups_count" type="number" placeholder="0"/></div>
+      <div class="field"><label>UPS Monitored?</label><select name="hw_ups_mon"><option value="">—</option><option>Yes – network managed</option><option>No – standalone</option><option>N/A</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S12 -->
+<div class="section-card" id="sec12">
+  <div class="section-header" onclick="toggleSection('sec12')">
+    <div class="section-num">12</div>
+    <div class="section-title">Current Vendors &amp; Contracts<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec12')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="note-box">Examples: ISP, domain registrar, SSL provider, SaaS subscriptions, hardware maintenance, previous MSP / IT provider.</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_vendors">
+        <thead><tr><th>Vendor / Supplier</th><th>Service Provided</th><th>Contract End Date</th><th>Account #</th><th>Primary Contact at Vendor</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_vendors',5)">＋ Add Vendor</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S13 -->
+<div class="section-card" id="sec13">
+  <div class="section-header" onclick="toggleSection('sec13')">
+    <div class="section-num">13</div>
+    <div class="section-title">Documentation &amp; Credentials<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec13')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <table class="yn-table">
+      <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>Question</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
+      <tbody>
+        <tr><td>Network diagram exists?</td><td class="yn-radio"><input type="radio" name="yn_netdiag" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_netdiag" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_netdiag" value="NA"/></td></tr>
+        <tr><td>IT asset / inventory list maintained?</td><td class="yn-radio"><input type="radio" name="yn_asset_inv" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_asset_inv" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_asset_inv" value="NA"/></td></tr>
+        <tr><td>Password manager with shared credentials in use?</td><td class="yn-radio"><input type="radio" name="yn_pwmgr_shared" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_pwmgr_shared" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_pwmgr_shared" value="NA"/></td></tr>
+        <tr><td>IT runbook / SOPs documented?</td><td class="yn-radio"><input type="radio" name="yn_runbook" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_runbook" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_runbook" value="NA"/></td></tr>
+        <tr><td>Software license registry maintained?</td><td class="yn-radio"><input type="radio" name="yn_lic_reg" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_lic_reg" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_lic_reg" value="NA"/></td></tr>
+        <tr><td>Change management process followed?</td><td class="yn-radio"><input type="radio" name="yn_change_mgmt" value="Yes"/></td><td class="yn-radio"><input type="radio" name="yn_change_mgmt" value="No"/></td><td class="yn-radio"><input type="radio" name="yn_change_mgmt" value="NA"/></td></tr>
+      </tbody>
+    </table>
+    <div class="field-grid" style="margin-top:12px;">
+      <div class="field"><label>Password Manager Platform</label><input name="doc_pwmgr" placeholder="e.g. Keeper, 1Password, IT Glue"/></div>
+      <div class="field"><label>Documentation Platform</label><input name="doc_platform" placeholder="e.g. IT Glue, Hudu, Confluence"/></div>
+      <div class="field span2"><label>Credentials / Docs to Hand Over at Onboarding</label><textarea name="doc_handover" placeholder="Describe what documentation / credential stores you can provide..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S14 -->
+<div class="section-card" id="sec14">
+  <div class="section-header" onclick="toggleSection('sec14')">
+    <div class="section-num">14</div>
+    <div class="section-title">IT Operations &amp; Support<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec14')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+
+    <div class="subsection-title">14.1 — Current Support Model</div>
+    <div class="field-grid">
+      <div class="field"><label>Current MSP / NOC Provider</label><input name="ops_current_msp" placeholder="Company name or 'In-house'"/></div>
+      <div class="field"><label>MSP Contract End Date</label><input name="ops_msp_end" type="date"/></div>
+      <div class="field"><label>24/7 Monitoring in Place?</label><select name="ops_247"><option value="">—</option><option>Yes – fully managed</option><option>Yes – alerts only</option><option>No</option></select></div>
+      <div class="field"><label>Support Coverage Required</label>
+        <select name="ops_coverage"><option value="">—</option><option>Mon–Fri 8am–5pm</option><option>Mon–Fri 7am–7pm</option><option>24/5</option><option>24/7/365</option></select>
+      </div>
+      <div class="field span2"><label>Current Support Gaps / Pain Points</label><textarea name="ops_gaps" placeholder="What's not working well with your current IT support situation?"></textarea></div>
+    </div>
+
+    <div class="subsection-title">14.2 — Help Desk &amp; Ticketing</div>
+    <div class="field-grid">
+      <div class="field"><label>Ticketing System in Use</label><input name="ops_ticketing" placeholder="e.g. ServiceNow, Zendesk, Freshdesk, email only"/></div>
+      <div class="field"><label>How Do Users Request Support?</label>
+        <select name="ops_support_channel"><option value="">—</option><option>Ticketing portal</option><option>Email</option><option>Phone</option><option>Walk-up / in-person</option><option>Multiple channels</option></select>
+      </div>
+      <div class="field"><label>Approximate Ticket Volume</label><input name="ops_ticket_vol" placeholder="e.g. ~50/week, ~200/month"/></div>
+      <div class="field"><label>Satisfied with Current Response Times?</label><select name="ops_response_sat"><option value="">—</option><option>Yes</option><option>Partially</option><option>No</option></select></div>
+    </div>
+
+    <div class="subsection-title">14.3 — SLA &amp; Service Expectations</div>
+    <div class="field-grid">
+      <div class="field"><label>Target Response Time (P1 Critical)</label><input name="ops_sla_p1" placeholder="e.g. 15 minutes, 1 hour"/></div>
+      <div class="field"><label>Target Resolution Time (P1 Critical)</label><input name="ops_sla_res" placeholder="e.g. 4 hours, same business day"/></div>
+      <div class="field"><label>Industry / Internal SLA Mandates?</label><input name="ops_sla_mandates" placeholder="e.g. HIPAA uptime requirements, client SLAs"/></div>
+      <div class="field"><label>Preferred Reporting Frequency</label>
+        <select name="ops_reporting"><option value="">—</option><option>Weekly</option><option>Monthly</option><option>Quarterly</option><option>On-demand only</option></select>
+      </div>
+      <div class="field"><label>Preferred Engagement Model</label>
+        <select name="ops_engagement"><option value="">—</option><option>Fully managed / all-inclusive</option><option>Co-managed (blended)</option><option>Project-based only</option><option>Retainer</option><option>Break/fix</option></select>
+      </div>
+      <div class="field"><label>Areas Most Challenging for Internal Team</label><input name="ops_challenges" placeholder="e.g. cloud, security, virtualisation, dev ops"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S15 -->
+<div class="section-card" id="sec15">
+  <div class="section-header" onclick="toggleSection('sec15')">
+    <div class="section-num">15</div>
+    <div class="section-title">Strategic Goals &amp; Future Plans<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec15')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+
+    <div class="subsection-title">15.1 — Upcoming Projects (6–12 Months)</div>
+    <div class="note-box">List any planned projects, initiatives, or changes in the next 6–12 months.</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_projects">
+        <thead><tr><th>Project / Initiative</th><th>Category</th><th>Estimated Timeline</th><th>Budget Allocated?</th><th>Notes / Dependencies</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_projects',5)">＋ Add Project</button>
+
+    <div class="subsection-title">15.2 — IT Goals (1–3 Years)</div>
+    <div class="field-grid">
+      <div class="field span2"><label>Primary IT Goals Over the Next 1–3 Years</label><textarea name="goals_1_3yr" placeholder="e.g. full cloud migration, zero-trust rollout, ERP upgrade, SOC 2 certification..."></textarea></div>
+      <div class="field"><label>New Software / Automation Initiatives Planned?</label><input name="goals_automation" placeholder="e.g. workflow automation, AI tools, new ERP"/></div>
+      <div class="field"><label>Office Expansions / Relocations Planned?</label><select name="goals_expansion"><option value="">—</option><option>Yes</option><option>No</option><option>Under consideration</option></select></div>
+    </div>
+
+    <div class="subsection-title">15.3 — Budget &amp; Decision Process</div>
+    <div class="field-grid">
+      <div class="field"><label>How Are IT Investment Decisions Made?</label><input name="budget_process" placeholder="e.g. annual budget cycle, CFO approval, board sign-off"/></div>
+      <div class="field"><label>Who Else Is Involved in Decision-Making?</label><input name="budget_stakeholders" placeholder="e.g. CEO, CFO, Procurement, IT steering committee"/></div>
+      <div class="field"><label>Looking for a Long-Term Strategic Partner?</label><select name="budget_partner"><option value="">—</option><option>Yes</option><option>No</option><option>Open to it</option></select></div>
+      <div class="field"><label>Services to Consolidate with Single Provider</label><input name="budget_consolidate" placeholder="e.g. currently using 3 MSPs, want to consolidate"/></div>
+      <div class="field span2"><label>How Do You Evaluate New IT Vendors / Partners?</label><textarea name="budget_eval" placeholder="e.g. RFP process, referrals, proof-of-concept, pricing..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S16 -->
+<div class="section-card" id="sec16">
+  <div class="section-header" onclick="toggleSection('sec16')">
+    <div class="section-num">16</div>
+    <div class="section-title">Data &amp; Analytics<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec16')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="note-box">This section is optional — complete it only if your organisation has significant data engineering, analytics, or BI requirements.</div>
+
+    <div class="subsection-title">16.1 — Data Strategy &amp; Objectives</div>
+    <div class="field-grid">
+      <div class="field span2"><label>Primary Business Objectives Driving Data Initiatives</label><textarea name="da_objectives" placeholder="e.g. improve reporting, enable predictive analytics, consolidate data silos..."></textarea></div>
+      <div class="field"><label>Types of Data Managed</label><input name="da_data_types" placeholder="e.g. Structured, Unstructured, Semi-structured, Streaming"/></div>
+      <div class="field"><label>Estimated Data Volume Managed</label>
+        <select name="da_volume"><option value="">—</option><option>Under 1TB</option><option>1–10TB</option><option>10–100TB</option><option>100TB–1PB</option><option>1PB+</option></select>
+      </div>
+      <div class="field"><label>Expected Annual Data Growth</label><input name="da_growth" placeholder="e.g. 20% YoY, doubling in 2 years"/></div>
+      <div class="field"><label>Data Latency Requirements</label>
+        <select name="da_latency"><option value="">—</option><option>Real-time (sub-second)</option><option>Near real-time (minutes)</option><option>Hourly</option><option>Daily batch</option><option>Weekly / ad-hoc</option></select>
+      </div>
+    </div>
+
+    <div class="subsection-title">16.2 — Data Sources &amp; Ingestion</div>
+    <div class="field-grid">
+      <div class="field span2"><label>Primary Sources of Critical Data</label><input name="da_sources" placeholder="e.g. CRM, ERP, IoT sensors, third-party APIs, flat files, databases"/></div>
+      <div class="field"><label>Data Formats in Use</label><input name="da_formats" placeholder="e.g. CSV, JSON, XML, Parquet, database tables"/></div>
+      <div class="field"><label>Ingestion Frequency / Velocity</label>
+        <select name="da_ingestion"><option value="">—</option><option>Real-time / streaming</option><option>Micro-batch (minutes)</option><option>Hourly batch</option><option>Daily batch</option><option>Weekly / monthly</option><option>Mixed</option></select>
+      </div>
+    </div>
+
+    <div class="subsection-title">16.3 — Current Data Platform &amp; Architecture</div>
+    <div class="field-grid">
+      <div class="field"><label>Current Data Architecture</label>
+        <select name="da_architecture"><option value="">—</option><option>On-premises only</option><option>Cloud-native</option><option>Hybrid</option><option>No formal architecture</option></select>
+      </div>
+      <div class="field"><label>Data Warehouse / Lakehouse Platform</label><input name="da_warehouse" placeholder="e.g. Snowflake, Databricks, Redshift, Synapse, BigQuery, none"/></div>
+      <div class="field"><label>ETL / ELT Tools in Use</label><input name="da_etl" placeholder="e.g. Azure Data Factory, dbt, Informatica, Talend, custom scripts"/></div>
+      <div class="field"><label>Databases in Use</label><input name="da_databases" placeholder="e.g. SQL Server, PostgreSQL, Oracle, MySQL, MongoDB"/></div>
+      <div class="field"><label>BI / Analytics / Reporting Tools</label><input name="da_bi" placeholder="e.g. Power BI, Tableau, Looker, SSRS, Excel, custom"/></div>
+      <div class="field"><label>Cloud Provider(s) for Data</label><input name="da_cloud" placeholder="e.g. Azure, AWS, GCP, multi-cloud"/></div>
+    </div>
+
+    <div class="subsection-title">16.4 — Data Team &amp; Governance</div>
+    <div class="field-grid">
+      <div class="field"><label>Size of Internal Data / Analytics Team</label><input name="da_team_size" placeholder="e.g. 2 data engineers, 1 analyst, no dedicated team"/></div>
+      <div class="field"><label>Technical Skills Available</label><input name="da_skills" placeholder="e.g. SQL, Python, Spark, dbt, Power BI"/></div>
+      <div class="field"><label>Dedicated Pipeline / Platform Ops Resources?</label><select name="da_dedicated"><option value="">—</option><option>Yes – full-time</option><option>Partially</option><option>No</option></select></div>
+      <div class="field"><label>External Data Vendors / Partners</label><input name="da_vendors" placeholder="e.g. data providers, integration partners, consultants"/></div>
+      <div class="field"><label>Data Quality / Governance Maturity</label>
+        <select name="da_governance"><option value="">—</option><option>Formal program in place</option><option>Informal / ad-hoc</option><option>None</option></select>
+      </div>
+      <div class="field"><label>Data Compliance Requirements</label><input name="da_compliance" placeholder="e.g. GDPR, CCPA, HIPAA data residency, SOC 2"/></div>
+    </div>
+
+    <div class="subsection-title">16.5 — Pain Points &amp; Goals</div>
+    <div class="field-grid">
+      <div class="field span2"><label>Primary Challenges in Current Data Management</label><textarea name="da_pain" placeholder="e.g. siloed data, slow reporting, poor data quality, lack of self-service BI..."></textarea></div>
+      <div class="field span2"><label>Specific Analytics Outcomes / Use Cases Desired</label><textarea name="da_use_cases" placeholder="e.g. predictive churn, customer segmentation, real-time dashboards, supply chain visibility..."></textarea></div>
+      <div class="field"><label>Planned / Ongoing Digital Transformation Initiatives</label><input name="da_transformation" placeholder="e.g. cloud data migration, data mesh, AI/ML platform"/></div>
+      <div class="field"><label>How Is Data Initiative Success Measured?</label><input name="da_kpis" placeholder="e.g. report latency, user adoption, ROI, data quality score"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S17 -->
+<div class="section-card" id="sec17">
+  <div class="section-header" onclick="toggleSection('sec17')">
+    <div class="section-num">17</div>
+    <div class="section-title">Additional Notes &amp; Special Requirements<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec17')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Use this section for anything not covered above — upcoming projects, known pain points, specific concerns about your current IT environment, or anything you'd like us to know before our discovery call.</p>
+    <div class="field-grid cols-1">
+      <div class="field"><label>Known Issues or Current Pain Points</label><textarea name="notes_pain" rows="5" placeholder="Describe any ongoing issues, frustrations, or areas of concern..."></textarea></div>
+      <div class="field"><label>Upcoming Projects or Planned Changes</label><textarea name="notes_projects" rows="4" placeholder="Hardware refreshes, migrations, new office, software rollouts..."></textarea></div>
+      <div class="field"><label>Any Regulatory or Industry-Specific IT Requirements</label><textarea name="notes_reqs" rows="3" placeholder="Any specific requirements from your industry, clients, or insurers..."></textarea></div>
+      <div class="field"><label>Anything Else We Should Know</label><textarea name="notes_other" rows="4" placeholder="Open field — anything at all..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIONS BAR -->
+<div class="actions-bar">
+  <div class="actions-bar-left">
+    <strong id="completedCount">0</strong> of 14 sections touched
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-outline" onclick="clearForm()">Clear Form</button>
+    <button class="btn btn-primary" id="pdfBtn" onclick="generatePDF()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      <span id="pdfBtnText">Generate PDF</span>
+      <span class="spinner" id="pdfSpinner"></span>
+    </button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── SECTION TOGGLE ────────────────────────────────────────────────
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('collapsed');
+}
+
+function toggleNA(id) {
+  const card = document.getElementById(id);
+  const isNA = card.classList.toggle('is-na');
+  if (isNA) {
+    // Marking N/A: collapse the body
+    card.classList.add('collapsed');
+  } else {
+    // Un-marking N/A: expand the body
+    card.classList.remove('collapsed');
+  }
+  updateProgress();
+}
+
+function isSectionNA(id) {
+  return document.getElementById(id).classList.contains('is-na');
+}
+
+// ── DYNAMIC TABLE ROWS ────────────────────────────────────────────
+function addRow(tableId, cols, seeded = false) {
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  const row = document.createElement('tr');
+  for (let i = 0; i < cols; i++) {
+    const td = document.createElement('td');
+    const input = document.createElement('input');
+    if (seeded) input.dataset.preseed = '1';
+    input.addEventListener('input', function() {
+      delete this.dataset.preseed;
+      updateProgress();
+    });
+    td.appendChild(input);
+    row.appendChild(td);
+  }
+  // Delete cell
+  const delTd = document.createElement('td');
+  delTd.className = 'delete-cell';
+  const delBtn = document.createElement('button');
+  delBtn.type = 'button';
+  delBtn.textContent = '✕';
+  delBtn.title = 'Remove row';
+  delBtn.onclick = () => { row.remove(); updateProgress(); };
+  delTd.appendChild(delBtn);
+  row.appendChild(delTd);
+  tbody.appendChild(row);
+  if (!window._seeding) updateProgress();
+}
+
+// ── CONTACT BLOCKS ────────────────────────────────────────────────
+let contactIdx = 0;
+function addContact(containerId, title, seeded = false) {
+  const idx = contactIdx++;
+  const container = document.getElementById(containerId);
+  const block = document.createElement('div');
+  block.className = 'contact-block';
+  block.innerHTML = `
+    <div class="contact-block-title">${title}<button type="button" class="delete-btn" onclick="this.closest('.contact-block').remove();updateProgress();" title="Remove contact">✕</button></div>
+    <div class="field-grid">
+      <div class="field"><label>Full Name</label><input name="contact_${idx}_name" placeholder="Jane Smith"/></div>
+      <div class="field"><label>Title / Role</label><input name="contact_${idx}_role" placeholder="IT Manager"/></div>
+      <div class="field"><label>Email</label><input name="contact_${idx}_email" type="email" placeholder="jane@company.com"/></div>
+      <div class="field"><label>Phone</label><input name="contact_${idx}_phone" placeholder="(555) 000-0000"/></div>
+      <div class="field"><label>Mobile</label><input name="contact_${idx}_mobile" placeholder="(555) 000-0000"/></div>
+      <div class="field"><label>Preferred Contact Method</label>
+        <select name="contact_${idx}_pref"><option value="">—</option><option>Email</option><option>Phone</option><option>Text</option><option>Teams</option></select>
+      </div>
+      <div class="field"><label>Receives IT Alerts?</label><select name="contact_${idx}_alerts"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Decision Maker?</label><select name="contact_${idx}_dm"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+    </div>`;
+  block.querySelectorAll('input,select').forEach(el => {
+    if (seeded) el.dataset.preseed = '1';
+    el.addEventListener('input', function() {
+      delete this.dataset.preseed;
+      updateProgress();
+    });
+  });
+  container.appendChild(block);
+  if (!window._seeding) updateProgress();
+}
+
+// ── PROGRESS (declared before seeding so updateProgress is available) ──────
+const sections = ['sec1','sec2','sec3','sec4','sec5','sec6','sec7','sec8','sec9','sec10','sec11','sec12','sec13','sec14','sec15','sec16','sec17'];
+const secLabels = ['Company','Network','Servers','Identity','Endpoints','M365','SaaS','Databases','Backup','Security','Hardware','Vendors','Docs','IT Ops','Strategy','Data & Analytics','Notes'];
+
+// Build section pills
+const psDiv = document.getElementById('progressSections');
+sections.forEach((s, i) => {
+  const p = document.createElement('span');
+  p.className = 'psec'; p.id = `psec_${s}`;
+  p.textContent = `${i+1}. ${secLabels[i]}`;
+  p.onclick = () => { document.getElementById(s).scrollIntoView({behavior:'smooth'}); };
+  psDiv.appendChild(p);
+});
+
+function sectionHasData(sId) {
+  const card = document.getElementById(sId);
+  if (card.classList.contains('is-na')) return true; // N/A counts as done
+  const inputs = card.querySelectorAll('input:not([data-preseed]),select:not([data-preseed]),textarea:not([data-preseed])');
+  for (const el of inputs) {
+    if (el.type === 'radio') {
+      if (el.checked) return true;
+      continue;
+    }
+    if (el.value && el.value.trim()) return true;
+  }
+  return false;
+}
+
+function updateProgress() {
+  let done = 0;
+  sections.forEach(s => {
+    const has = sectionHasData(s);
+    if (has) done++;
+    const pill = document.getElementById(`psec_${s}`);
+    if (pill) pill.classList.toggle('done', has);
+  });
+  const pct = Math.round(done / sections.length * 100);
+  document.getElementById('pct').textContent = pct;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('completedCount').textContent = done;
+}
+
+document.getElementById('mainForm').addEventListener('input', updateProgress);
+
+// ── SEED INITIAL DATA (after updateProgress is defined) ───────────
+window._seeding = true;
+addContact('contacts-it', 'Primary IT / Technical Contact', true);
+addContact('contacts-exec', 'Owner / CEO', true);
+addContact('contacts-other', 'Finance / Accounts Payable Contact', true);
+
+['tbl_firewall','tbl_switches','tbl_subnets','tbl_servers','tbl_azure',
+ 'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors','tbl_projects'].forEach(id => {
+  const cols = document.querySelector(`#${id} thead tr`).children.length;
+  addRow(id, cols, true);
+  addRow(id, cols, true);
+});
+window._seeding = false;
+
+// Section 17 (Data & Analytics) is optional — mark N/A by default
+
+
+// ── CLEAR FORM ────────────────────────────────────────────────────
+function clearForm() {
+  if (!confirm('Clear all form data?')) return;
+  document.getElementById('mainForm').reset();
+  document.querySelectorAll('.dyn-table tbody, #contacts-it, #contacts-exec, #contacts-other').forEach(el => el.innerHTML = '');
+  addContact('contacts-it', 'Primary IT / Technical Contact');
+  addContact('contacts-exec', 'Owner / CEO');
+  addContact('contacts-other', 'Finance / Accounts Payable Contact');
+  ['tbl_firewall','tbl_switches','tbl_subnets','tbl_servers','tbl_azure',
+   'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors','tbl_projects'].forEach(id => {
+    const cols = document.querySelector(`#${id} thead tr`).children.length;
+    addRow(id, cols);
+    addRow(id, cols);
+  });
+  updateProgress();
+  showToast('Form cleared.');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ── PDF GENERATION ────────────────────────────────────────────────
+// Fetch and cache the logo SVG as a data URI for PDF embedding
+let _logoCached = null;
+async function fetchLogoAsDataUri() {
+  if (_logoCached) return _logoCached;
+  try {
+    const res = await fetch("https://versetalinfo.com/wp-content/uploads/2021/09/logo.svg", { mode: 'cors' });
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    const dataUri = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(blob);
+    });
+    if (!dataUri) return null;
+    _logoCached = dataUri;
+    window._logoDataUri = dataUri;
+    // Pre-render to PNG canvas so newPage() can use it synchronously
+    await new Promise(resolve => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const cvs = document.createElement('canvas');
+        cvs.width = 440; cvs.height = 114;
+        const ctx = cvs.getContext('2d');
+        ctx.drawImage(img, 0, 0, 440, 114);
+        window._logoPngCache = cvs.toDataURL('image/png');
+        resolve();
+      };
+      img.onerror = () => resolve();
+      img.src = dataUri;
+    });
+    return _logoCached;
+  } catch(e) {
+    console.warn('Logo fetch failed:', e);
+    return null;
+  }
+}
+
+async function generatePDF() {
+  const btn = document.getElementById('pdfBtn');
+  const btnText = document.getElementById('pdfBtnText');
+  const spinner = document.getElementById('pdfSpinner');
+  btn.disabled = true;
+  btnText.textContent = 'Generating…';
+  spinner.classList.add('active');
+
+  await new Promise(r => setTimeout(r, 50)); // let spinner render
+
+  // Dynamically load jsPDF if not already present
+  if (!window.jspdf) {
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.crossOrigin = 'anonymous';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    }).catch(() => null);
+  }
+  if (!window.jspdf) {
+    btn.disabled = false; btnText.textContent = 'Generate PDF'; spinner.classList.remove('active');
+    showToast('Could not load PDF engine. Make sure you have internet access.');
+    return;
+  }
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    const W = 210, H = 297;
+    const ml = 14, mr = 14, mt = 14;
+    let y = mt;
+    const cw = W - ml - mr; // content width
+
+    // Colors
+    const navy   = [10,  37,  67];
+    const green  = [91, 191,  70];
+    const sky    = [42, 167, 223];
+    const ltblue = [214, 232, 245];
+    const white  = [255, 255, 255];
+    const gold   = [200, 146,  42];
+    const muted  = [107, 122, 141];
+
+    function newPage() {
+      doc.addPage();
+      y = mt;
+      // Page header band
+      doc.setFillColor(...navy);
+      doc.rect(0, 0, W, 10, 'F');
+      doc.setFillColor(...green);
+      doc.rect(0, 10, W, 1, 'F');
+      // Mini logo in page header (sync - uses pre-cached PNG)
+      try {
+        if (window._logoPngCache) {
+          doc.addImage(window._logoPngCache, 'PNG', ml, 1.2, 24, 6.8);
+        }
+      } catch(e) {
+        doc.setTextColor(...white);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7.5);
+        doc.text('Versetal', ml, 7);
+      }
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.setTextColor(...muted);
+      doc.text('Client Onboarding Questionnaire  |  CONFIDENTIAL', W - mr, 7, { align: 'right' });
+      y = 18;
+    }
+
+    function checkY(needed = 12) {
+      if (y + needed > H - 16) newPage();
+    }
+
+    function sectionHeader(num, title) {
+      checkY(14);
+      doc.setFillColor(...navy);
+      doc.rect(ml, y, cw, 10, 'F');
+      doc.setFillColor(...green);
+      doc.rect(ml, y + 10, cw, 1, 'F');
+      // Circle
+      doc.setFillColor(...green);
+      doc.circle(ml + 7, y + 5, 4.5, 'F');
+      doc.setTextColor(...white);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.text(String(num), ml + 7, y + 6.5, { align: 'center' });
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text(title, ml + 16, y + 6.8);
+      y += 14;
+    }
+
+    function subHeader(title) {
+      checkY(10);
+      doc.setTextColor(...sky);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.text(title.toUpperCase(), ml, y + 4);
+      doc.setDrawColor(...ltblue);
+      doc.setLineWidth(0.3);
+      doc.line(ml, y + 5.5, ml + cw, y + 5.5);
+      y += 9;
+    }
+
+    function sectionNA(num, title) {
+      // Render a compact N/A band for the whole section
+      checkY(18);
+      // Header bar (dimmed)
+      doc.setFillColor(80, 100, 120);
+      doc.rect(ml, y, cw, 10, 'F');
+      doc.setFillColor(180, 190, 200);
+      doc.rect(ml, y + 10, cw, 1, 'F');
+      doc.setFillColor(140, 155, 170);
+      doc.circle(ml + 7, y + 5, 4.5, 'F');
+      doc.setTextColor(...white);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.text(String(num), ml + 7, y + 6.5, { align: 'center' });
+      doc.setFontSize(10);
+      doc.text(title, ml + 16, y + 6.8);
+      // N/A label on right
+      doc.setFontSize(7);
+      doc.setFont('helvetica', 'normal');
+      doc.text('NOT APPLICABLE', ml + cw - 2, y + 6.5, { align: 'right' });
+      y += 13;
+      // Grey content band
+      doc.setFillColor(235, 238, 242);
+      doc.rect(ml, y, cw, 8, 'F');
+      doc.setTextColor(160, 170, 180);
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(8);
+      doc.text('This section was marked as Not Applicable by the submitter.', ml + cw/2, y + 5.2, { align: 'center' });
+      y += 12;
+    }
+
+    function fieldPair(label, value, x, width) {
+      // Label
+      doc.setTextColor(...muted);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(6.5);
+      doc.text(label.toUpperCase(), x, y + 3);
+      // Value
+      doc.setTextColor(30, 30, 30);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      const lines = doc.splitTextToSize(value || '—', width - 2);
+      doc.text(lines, x, y + 8);
+      // Underline
+      const valueH = lines.length * 4.2;
+      doc.setDrawColor(220, 228, 238);
+      doc.setLineWidth(0.3);
+      doc.line(x, y + 9 + valueH, x + width - 2, y + 9 + valueH);
+      return 10 + valueH;
+    }
+
+    function fieldRow2(l1, v1, l2, v2) {
+      checkY(18);
+      const half = cw / 2 - 4;
+      const h1 = fieldPair(l1, v1, ml, half);
+      const h2 = fieldPair(l2, v2, ml + half + 8, half);
+      y += Math.max(h1, h2) + 4;
+    }
+
+    function fieldRow1(label, value) {
+      checkY(18);
+      const h = fieldPair(label, value, ml, cw);
+      y += h + 4;
+    }
+
+    function drawTable(headers, rows, colWidths) {
+      checkY(12);
+      const rowH = 7;
+      const totalW = colWidths.reduce((a,b) => a+b, 0);
+      // Header
+      doc.setFillColor(...navy);
+      doc.rect(ml, y, totalW, rowH, 'F');
+      doc.setTextColor(...white);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(6.5);
+      let xp = ml;
+      headers.forEach((h, i) => {
+        doc.text(h, xp + 2, y + 4.8);
+        xp += colWidths[i];
+      });
+      y += rowH;
+
+      rows.forEach((row, ri) => {
+        if (!row.some(c => c)) return; // skip fully empty rows
+        const lineCount = row.reduce((max, cell, ci) => {
+          const lines = doc.splitTextToSize(cell || '', colWidths[ci] - 3);
+          return Math.max(max, lines.length);
+        }, 1);
+        const rh = Math.max(rowH, lineCount * 3.8 + 3);
+        checkY(rh);
+        if (ri % 2 === 1) {
+          doc.setFillColor(...ltblue);
+          doc.rect(ml, y, totalW, rh, 'F');
+        }
+        doc.setTextColor(40, 40, 40);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7);
+        xp = ml;
+        row.forEach((cell, ci) => {
+          const lines = doc.splitTextToSize(cell || '', colWidths[ci] - 3);
+          doc.text(lines, xp + 2, y + 4.2);
+          xp += colWidths[ci];
+        });
+        // Row border
+        doc.setDrawColor(200, 210, 220);
+        doc.setLineWidth(0.2);
+        doc.line(ml, y + rh, ml + totalW, y + rh);
+        y += rh;
+      });
+      y += 4;
+    }
+
+    function drawYNTable(questions, names) {
+      checkY(12);
+      const qW = cw - 30, ynW = 10;
+      const rowH = 7;
+      // Header
+      doc.setFillColor(...navy);
+      doc.rect(ml, y, cw, rowH, 'F');
+      doc.setTextColor(...white);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(6.5);
+      doc.text('Question', ml + 2, y + 4.8);
+      doc.text('Yes', ml + qW + 2, y + 4.8);
+      doc.text('No', ml + qW + ynW + 2, y + 4.8);
+      doc.text('N/A', ml + qW + ynW * 2 + 2, y + 4.8);
+      y += rowH;
+      questions.forEach((q, i) => {
+        checkY(rowH);
+        if (i % 2 === 1) { doc.setFillColor(...ltblue); doc.rect(ml, y, cw, rowH, 'F'); }
+        doc.setTextColor(40, 40, 40);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.text(q, ml + 2, y + 4.8);
+        const val = getRadio(names[i]);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(val === 'Yes' ? 0 : 180, val === 'Yes' ? 120 : 180, val === 'Yes' ? 0 : 180);
+        if (val === 'Yes')  doc.text('✓', ml + qW + 3, y + 5);
+        if (val === 'No')   doc.text('✓', ml + qW + ynW + 3, y + 5);
+        if (val === 'NA')   doc.text('✓', ml + qW + ynW * 2 + 3, y + 5);
+        doc.setDrawColor(200, 210, 220);
+        doc.setLineWidth(0.2);
+        doc.line(ml, y + rowH, ml + cw, y + rowH);
+        y += rowH;
+      });
+      y += 4;
+    }
+
+    function getVal(name) {
+      const el = document.querySelector(`[name="${name}"]`);
+      return el ? el.value.trim() : '';
+    }
+    function getRadio(name) {
+      const el = document.querySelector(`[name="${name}"]:checked`);
+      return el ? el.value : '';
+    }
+    function getTableData(id) {
+      const rows = [];
+      document.querySelectorAll(`#${id} tbody tr`).forEach(tr => {
+        const cells = [];
+        tr.querySelectorAll('input,select').forEach(el => cells.push(el.value.trim()));
+        rows.push(cells);
+      });
+      return rows;
+    }
+    function getContactBlocks(containerId) {
+      const blocks = [];
+      document.querySelectorAll(`#${containerId} .contact-block`).forEach(block => {
+        const obj = {};
+        block.querySelectorAll('input,select').forEach(el => {
+          if (el.name) obj[el.name.split('_').slice(2).join('_')] = el.value.trim();
+        });
+        obj._title = block.querySelector('.contact-block-title').textContent.trim();
+        blocks.push(obj);
+      });
+      return blocks;
+    }
+
+    // ── COVER PAGE ──────────────────────────────────────────────────
+    doc.setFillColor(...navy);
+    doc.rect(0, 0, W, 60, 'F');
+    doc.setFillColor(...green);
+    doc.rect(0, 60, W, 2, 'F');
+
+    // Logo — embed SVG as PNG-rendered image via canvas
+    // Fetch and render live SVG logo
+    const logoDataUri = await fetchLogoAsDataUri();
+    if (logoDataUri) {
+      await new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          const cvs = document.createElement('canvas');
+          cvs.width = 400; cvs.height = 114;
+          const ctx = cvs.getContext('2d');
+          ctx.drawImage(img, 0, 0, 400, 114);
+          const pngData = cvs.toDataURL('image/png');
+          doc.addImage(pngData, 'PNG', ml, 10, 55, 15.7);
+          resolve();
+        };
+        img.onerror = () => resolve();
+        img.src = logoDataUri;
+      });
+    }
+
+    // Cover title text - pushed down to clear logo
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(...white);
+    doc.text('Client Onboarding', ml, 42);
+    doc.setTextColor(...green);
+    doc.text('Questionnaire', ml, 52);
+
+    doc.setFillColor(...green);
+    doc.rect(ml, 57, 30, 1.5, 'F');
+
+    y = 70;
+    doc.setTextColor(60,60,60);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('This document contains confidential information prepared by Versetal Managed Services.', ml, y);
+    doc.text('Please complete all applicable sections and return to your Versetal account representative.', ml, y+5);
+
+    y += 18;
+    doc.setFillColor(...ltblue);
+    doc.roundedRect(ml, y, cw, 20, 2, 2, 'F');
+    const coName = getVal('co_legal') || '______________________________________';
+    const coDate = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+    doc.setTextColor(...navy);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text('Company:', ml + 4, y + 7);
+    doc.setFont('helvetica', 'normal');
+    doc.text(coName, ml + 30, y + 7);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Generated:', ml + 4, y + 14);
+    doc.setFont('helvetica', 'normal');
+    doc.text(coDate, ml + 30, y + 14);
+    y += 28;
+
+    // Page numbers footer setup
+    const totalPagesExp = doc.internal.getNumberOfPages;
+
+    // ── SECTION 1 ───────────────────────────────────────────────────
+    newPage();
+    sectionHeader(1, 'Company Information & Key Contacts');
+    subHeader('1.1 — General Company Details');
+    fieldRow2('Legal Company Name', getVal('co_legal'), 'Trading Name', getVal('co_trade'));
+    fieldRow1('Primary Office Address', getVal('co_address'));
+    fieldRow1('Additional Locations', getVal('co_locations'));
+    fieldRow2('Industry / Vertical', getVal('co_industry'), 'Website', getVal('co_website'));
+    fieldRow2('Total Employees', getVal('co_employees'), 'IT Users', getVal('co_it_users'));
+    fieldRow2('Business Hours', getVal('co_hours'), 'After-Hours Support', getVal('co_afterhours'));
+
+    subHeader('1.2 — Key Contacts');
+    ['contacts-it','contacts-exec','contacts-other'].forEach(cid => {
+      getContactBlocks(cid).forEach(c => {
+        if (!c.name && !c.email) return;
+        checkY(28);
+        doc.setFillColor(...ltblue);
+        doc.roundedRect(ml, y, cw, 6, 1, 1, 'F');
+        doc.setTextColor(...navy);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7.5);
+        doc.text(c._title, ml + 3, y + 4.2);
+        y += 8;
+        fieldRow2('Name', c.name, 'Title / Role', c.role);
+        fieldRow2('Email', c.email, 'Phone', c.phone);
+        fieldRow2('Mobile', c.mobile, 'Preferred Contact', c.pref);
+        fieldRow2('Receives IT Alerts', c.alerts, 'Decision Maker', c.dm);
+        y += 2;
+      });
+    });
+
+    subHeader('1.3 — Escalation & Communication');
+    fieldRow2('Support Email', getVal('esc_email'), 'Emergency Contact', getVal('esc_emergency'));
+    fieldRow2('Preferred Comms', getVal('esc_comms'), 'Do Not Call Directly', getVal('esc_nocall'));
+    fieldRow1('Maintenance Windows', getVal('esc_maintenance'));
+
+    // ── SECTION 2 ───────────────────────────────────────────────────
+    if(isSectionNA('sec2')){sectionNA(2,'Network & On-Premises Infrastructure');}else{
+    newPage();
+    sectionHeader(2, 'Network & On-Premises Infrastructure');
+    subHeader('2.1 — Internet & WAN');
+    fieldRow2('ISP Provider(s)', getVal('net_isp'), 'Connection Type', getVal('net_type'));
+    fieldRow2('Speeds (per site)', getVal('net_speed'), 'Redundant Internet', getVal('net_failover'));
+    fieldRow2('Static IPs', getVal('net_static'), 'DNS Management', getVal('net_dns'));
+
+    subHeader('2.2 — Firewall & Edge Devices');
+    drawTable(['Make/Model','Location','Firmware','Managed By','Warranty/EOL'], getTableData('tbl_firewall'), [42,34,30,34,42]);
+
+    subHeader('2.3 — Switches & Access Points');
+    drawTable(['Make/Model','Qty','Location','VLANs?','Managed By'], getTableData('tbl_switches'), [46,16,38,24,58]);
+
+    subHeader('2.4 — VPN & Remote Access');
+    fieldRow2('VPN Solution', getVal('vpn_product'), 'Site-to-Site VPNs', getVal('vpn_s2s'));
+    fieldRow2('Remote Desktop / Jump', getVal('vpn_rd'), 'MFA for Remote Access', getVal('vpn_mfa'));
+    fieldRow1('Remote Workers (count)', getVal('vpn_users'));
+
+    subHeader('2.5 — IP Addressing & Subnets');
+    drawTable(['Network/VLAN','Subnet','Gateway','DHCP Server','Notes'], getTableData('tbl_subnets'), [36,30,26,30,60]);
+
+    }
+
+    // ── SECTION 3 ───────────────────────────────────────────────────
+    if(isSectionNA('sec3')){sectionNA(3,'Servers & Virtualization');}else{
+    newPage();
+    sectionHeader(3, 'Servers & Virtualization');
+    subHeader('3.1 — Physical Servers');
+    drawTable(['Name/Role','Make & Model','OS/Version','RAM/CPU','Warranty','Location'], getTableData('tbl_servers'), [30,30,28,24,26,44]);
+
+    subHeader('3.2 — Virtualization');
+    fieldRow2('Hypervisor Platform', getVal('virt_platform'), 'Version / Build', getVal('virt_version'));
+    fieldRow2('Virtual Machine Count', getVal('virt_vms'), 'Shared Storage', getVal('virt_storage'));
+    fieldRow2('HA / Clustering', getVal('virt_ha'), 'Snapshot Policy', getVal('virt_snap'));
+
+    subHeader('3.3 — Storage');
+    fieldRow2('NAS / SAN Device', getVal('stor_device'), 'Total Capacity', getVal('stor_cap'));
+    fieldRow2('RAID Config', getVal('stor_raid'), 'File Share Paths', getVal('stor_shares'));
+    fieldRow1('Tape / Offline Media', getVal('stor_tape'));
+
+    }
+
+    // ── SECTION 4 ───────────────────────────────────────────────────
+    if(isSectionNA('sec4')){sectionNA(4,'Active Directory & Identity');}else{
+    newPage();
+    sectionHeader(4, 'Active Directory & Identity');
+    subHeader('4.1 — On-Premises Active Directory');
+    fieldRow2('AD Domain Name(s)', getVal('ad_domain'), 'Domain Controllers', getVal('ad_dcs'));
+    fieldRow2('Functional Level', getVal('ad_level'), 'AD Sites & Services', getVal('ad_sites'));
+    fieldRow2('Enabled Users', getVal('ad_users'), 'Computer Objects', getVal('ad_computers'));
+    fieldRow2('Service Accounts', getVal('ad_svc'), 'GPO Count', getVal('ad_gpos'));
+    fieldRow1('LDAP / SSO Integrations', getVal('ad_ldap'));
+
+    subHeader('4.2 — Azure AD / Entra ID');
+    fieldRow2('Tenant in Use', getVal('aad_use'), 'Tenant Domain', getVal('aad_tenant'));
+    fieldRow2('Sync Method', getVal('aad_sync'), 'Device Join', getVal('aad_join'));
+    fieldRow2('Conditional Access', getVal('aad_ca'), 'PIM', getVal('aad_pim'));
+
+    subHeader('4.3 — MFA & Authentication');
+    drawYNTable([
+      'MFA enforced for all users?','MFA enforced for admin accounts?',
+      'Passwordless / FIDO2 in use?','SSO platform in use?','Org-wide password manager?'
+    ],['yn_mfa_all','yn_mfa_admin','yn_passkey','yn_sso','yn_pwmgr']);
+    fieldRow1('SSO Platform / Identity Provider', getVal('auth_sso_product'));
+
+    }
+
+    // ── SECTION 5 ───────────────────────────────────────────────────
+    if(isSectionNA('sec5')){sectionNA(5,'Endpoints & Device Management');}else{
+    newPage();
+    sectionHeader(5, 'Endpoints & Device Management');
+    subHeader('5.1 — Workstations & Laptops');
+    drawTable(['OS / Version','Count','Managed By','Domain Joined?','Avg Age (Yrs)'], getTableData('tbl_endpoints'), [40,20,40,36,46]);
+
+    subHeader('5.2 — Mobile Devices');
+    fieldRow2('iOS Devices', getVal('mob_ios'), 'Android Devices', getVal('mob_android'));
+    fieldRow2('Ownership Model', getVal('mob_ownership'), 'MDM Platform', getVal('mob_mdm'));
+
+    subHeader('5.3 — Endpoint Security');
+    drawYNTable([
+      'Intune / MDM in use?','Autopilot / DEP configured?','AV / EDR on all endpoints?',
+      'Patch management in place?','Disk encryption enforced?','AppLocker / whitelisting?'
+    ],['yn_intune','yn_autopilot','yn_edr','yn_patch','yn_encrypt','yn_applocker']);
+    fieldRow2('AV / EDR Product', getVal('ep_edr_product'), 'Patch Management Tool', getVal('ep_patch_product'));
+
+    }
+
+    // ── SECTION 6 ───────────────────────────────────────────────────
+    if(isSectionNA('sec6')){sectionNA(6,'Microsoft 365 & Cloud Services');}else{
+    newPage();
+    sectionHeader(6, 'Microsoft 365 & Cloud Services');
+    subHeader('6.1 — Microsoft 365');
+    fieldRow2('Tenant Domain', getVal('m365_tenant'), 'License Plan(s)', getVal('m365_licenses'));
+    fieldRow2('Licensed Users', getVal('m365_users'), 'CSP / Reseller', getVal('m365_csp'));
+    fieldRow2('Email Platform', getVal('m365_exchange'), 'Intune Licensed', getVal('m365_intune'));
+    fieldRow2('Defender Licensed', getVal('m365_defender'), 'Shared Mailboxes', getVal('m365_shared'));
+
+    subHeader('6.2 — Azure Subscriptions');
+    drawTable(['Name','Subscription ID','Purpose','Spend/mo','Admin Contact'], getTableData('tbl_azure'), [32,42,30,22,56]);
+
+    subHeader('6.3 — Other Cloud Platforms');
+    drawTable(['Platform','Services Used','# Resources','Admin Contact','Monthly Cost'], getTableData('tbl_cloud'), [28,42,22,46,44]);
+
+    }
+
+    // ── SECTION 7 ───────────────────────────────────────────────────
+    if(isSectionNA('sec7')){sectionNA(7,'SaaS & Line-of-Business Applications');}else{
+    newPage();
+    sectionHeader(7, 'SaaS & Line-of-Business Applications');
+    subHeader('7.1 — SaaS Application Inventory');
+    drawTable(['Application','Vendor','Purpose','Users','SSO?','Admin Contact'], getTableData('tbl_saas'), [32,26,36,14,14,60]);
+
+    subHeader('7.2 — Locally-Installed / Line-of-Business Applications');
+    drawTable(['Application','Vendor / Dev','Version','Installed On','Users','Critical?','Support'], getTableData('tbl_lob'), [28,24,16,28,12,16,58]);
+    fieldRow2('Special Port / Firewall Requirements', getVal('lob_ports'), 'OS / Hardware Dependencies', getVal('lob_legacy_dep'));
+    fieldRow2('Local Database Backend', getVal('lob_db_dep'), 'Custom / In-House Apps', getVal('lob_custom'));
+
+    subHeader('7.3 — Key Business Systems');
+    drawYNTable([
+      'CRM (e.g. Salesforce, HubSpot)','ERP (e.g. SAP, Dynamics)',
+      'Accounting / Finance','HR / Payroll','Project Management',
+      'Document Management','Industry-Specific LOB App'
+    ],['yn_crm','yn_erp','yn_accounting','yn_hr','yn_pm','yn_dms','yn_lob']);
+    fieldRow1('LOB Application Description', getVal('saas_lob_desc'));
+
+    subHeader('7.4 — Communications & Collaboration');
+    fieldRow2('Email Platform', getVal('comm_email'), 'Video / UC', getVal('comm_uc'));
+    fieldRow2('Phone System', getVal('comm_phone'), 'Fax', getVal('comm_fax'));
+    fieldRow1('Intranet / Portal', getVal('comm_intranet'));
+
+    }
+
+    // ── SECTION 8 ───────────────────────────────────────────────────
+    if(isSectionNA('sec8')){sectionNA(8,'Databases & Data Management');}else{
+    newPage();
+    sectionHeader(8, 'Databases & Data Management');
+    subHeader('8.1 — Database Servers');
+    drawTable(['Engine','Version','Hosting','# DBs','Size','Backup Method'], getTableData('tbl_db'), [26,20,36,16,24,60]);
+    fieldRow2('Clusters / Always On', getVal('db_clusters'), 'Retention Policy', getVal('db_retention'));
+    fieldRow2('PII / PHI Data', getVal('db_pii'), 'DB Admin Access', getVal('db_admins'));
+
+    subHeader('8.2 — Compliance');
+    drawYNTable([
+      'HIPAA / Healthcare data?','PCI-DSS / Payment cards?','SOC 2 required?',
+      'GDPR / CCPA obligations?','Cyber insurance in place?','Prior pen test / assessment?'
+    ],['yn_hipaa','yn_pci','yn_soc2','yn_gdpr','yn_cyber_ins','yn_pentest']);
+    fieldRow2('Compliance Frameworks', getVal('comp_frameworks'), 'Last Audit Date', getVal('comp_last_audit'));
+    fieldRow1('Cyber Insurance Carrier & Policy #', getVal('comp_cyber_ins'));
+
+    }
+
+    // ── SECTION 9 ───────────────────────────────────────────────────
+    if(isSectionNA('sec9')){sectionNA(9,'Backup, Disaster Recovery & Business Continuity');}else{
+    newPage();
+    sectionHeader(9, 'Backup, Disaster Recovery & Business Continuity');
+    subHeader('9.1 — Backup Configuration');
+    drawTable(['What Is Backed Up','Tool / Vendor','Frequency','Retention','Offsite?','Last Tested'], getTableData('tbl_backup'), [36,30,18,18,20,60]);
+
+    subHeader('9.2 — Recovery Objectives');
+    fieldRow2('RTO', getVal('dr_rto'), 'RPO', getVal('dr_rpo'));
+    fieldRow2('DR / BCP Plan', getVal('dr_plan'), 'Offsite Standby', getVal('dr_standby'));
+    fieldRow2('Immutable Backups', getVal('dr_immutable'), 'M365 Cloud Backup', getVal('dr_m365backup'));
+
+    }
+
+    // ── SECTION 10 ──────────────────────────────────────────────────
+    if(isSectionNA('sec10')){sectionNA(10,'Security & Monitoring');}else{
+    newPage();
+    sectionHeader(10, 'Security & Monitoring');
+    subHeader('10.1 — Security Posture');
+    drawYNTable([
+      'Security awareness training?','Phishing simulation?','SIEM / log aggregation?',
+      'Vulnerability scanning?','Dark web monitoring?','DNS filtering / web proxy?',
+      '3rd-party email filtering?','Previous security incidents?'
+    ],['yn_sat','yn_phish','yn_siem','yn_vulnscan','yn_darkweb','yn_dns_filter','yn_emailsec','yn_breach']);
+    fieldRow2('DNS Filter Product', getVal('sec_dns_product'), 'Email Security Product', getVal('sec_email_product'));
+    fieldRow1('SIEM Platform', getVal('sec_siem_product'));
+    fieldRow1('Incident Description (if applicable)', getVal('sec_incident_desc'));
+
+    subHeader('10.2 — Physical Security');
+    fieldRow2('Server Room Locked', getVal('phys_lock'), 'Access Control', getVal('phys_access'));
+    fieldRow2('CCTV System', getVal('phys_cctv'), 'UPS / Power Protection', getVal('phys_ups'));
+
+    }
+
+    // ── SECTION 11 ──────────────────────────────────────────────────
+    if(isSectionNA('sec11')){sectionNA(11,'Printing, Peripherals & Misc Hardware');}else{
+    newPage();
+    sectionHeader(11, 'Printing, Peripherals & Misc Hardware');
+    subHeader('11.1 — Printers & Copiers');
+    drawTable(['Make / Model','Location','Network/Local','Managed Print?','Support Contact'], getTableData('tbl_printers'), [38,30,24,28,62]);
+
+    subHeader('11.2 — Other Hardware');
+    fieldRow2('Barcode / POS', getVal('hw_pos'), 'IP Cameras / NVR', getVal('hw_cctv'));
+    fieldRow2('Building Mgmt / HVAC', getVal('hw_bms'), 'Legacy / Specialty HW', getVal('hw_legacy'));
+    fieldRow2('UPS Unit Count', getVal('hw_ups_count'), 'UPS Monitored?', getVal('hw_ups_mon'));
+
+    }
+
+    // ── SECTION 12 ──────────────────────────────────────────────────
+    if(isSectionNA('sec12')){sectionNA(12,'Current Vendors & Contracts');}else{
+    newPage();
+    sectionHeader(12, 'Current Vendors & Contracts');
+    drawTable(['Vendor / Supplier','Service','Contract End','Account #','Contact at Vendor'], getTableData('tbl_vendors'), [36,42,24,20,60]);
+
+    }
+
+    // ── SECTION 13 ──────────────────────────────────────────────────
+    if(isSectionNA('sec13')){sectionNA(13,'Documentation & Credentials');}else{
+    sectionHeader(13, 'Documentation & Credentials');
+    drawYNTable([
+      'Network diagram exists?','Asset / inventory list maintained?',
+      'Password manager with shared creds?','IT runbook / SOPs documented?',
+      'Software license registry?','Change management process?'
+    ],['yn_netdiag','yn_asset_inv','yn_pwmgr_shared','yn_runbook','yn_lic_reg','yn_change_mgmt']);
+    fieldRow2('Password Manager', getVal('doc_pwmgr'), 'Documentation Platform', getVal('doc_platform'));
+    fieldRow1('Handover Notes', getVal('doc_handover'));
+
+    }
+
+    // ── SECTION 17 ──────────────────────────────────────────────────
+    if(isSectionNA('sec17')){sectionNA(17,'Additional Notes & Special Requirements');}else{
+    newPage();
+    sectionHeader(17, 'Additional Notes & Special Requirements');
+    fieldRow1('Known Issues / Pain Points', getVal('notes_pain'));
+    fieldRow1('Upcoming Projects / Changes', getVal('notes_projects'));
+    fieldRow1('Regulatory / Industry Requirements', getVal('notes_reqs'));
+    fieldRow1('Anything Else We Should Know', getVal('notes_other'));
+
+    }
+
+    // ── SECTION 14 ──────────────────────────────────────────────────
+    if(isSectionNA('sec14')){sectionNA(14,'IT Operations & Support');}else{
+    newPage();
+    sectionHeader(14, 'IT Operations & Support');
+    subHeader('15.1 — Current Support Model');
+    fieldRow2('Current MSP / NOC Provider', getVal('ops_current_msp'), 'MSP Contract End Date', getVal('ops_msp_end'));
+    fieldRow2('24/7 Monitoring', getVal('ops_247'), 'Coverage Required', getVal('ops_coverage'));
+    fieldRow1('Current Support Gaps / Pain Points', getVal('ops_gaps'));
+    subHeader('15.2 — Help Desk & Ticketing');
+    fieldRow2('Ticketing System', getVal('ops_ticketing'), 'Support Channel', getVal('ops_support_channel'));
+    fieldRow2('Ticket Volume', getVal('ops_ticket_vol'), 'Satisfied with Response Times', getVal('ops_response_sat'));
+    subHeader('15.3 — SLA & Service Expectations');
+    fieldRow2('P1 Response Time Target', getVal('ops_sla_p1'), 'P1 Resolution Time Target', getVal('ops_sla_res'));
+    fieldRow2('SLA Mandates', getVal('ops_sla_mandates'), 'Reporting Frequency', getVal('ops_reporting'));
+    fieldRow2('Engagement Model', getVal('ops_engagement'), 'Challenging Areas', getVal('ops_challenges'));
+    }
+
+    // ── SECTION 15 ──────────────────────────────────────────────────
+    if(isSectionNA('sec15')){sectionNA(15,'Strategic Goals & Future Plans');}else{
+    newPage();
+    sectionHeader(15, 'Strategic Goals & Future Plans');
+    subHeader('16.1 — Upcoming Projects (6-12 Months)');
+    drawTable(['Project / Initiative','Category','Timeline','Budget?','Notes'], getTableData('tbl_projects'), [46,30,26,18,62]);
+    subHeader('16.2 — IT Goals (1-3 Years)');
+    fieldRow1('Primary IT Goals (1-3 Years)', getVal('goals_1_3yr'));
+    fieldRow2('Automation / New Software', getVal('goals_automation'), 'Expansion / Relocation', getVal('goals_expansion'));
+    subHeader('16.3 — Budget & Decision Process');
+    fieldRow2('Decision-Making Process', getVal('budget_process'), 'Key Stakeholders', getVal('budget_stakeholders'));
+    fieldRow2('Seeking Long-Term Partner', getVal('budget_partner'), 'Services to Consolidate', getVal('budget_consolidate'));
+    fieldRow1('Vendor Evaluation Process', getVal('budget_eval'));
+    }
+
+    // ── SECTION 16 ──────────────────────────────────────────────────
+    if(isSectionNA('sec16')){sectionNA(16,'Data & Analytics (Optional)');}else{
+    newPage();
+    sectionHeader(16, 'Data & Analytics');
+    subHeader('17.1 — Data Strategy & Objectives');
+    fieldRow1('Business Objectives Driving Data Initiatives', getVal('da_objectives'));
+    fieldRow2('Estimated Data Volume', getVal('da_volume'), 'Expected Growth Rate', getVal('da_growth'));
+    fieldRow2('Data Latency Requirements', getVal('da_latency'), 'Data Ingestion Frequency', getVal('da_ingestion'));
+    fieldRow2('Primary Data Sources', getVal('da_sources'), 'Data Formats', getVal('da_formats'));
+    subHeader('17.2 — Current Data Platform & Architecture');
+    fieldRow2('Data Architecture', getVal('da_architecture'), 'Data Warehouse / Lakehouse', getVal('da_warehouse'));
+    fieldRow2('ETL / ELT Tools', getVal('da_etl'), 'Databases', getVal('da_databases'));
+    fieldRow2('BI / Analytics Tools', getVal('da_bi'), 'Cloud Provider(s) for Data', getVal('da_cloud'));
+    subHeader('17.3 — Data Team & Governance');
+    fieldRow2('Data Team Size', getVal('da_team_size'), 'Technical Skills Available', getVal('da_skills'));
+    fieldRow2('Dedicated Pipeline Ops?', getVal('da_dedicated'), 'External Data Vendors', getVal('da_vendors'));
+    fieldRow2('Governance Maturity', getVal('da_governance'), 'Data Compliance Requirements', getVal('da_compliance'));
+    subHeader('17.4 — Pain Points & Goals');
+    fieldRow1('Primary Data Challenges', getVal('da_pain'));
+    fieldRow1('Analytics Use Cases Desired', getVal('da_use_cases'));
+    fieldRow2('Transformation Initiatives', getVal('da_transformation'), 'Success Metrics / KPIs', getVal('da_kpis'));
+    }
+
+    // ── FOOTER ON EVERY PAGE ─────────────────────────────────────────
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFillColor(...navy);
+      doc.rect(0, H - 10, W, 10, 'F');
+      doc.setFillColor(...green);
+      doc.rect(0, H - 10, W, 0.8, 'F');
+      doc.setTextColor(...muted);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.setTextColor(...muted);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.text('versetal.com  |  Managed Services', ml, H - 4);
+      doc.text(`Page ${i} of ${totalPages}`, W - mr, H - 4, { align: 'right' });
+    }
+
+    const company = getVal('co_legal').replace(/[^a-z0-9]/gi,'_') || 'Client';
+    doc.save(`Versetal_Onboarding_${company}.pdf`);
+    showToast('PDF generated and downloaded!');
+  } catch(e) {
+    console.error(e);
+    showToast('PDF error: ' + (e.message || e) + ' — check console.');
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'Generate PDF';
+    spinner.classList.remove('active');
+  }
+}
+
+// Wire up seeded-flag clearing for hard-coded HTML table rows
+document.querySelectorAll('input[data-preseed]').forEach(el => {
+  el.addEventListener('input', function() {
+    delete this.dataset.preseed;
+    updateProgress();
+  });
+});
+
+updateProgress();
+
+// Pre-fetch logo in background so it's ready when PDF is generated
+fetchLogoAsDataUri().catch(() => {});
+
+// Measure actual scrollbar width and expose as CSS var so actions bar lines up
+(function() {
+  const sb = window.innerWidth - document.documentElement.clientWidth;
+  document.documentElement.style.setProperty('--sb-width', sb + 'px');
+})();
+</script>
+</body>
+</html>

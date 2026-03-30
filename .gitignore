@@ -1,0 +1,14 @@
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Office temp files
+~$*
+*.tmp
+.~lock.*
+
+# Editor noise
+.vscode/
+*.swp
+*~

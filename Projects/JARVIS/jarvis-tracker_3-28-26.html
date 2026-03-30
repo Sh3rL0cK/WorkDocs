@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JARVIS — Project Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#F4F6F9;color:#1A2535;padding:24px;font-size:14px}
+h1{font-size:17px;font-weight:700;color:#0A2543;border-bottom:3px solid #5BBF46;padding-bottom:10px;margin-bottom:6px}
+.meta{font-size:11px;color:#8899AA;margin-bottom:24px}
+.section{margin-bottom:20px;background:#fff;border-radius:10px;border:0.5px solid rgba(10,37,67,0.12);overflow:hidden;box-shadow:0 1px 4px rgba(10,37,67,0.06)}
+.section-title{font-size:11px;font-weight:700;color:#fff;background:#0A2543;padding:8px 14px;letter-spacing:0.07em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.section-count{background:rgba(255,255,255,0.2);border-radius:999px;padding:1px 7px;font-size:10px}
+.item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;border-bottom:0.5px solid rgba(10,37,67,0.07);font-size:13px;line-height:1.5}
+.item:last-child{border-bottom:none}
+.item:hover{background:#F8FAFC}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:600;white-space:nowrap;flex-shrink:0;margin-top:2px;letter-spacing:0.03em}
+.done{background:#EAF3DE;color:#27500A}
+.bug{background:#FCEBEB;color:#791F1F}
+.feature{background:#E6F1FB;color:#0C447C}
+.migration{background:#EEEDFE;color:#3C3489}
+.investigation{background:#FEF3C7;color:#92400E}
+.item-text{flex:1}
+.item-note{font-size:11px;color:#8899AA;margin-top:3px;line-height:1.5}
+.cmd{font-family:monospace;background:#F0F4F8;padding:1px 5px;border-radius:3px;font-size:11px;color:#0A2543}
+</style>
+</head>
+<body>
+
+<h1>VERSETAL — J.A.R.V.I.S. &nbsp; Project Tracker</h1>
+<div class="meta">Updated: March 28, 2026 &nbsp;·&nbsp; autotask-ai (10.0.1.16) &nbsp;·&nbsp; Node.js/Express + PostgreSQL + Claude AI &nbsp;·&nbsp; ~229,835 tickets in DB</div>
+
+<!-- ── COMPLETED ─────────────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">✅ Completed <span class="section-count">44</span></div>
+
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Core platform scaffolding<div class="item-note">Node.js/Express server, PostgreSQL (autotaskdb), nginx reverse proxy, systemd service, Ubuntu 24.04 VM on ESXi</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Autotask REST API integration<div class="item-note">Zone 14 (webservices14), auth headers, full ticket CRUD, notes, resources, companies, queues, picklists</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">PostgreSQL schema<div class="item-note">Tables: tickets, ticket_notes, companies, queues, resources, picklists, sync_state. Non-standard Versetal IDs: Priority 1=High/2=Med/3=Low/4=Emergency, Status 5=Complete, closed=[5,14,16]</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Historical sync — keyset pagination<div class="item-note">Replaced broken page-number pagination with <span class="cmd">id gt lastId</span> cursor. Quarterly chunks 2016–2026, 2h15m runtime cap, nightly cron at 6:05am. Progress: 2016–2024 Q1 complete, 2024 Q2–2025 Q4 still running nightly.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Incremental sync — keyset pagination + field fix<div class="item-note">Same cursor fix applied. <span class="cmd">queue_id</span> and <span class="cmd">assigned_resource_id</span> now included in ON CONFLICT DO UPDATE. Runs every 15 min via node-cron.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Rate limit handling — historical sync<div class="item-note">Exponential backoff [2m,5m,10m,15m], never aborts on rate limits, only on runtime cap. False positive fix: only checks body on non-200 responses (ticket descriptions contain "threshold" legitimately).</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Versetal brand theme<div class="item-note">Navy #0A2543, Green #5BBF46, SkyBlue #2AA7DF, Gold #C8922A, LightBlue #D6E8F5. Navy sidebar, green active state, white table headers, alternating rows, Arial throughout.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Single-file HTML frontend<div class="item-note">All CSS, JS, HTML in one index.html. Served from /home/autoadmin/autotask-server/public/</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Ticket list with pagination<div class="item-note">25/50/100/250 per page, prev/next, search, status/priority/company/resource dropdowns. Server-side search hits all 229k tickets regardless of loaded timeframe.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Ticket detail view<div class="item-note">Full field display, Autotask link, update status/priority, add internal note, tech notes vs workflow notes separated, workflow notes collapsed by default.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Ticket creation<div class="item-note">Full create form with company, queue, priority, resource assignment, description</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Ticket reassignment from detail view<div class="item-note">Resource dropdown in ticket detail, PATCH sends both assignedResourceID + assignedResourceRoleID (required by Autotask)</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Picklist-based labels<div class="item-note">Dynamic issue type, sub-issue type, source labels via picklists table. Sub-issue cascades via parent_value column.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dynamic resource dropdown<div class="item-note">Populated from tickets currently in view, sorted by name</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Company filter dropdown<div class="item-note">Populated from tickets in current view, filters locally</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">AI suggest next step<div class="item-note">Button in ticket detail, sends title + description to Claude via /api/claude proxy, shows suggestion inline</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">AI triage page<div class="item-note">Paste alert text → Claude analyzes → creates Autotask ticket. Review panel shows customer, resource, queue, status before submit.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">AI analysis page — QBR reporting<div class="item-note">Select client + timeframe + focus area → Claude generates structured MSP report. PDF export via browser print. Include/exclude closed tickets toggle. 529 retry with backoff. 16k max_tokens.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Claude API proxy (/api/claude)<div class="item-note">Server-side proxy avoids CORS. API key stored in DB (setting_anthropic_key), never exposed to browser.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Settings page — API key + proxy config<div class="item-note">Anthropic key saved to DB, masked after save. Proxy URL persisted in localStorage.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Lookup sync (/api/sync?type=lookups)<div class="item-note">Syncs companies, queues, resources, picklists from Autotask on demand</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">HTTPS — self-signed cert via nginx<div class="item-note">autotask-ai.sorelcorp.com, Let's Encrypt not available internally. PROXY_DEFAULT uses window.location.origin to avoid mixed content.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Git repo — Sh3rL0cK/JARVIS<div class="item-note">Tagged v1.0. Remote at https://github.com/Sh3rL0cK/JARVIS.git</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — auto-load open tickets on page load<div class="item-note">No manual button press needed. Loads all open tickets on startup and refresh.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — 7 metric cards (all clickable)<div class="item-note">Total open, New, In progress, Critical, Overdue, Closed today, Unassigned. Each drills down to filtered ticket list.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — ticket volume chart (14 days)<div class="item-note">Chart.js bar chart, opened vs closed per day</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — top clients by open tickets<div class="item-note">Horizontal bar list, clickable → filters Tickets tab by client</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — engineer workload<div class="item-note">Open tickets per engineer, clickable → filters by resource. Unassigned row included.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — priority breakdown doughnut<div class="item-note">Emergency/High/Medium/Low breakdown of open tickets</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — queue breakdown<div class="item-note">Open tickets per queue, clickable → filters by queue</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — client health scores<div class="item-note">Color-coded red/amber/green by overdue+critical+aged counts. Clickable.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — recent activity feed<div class="item-note">Last 12 ticket updates, Xm/Xh/Xd ago timestamps, clickable cards</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — auto-refresh countdown timer<div class="item-note">5:00 countdown, refreshes dashboard data on expiry. Does not stomp active filters on Tickets page.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard — SLA breach + ticket age indicators<div class="item-note">Orange ● = 1–3 days, Red ● = 3+ days. Yellow bg = SLA due within 4h, Red bg = SLA breached.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard drill-down — race condition fixed<div class="item-note">filteredTickets pre-set BEFORE nav() call. loadTickets() preserves pre-filtered set. No setTimeout race.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard drill-down — all filter types correct<div class="item-note">In progress uses all 6 statuses [8,10,20,21,24,23]. Overdue uses due_date filter. Closed Today uses dedicated /api/tickets/closed-today endpoint (last_activity_date >= midnight).</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Active filter pills on Tickets page<div class="item-note">Pill shows for queue, in-progress, overdue, closed-today, unassigned, engineer, client drill-downs. Dismissible ✕ resets all dropdowns. Viewing: context label always shows current view description.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Timeframe dropdown — Load button (no auto-fire)<div class="item-note">Changing timeframe no longer auto-reloads. Explicit Load button required. Prevents overriding dashboard drill-downs.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">↺ Reset & Refresh button<div class="item-note">Clears all filters, pill, context label, then reloads from server using current timeframe.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Closed Today — dedicated server endpoint<div class="item-note">/api/tickets/closed-today?date=YYYY-MM-DD queries by last_activity_date + status IN (5,14,16). Dashboard metric card fetches from this endpoint so count matches drill-down. Pill reads "since midnight".</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Ticket detail — back to filtered list works<div class="item-note">navToTickets() now resets tickets-list/ticket-detail visibility. No more stale detail view after navigating back from dashboard.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">AI resolution detection<div class="item-note">On ticket open, sends title+description+notes to Claude. If resolved (medium/high confidence) → amber banner. "Draft resolution & close" → Claude writes resolution note → editable → POST note + PATCH status=5.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Client onboarding questionnaire<div class="item-note">14-section interactive HTML, client-side PDF export (jsPDF), dynamic rows, N/A toggles, progress bar, Versetal branding</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Crontab — historical sync at 6:05am<div class="item-note">Moved from 1:05am to 6:05am (quietest SPOG window)</div></div></div>
+</div>
+
+<!-- ── ACTIVE BUGS ────────────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">🐛 Active Bugs <span class="section-count">4</span></div>
+
+  <div class="item"><span class="badge investigation">Investigate</span><div class="item-text">assigned_resource_id writing NULL despite API returning correct value<div class="item-note">T20260324.0370: raw JSON has assignedResourceID=29683140, column is NULL, synced_at=Mar 25 16:25 (after assignment). Both /Tickets/{id} and /Tickets/query return correct value. last_sync reset to 2026-03-24 to force re-sync overnight. Check tomorrow: <span class="cmd">SELECT assigned_resource_id FROM tickets WHERE ticket_number='T20260324.0370'</span>. If still NULL → add debug logging to server.js upsert.</div></div></div>
+
+  <div class="item"><span class="badge bug">Bug</span><div class="item-text">Historical sync incomplete — 2024 Q2 through 2025 Q4<div class="item-note">Runs nightly at 6:05am, will complete over next 1–2 runs. Check: <span class="cmd">ssh autotask "tail -20 ~/historical-sync.log"</span> and <span class="cmd">SELECT key,value FROM sync_state WHERE key LIKE 'historical_202%' ORDER BY key</span></div></div></div>
+
+  <div class="item"><span class="badge bug">Bug</span><div class="item-text">Deploy script broken<div class="item-note">~/deploy-autotask.sh references autotask.html which no longer exists. Use manual SCP until fixed.</div></div></div>
+
+  <div class="item"><span class="badge bug">Bug</span><div class="item-text">favicon.ico 404<div class="item-note">Minor — no favicon served. Easy fix: add a favicon.ico to the public/ directory.</div></div></div>
+</div>
+
+<!-- ── PENDING FEATURES ───────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">🔜 Pending Features <span class="section-count">10</span></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Git commit — today's session<div class="item-note">None of March 28 changes pushed yet. <span class="cmd">cd ~/autotask-server && git add -A && git commit -m 'Dashboard drill-downs, filter pills, AI resolution detection, closed-today endpoint' && git push</span></div></div></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">AI resolution detection — real-world test<div class="item-note">Built and deployed March 28 but not yet tested end-to-end. Test on a ticket with "Resolved:" in the title. Verify amber banner appears, draft generates, note posts, status updates to Complete.</div></div></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">AI Triage — review step before submission<div class="item-note">After Claude analyzes alert, show review panel with editable fields (customer/contact, resource, queue, status, priority) before creating ticket.</div></div></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Support Scope Tracker (Module 1)<div class="item-note">Track which clients have which services in scope. Per-client service flags, coverage notes, out-of-scope logging. Zero external dependencies — pure DB + UI.</div></div></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Cloud Cost Dashboard (Module 2)<div class="item-note">Azure spend tracking via Partner Center API. App registration required. Per-client subscription costs, trend charts, margin tracking.</div></div></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Security Dashboard<div class="item-note">S1 + Rapid7 integration. Endpoint health, open findings, severity breakdown by client.</div></div></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Assets / Inventory module<div class="item-note">Asset tracking per client, device type, warranty status, assigned user</div></div></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">IAM / Onboarding module<div class="item-note">New hire onboarding checklist, M365 provisioning status, license tracking</div></div></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Knowledge Base<div class="item-note">Internal KB articles, searchable, linked to ticket types/clients</div></div></div>
+
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Code annotation — JSDoc<div class="item-note">Low priority. Document server.js functions for maintainability.</div></div></div>
+</div>
+
+<!-- ── REACT MIGRATION ────────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">⚛️ React Migration — Planned <span class="section-count">8</span></div>
+
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">React + Vite frontend<div class="item-note">Replace single-file HTML. Every filter = server query, no in-memory allTickets array. Eliminates race conditions, stale state, Reset & Refresh button, filter pill complexity.</div></div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Server-side filtering for all ticket queries<div class="item-note">GET /api/tickets?status=&priority=&resource=&queue=&page=&pageSize= — server does filtering, browser never holds 10k tickets in memory</div></div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Dashboard metrics from SQL aggregates<div class="item-note">Dedicated /api/dashboard/metrics endpoint — counts only, no ticket rows. Eliminates the closed-today mismatch problem entirely.</div></div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Global state management — Zustand or Context<div class="item-note">Filter state lives in React state/URL params, not global JS variables</div></div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">React Router — URL-based navigation<div class="item-note">Deep-linkable pages, browser back/forward works, bookmarkable filtered views</div></div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Component library<div class="item-note">Ticket card, metric card, filter bar, pill, chart components reusable across pages</div></div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Mobile responsive mode<div class="item-note">Collapsible sidebar, touch-friendly ticket list, swipe gestures, mobile-optimized ticket detail. Build after React migration.</div></div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Dark mode<div class="item-note">CSS variable architecture already in place — straightforward to implement in React with a theme toggle</div></div></div>
+</div>
+
+</body>
+</html>

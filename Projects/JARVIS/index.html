@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VERSETAL — J.A.R.V.I.S.</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Versetal Brand Colors */
+  --navy:#0A2543;--navy2:#0D3060;--navy3:#0B1E38;
+  --green:#5BBF46;--green2:#4CAF38;
+  --skyblue:#2AA7DF;--lightblue:#D6E8F5;
+  --gold:#C8922A;--cta-green:#7AC559;
+
+  /* UI Colors */
+  --bg:#F4F6F9;--bg2:#FFFFFF;--bg3:#E8EDF3;
+  --text:#1A2535;--text2:#4A5568;--text3:#8899AA;
+  --border:rgba(10,37,67,0.12);--border2:rgba(10,37,67,0.25);
+  --radius:8px;--radius-lg:12px;
+  --font:Arial,sans-serif;
+
+  /* Badge Colors */
+  --blue-bg:#E6F1FB;--blue-text:#0C447C;
+  --amber-bg:#FAEEDA;--amber-text:#633806;
+  --pink-bg:#FBEAF0;--pink-text:#72243E;
+  --green-bg:#EAF3DE;--green-text:#27500A;
+  --red-bg:#FCEBEB;--red-text:#791F1F;
+  --orange-bg:#FAECE7;--orange-text:#712B13;
+  --purple-bg:#EEEDFE;--purple-text:#3C3489;--purple-border:#AFA9EC;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--navy);border-right:none;padding:1.25rem 0.75rem;display:flex;flex-direction:column;gap:2px;z-index:10}
+.sidebar-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;padding:0 8px;letter-spacing:0.06em;text-transform:uppercase;line-height:1.4}
+.nav-btn{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius);border:none;background:transparent;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.65);width:100%;text-align:left;font-family:var(--font)}
+.nav-btn:hover{background:rgba(255,255,255,0.1);color:#fff}
+.nav-btn.active{background:var(--green);color:#fff;font-weight:600;box-shadow:none}
+.proxy-status{margin-top:auto;padding:8px 10px;border-radius:var(--radius);background:rgba(255,255,255,0.08);font-size:11px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:#E24B4A;flex-shrink:0}
+.dot.ok{background:var(--green)}
+.main{margin-left:210px;padding:2rem;max-width:100%;overflow-x:hidden}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:20px;font-weight:500;margin-bottom:1.5rem}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:1.5rem}
+.metric{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem}
+.metric-label{font-size:12px;color:var(--text2);margin-bottom:6px}
+.metric-value{font-size:28px;font-weight:500}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:14px;overflow:hidden}
+.card-title{font-size:14px;font-weight:500;margin-bottom:14px}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap}
+.b-new{background:var(--blue-bg);color:var(--blue-text)}
+.b-progress{background:var(--amber-bg);color:var(--amber-text)}
+.b-waiting{background:var(--pink-bg);color:var(--pink-text)}
+.b-complete{background:var(--green-bg);color:var(--green-text)}
+.b-critical{background:var(--red-bg);color:var(--red-text)}
+.b-high{background:var(--orange-bg);color:var(--orange-text)}
+.b-medium{background:var(--amber-bg);color:var(--amber-text)}
+.b-low{background:var(--green-bg);color:var(--green-text)}
+.ticket-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.ticket-table thead tr{border-bottom:0.5px solid var(--border2)}
+.ticket-table th{font-size:11px;font-weight:600;color:#fff;padding:8px 10px;text-align:left;letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;background:var(--navy)}
+.ticket-table td{padding:9px 8px;font-size:13px;border-bottom:0.5px solid var(--border);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ticket-table tr:last-child td{border-bottom:none}
+.ticket-table tbody tr{cursor:pointer}
+.ticket-table tbody tr:hover td{background:var(--lightblue)}
+.col-num{width:110px}
+.col-title{width:auto}
+.col-company{width:160px}
+.col-queue{width:120px}
+.col-priority{width:80px}
+.col-date{width:90px}.col-status{width:110px}
+.col-date{width:90px}
+.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.toolbar input,.toolbar select{padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit}
+.toolbar input{flex:1;min-width:180px}
+.toolbar select{min-width:130px}
+input,select,textarea{padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--text3)}
+textarea{min-height:90px;resize:vertical;width:100%}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{padding:7px 14px;border-radius:var(--radius);border:0.5px solid var(--border2);background:transparent;cursor:pointer;font-size:13px;color:var(--text);font-family:inherit}
+.btn:hover{background:var(--bg2)}
+.btn-primary{background:var(--text);color:var(--bg);border-color:var(--text)}
+.btn-primary:hover{opacity:0.85;background:var(--text)}
+.btn-ai{background:var(--purple-bg);color:var(--purple-text);border-color:var(--purple-border)}
+.btn-ai:hover{opacity:0.85}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.msg{padding:10px 12px;border-radius:var(--radius);font-size:13px;margin-top:10px}
+.msg-ok{background:var(--green-bg);color:var(--green-text)}
+.msg-err{background:var(--red-bg);color:var(--red-text)}
+.msg-info{background:var(--blue-bg);color:var(--blue-text)}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--text);border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:4px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.back-btn{background:none;border:none;cursor:pointer;font-size:12px;color:var(--text2);display:inline-flex;align-items:center;gap:4px;margin-bottom:1rem;padding:0}
+.back-btn:hover{color:var(--text)}
+.field-grid{display:grid;grid-template-columns:130px 1fr;gap:6px 0;font-size:13px;margin-bottom:14px}
+.fl{color:var(--text2)}
+.fv{font-weight:500}
+.desc-box{font-size:13px;background:var(--bg2);border-radius:var(--radius);padding:10px;margin-bottom:14px;white-space:pre-wrap;line-height:1.6;word-break:break-word;overflow-wrap:break-word;max-width:100%;overflow-x:auto}
+.section-title{font-size:13px;font-weight:500;border-top:0.5px solid var(--border);padding-top:14px;margin-bottom:10px}
+.empty{color:var(--text2);font-size:13px;padding:1rem 0}
+.load-prompt{padding:2rem 0;display:flex;align-items:center;gap:12px}
+
+@media print {
+  .sidebar, .toolbar, .btn, button, select, input, 
+  #analysis-controls, .proxy-status { display: none !important; }
+  .main { margin-left: 0 !important; padding: 0 !important; }
+  .page { display: block !important; }
+  .page:not(#page-analysis) { display: none !important; }
+  #analysis-result .card { border: none !important; box-shadow: none !important; padding: 0 !important; }
+  body { background: white !important; }
+  @page { margin: 1cm; }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-title">VERSETAL<span style="display:block;font-size:9px;font-weight:400;letter-spacing:0.12em;opacity:0.7;margin-top:2px">J.A.R.V.I.S.</span></div>
+  <button class="nav-btn active" onclick="nav('dashboard',this)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+    Dashboard
+  </button>
+  <button class="nav-btn" onclick="nav('tickets',this)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h6"/></svg>
+    Tickets
+  </button>
+  <button class="nav-btn" onclick="nav('create',this)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v6M5 8h6"/></svg>
+    Create ticket
+  </button>
+  <button class="nav-btn" onclick="nav('triage',this)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l1.5 4h4l-3 2.5 1 4L8 10l-3.5 2.5 1-4L2 6h4z"/></svg>
+    AI triage
+  </button>
+  <button class="nav-btn" onclick="nav('analysis',this)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l3-4 3 2 3-5 3 3"/><path d="M1 14h14"/></svg>
+    AI analysis
+  </button>
+  <button class="nav-btn" onclick="nav('settings',this)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.3 3.3l1.4 1.4M11.3 11.3l1.4 1.4M3.3 12.7l1.4-1.4M11.3 4.7l1.4-1.4"/></svg>
+    Settings
+  </button>
+  <div class="proxy-status">
+    <span class="dot" id="proxy-dot"></span>
+    <span id="proxy-label">Checking...</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page active">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:8px">
+      <h1 style="margin-bottom:0;border-bottom:none;padding-bottom:0">Dashboard</h1>
+      <span style="font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block"></span>
+        Auto-refresh every 5 min
+      </span>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="metric-label">Total open</div><div class="metric-value" id="m-total">—</div></div>
+      <div class="metric"><div class="metric-label">New</div><div class="metric-value" id="m-new">—</div></div>
+      <div class="metric"><div class="metric-label">In progress</div><div class="metric-value" id="m-progress">—</div></div>
+      <div class="metric"><div class="metric-label">Critical</div><div class="metric-value" id="m-critical" style="color:var(--red-text)">—</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Recent tickets</div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+        <select id="timeframe" style="padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px">
+          <option value="1">Last 30 days</option>
+          <option value="3">Last 3 months</option>
+          <option value="6" selected>Last 6 months</option>
+          <option value="12">Last 12 months</option>
+          <option value="24">Last 2 years</option>
+          <option value="0">All time</option>
+        </select>
+        <button class="btn btn-primary" onclick="allTickets=[];loadData()">Load tickets</button>
+        <span id="loaded-label" style="font-size:12px;color:var(--text2)"></span>
+      </div>
+      <div id="dash-body"></div>
+    </div>
+  </div>
+
+  <!-- TICKETS -->
+  <div id="page-tickets" class="page">
+    <div id="tickets-list">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:8px">
+        <h1 style="margin-bottom:0;border-bottom:none;padding-bottom:0">Tickets</h1>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:12px;color:var(--text2)">Showing:</span>
+          <select id="tickets-timeframe" onchange="allTickets=[];fetchAndShowTickets()" style="padding:6px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);font-size:13px;font-family:var(--font)">
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+            <option value="90">Last 3 months</option>
+            <option value="180" selected>Last 6 months</option>
+            <option value="365">Last 12 months</option>
+            <option value="0">All time</option>
+          </select>
+          <span id="tickets-count-label" style="font-size:12px;color:var(--text2)"></span>
+        </div>
+      </div>
+      <div class="toolbar">
+        <input type="text" id="search-q" placeholder="Search title or #..." oninput="filterTickets()">
+        <select id="filter-company" onchange="allTickets=[];fetchAndShowTickets()">
+          <option value="">All clients</option>
+        </select>
+        <select id="filter-resource" onchange="filterTickets()">
+          <option value="">All resources</option>
+        </select>
+        <select id="filter-status" onchange="filterTickets()">
+          <option value="">All statuses</option>
+          <option value="1">New</option>
+          <option value="8">Work in progress</option>
+          <option value="10">Dispatched</option>
+          <option value="20">Assigned</option>
+          <option value="21">Acknowledged</option>
+          <option value="24">Scheduled</option>
+          <option value="7">Waiting customer</option>
+          <option value="9">Waiting materials</option>
+          <option value="12">Waiting vendor</option>
+          <option value="13">Waiting approval</option>
+          <option value="17">On hold</option>
+          <option value="11">Escalate</option>
+          <option value="5">Complete</option>
+          <option value="14">Billed</option>
+          <option value="16">Inactive</option>
+        </select>
+        <select id="filter-priority" onchange="filterTickets()">
+          <option value="">All priorities</option>
+          <option value="4">Emergency</option>
+          <option value="1">High</option>
+          <option value="2">Medium</option>
+          <option value="3">Low</option>
+        </select>
+        <button class="btn" onclick="allTickets=[];loadData(true)">Refresh</button>
+      </div>
+      <div class="card" id="tickets-body">
+        <div class="load-prompt" style="flex-wrap:wrap;gap:10px">
+          <select id="timeframe" style="padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px">
+            <option value="1">Last 30 days</option>
+            <option value="3">Last 3 months</option>
+            <option value="6" selected>Last 6 months</option>
+            <option value="12">Last 12 months</option>
+            <option value="24">Last 2 years</option>
+            <option value="0">All time</option>
+          </select>
+          <button class="btn btn-primary" onclick="loadData()">Load tickets</button>
+          <span id="loaded-label" style="font-size:12px;color:var(--text2)"></span>
+        </div>
+      </div>
+    </div>
+    <div id="ticket-detail" style="display:none">
+      <button class="back-btn" onclick="closeDetail()">← Back to tickets</button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- CREATE -->
+  <div id="page-create" class="page">
+    <div class="page-title">Create ticket</div>
+    <div class="card">
+      <div class="form-group"><label>Title</label><input type="text" id="c-title" placeholder="Brief description"></div>
+      <div class="form-group"><label>Description</label><textarea id="c-desc" placeholder="Full details..."></textarea></div>
+      <div class="row2">
+        <div class="form-group"><label>Priority</label>
+          <select id="c-priority">
+            <option value="1">Critical</option>
+            <option value="2">High</option>
+            <option value="3" selected>Medium</option>
+            <option value="4">Low</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Queue ID</label><input type="text" id="c-queue" placeholder="e.g. 29683386"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ai" onclick="aiDraft()">✦ AI draft from description</button>
+        <button class="btn btn-primary" onclick="createTicket()">Create ticket</button>
+      </div>
+      <div id="create-msg"></div>
+    </div>
+  </div>
+
+  <!-- TRIAGE -->
+  <div id="page-triage" class="page">
+    <div class="page-title">AI triage</div>
+    <div class="card">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Paste a problem description, email, or alert — Claude will analyze priority, suggest a title, and draft a ticket.</div>
+      <div class="form-group"><label>Input</label><textarea id="triage-input" placeholder="Paste issue, email, or alert..." style="min-height:140px"></textarea></div>
+      <div class="btn-row"><button class="btn btn-ai" onclick="runTriage()">✦ Analyze & triage</button></div>
+      <div id="triage-result"></div>
+    </div>
+  </div>
+
+  <!-- ANALYSIS -->
+  <div id="page-analysis" class="page">
+    <div class="page-title">AI analysis</div>
+    <div class="card">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:14px">Claude analyzes your tickets for trends, recurring issues, top clients, SLA risks, and correlated problems. Requires your Anthropic API key in Settings.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px">
+        <div>
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:5px">Time range</label>
+          <select id="analysis-timeframe" style="width:100%;padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px">
+            <option value="30">Last 30 days</option>
+            <option value="90">Last 3 months</option>
+            <option value="180" selected>Last 6 months</option>
+            <option value="365">Last 12 months</option>
+            <option value="730">Last 2 years</option>
+            <option value="0">All time</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:5px">Focus area</label>
+          <select id="analysis-focus" style="width:100%;padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px">
+            <option value="all">Full analysis</option>
+            <option value="qbr">⭐ QBR — Quarterly business review</option>
+            <option value="trends">Trends & patterns</option>
+            <option value="clients">Client breakdown</option>
+            <option value="sla">SLA & overdue risks</option>
+            <option value="recurring">Recurring issues</option>
+            <option value="correlated">Correlated issues</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:5px">Filter by client</label>
+          <select id="analysis-company" style="width:100%;padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px">
+            <option value="">All clients</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:5px">Department / Queue</label>
+          <select id="analysis-queue" style="width:100%;padding:7px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px">
+            <option value="">All departments</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-ai" onclick="runAnalysis()" id="analysis-btn">✦ Run analysis</button>
+        <button class="btn" id="export-pdf-btn" onclick="exportAnalysisPDF()" style="display:none">⬇ Export PDF</button>
+        <span id="analysis-status" style="font-size:12px;color:var(--text2)"></span>
+      </div>
+    </div>
+    <div id="analysis-result"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="page-settings" class="page">
+    <div class="page-title">Settings</div>
+    <div class="card">
+      <div class="card-title">Server</div>
+      <div class="form-group"><label>Server URL</label><input type="text" id="s-proxy" value=""></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="saveSettings()">Save & test</button>
+        <button class="btn" onclick="triggerSync(false)">Incremental sync</button>
+        <button class="btn" onclick="triggerSync(true)">Full sync</button>
+        <button class="btn" onclick="triggerLookupSync()">Sync lookups</button>
+      </div>
+      <div id="settings-msg"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Anthropic API key <span style="font-size:11px;font-weight:400;color:var(--text2)">(for AI features)</span></div>
+      <div class="form-group"><label>API key</label><input type="password" id="s-apikey" placeholder="sk-ant-..."></div>
+      <div class="btn-row"><button class="btn btn-primary" onclick="saveSettings()">Save</button></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const PROXY_DEFAULT = window.location.origin;
+const AT_INTEGRATION = 'HWPJO22ADGRJGIBSGAMZGXKP6SU';
+const AT_USER   = 'fnfvndaep4jy4ss@VERSETALINFO.COM';
+const AT_SECRET = '4Pc$G~5d1n#J@0WiK*a6f3*AZ';
+
+function proxyURL() { return (document.getElementById('s-proxy').value || localStorage.getItem('proxy_url') || PROXY_DEFAULT).replace(/\/$/, ''); }
+function apiURL(path) { return proxyURL() + '/api' + path; }
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let allTickets = [];
+let filteredTickets = [];
+let currentPage = 1;
+let pageSize = 25;
+let companiesMap = {};
+let queuesMap = {};
+let resourcesMap = {};
+let picklistMaps = {};
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function req(url, opts = {}) {
+  const r = await fetch(url, { ...opts, headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) } });
+  if (!r.ok) { const t = await r.text(); throw new Error(`HTTP ${r.status}: ${t}`); }
+  return r.json();
+}
+const GET   = path => req(apiURL(path));
+const POST  = (path, b) => req(apiURL(path), { method: 'POST',  body: JSON.stringify(b) });
+const PATCH = (path, b) => req(apiURL(path), { method: 'PATCH', body: JSON.stringify(b) });
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const STATUS   = {1:'New',5:'In progress',7:'Waiting client',8:'Waiting vendor',11:'Complete',12:'Failed',13:'Waiting approval',14:'Scheduled',16:'Assigned',17:'In review',19:'Escalated',20:'Closed',21:'Waiting parts',22:'Waiting vendor',29:'Dispatched'};
+
+const SC = {}; // Replaced by dynamic sBadge
+const PRIORITY = {}; // Loaded from picklists
+const PC       = {}; // Replaced by dynamic pBadge
+const sBadge = s => {
+  const label = (picklistMaps.status||{})[String(s)] || (s ? `Status ${s}` : '—');
+  const cls = {
+    'New':'new',
+    'Work In Progress':'progress','Dispatched':'progress','Assigned':'progress',
+    'Acknowledged':'progress','Scheduled':'progress','Shift Handoff':'progress',
+    'Waiting Customer':'waiting','Waiting Materials':'waiting','Waiting Vendor':'waiting',
+    'Waiting Approval':'waiting','On Hold':'waiting','Customer Note Added':'waiting',
+    'Versetal Note Added':'waiting',
+    'Escalate':'critical',
+    'Complete':'complete','Billed':'complete','Ready to Bill':'complete','Inactive':'complete',
+    'Change Order':'medium','Dispatched':'progress'
+  }[label] || 'new';
+  return `<span class="badge b-${cls}">${label}</span>`;
+};
+const pBadge = p => {
+  const label = (picklistMaps.priority||{})[String(p)] || PRIORITY[p] || `P${p}`;
+  const cls = {
+    'Emergency':'critical',
+    'High':'high',
+    'Medium':'medium',
+    'Low':'low'
+  }[label] || 'medium';
+  return `<span class="badge b-${cls}">${label}</span>`;
+};
+const coName   = id => companiesMap[id]  || '—';
+const qName    = id => queuesMap[id]    || '—';
+const resName  = id => resourcesMap[id] || resourcesMap[String(id)] || resourcesMap[parseInt(id)] || '—';
+const issName  = id => (picklistMaps.issueType    || {})[String(id)] || '—';
+const subName  = id => (picklistMaps.subIssueType || {})[String(id)] || '—';
+const srcName  = id => (picklistMaps.source       || {})[String(id)] || '—';
+
+function getFromDate() {
+  const sel = document.getElementById('timeframe');
+  const months = sel ? parseInt(sel.value) : 6;
+  if (months === 0) return null; // all time
+  const d = new Date();
+  d.setMonth(d.getMonth() - months);
+  // Autotask API expects M/D/YYYY HH:MM:SS format
+  const mm = d.getMonth() + 1;
+  const dd = d.getDate();
+  const yyyy = d.getFullYear();
+  return `${mm}/${dd}/${yyyy} 00:00:00`;
+}
+
+function getFromDateISO() {
+  const sel = document.getElementById('timeframe');
+  const months = sel ? parseInt(sel.value) : 6;
+  if (months === 0) return null;
+  const d = new Date();
+  d.setMonth(d.getMonth() - months);
+  return d;
+}
+
+function timeframeLabel() {
+  const sel = document.getElementById('timeframe');
+  if (!sel) return 'last 6 months';
+  const opt = sel.options[sel.selectedIndex];
+  return opt ? opt.text.toLowerCase() : 'last 6 months';
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+function nav(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (page === 'analysis') initAnalysisPage();
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'tickets') { loadTickets(); populateResourceDropdown(); }
+}
+
+async function populateResourceDropdown() {
+  const rsel = document.getElementById('filter-resource');
+  if (!rsel) return;
+  try {
+    // Get all resources from API
+    const res = await fetch(window.location.origin + '/api/resources').then(r=>r.json());
+    if (!Array.isArray(res) || res.length === 0) return;
+
+    // Build lookup map
+    const resMap = {};
+    for (const r of res) resMap[String(r.id)] = `${r.first_name} ${r.last_name}`.trim();
+
+    // Get only IDs that appear in loaded tickets
+    const usedIds = [...new Set(allTickets.map(t => String(t.assigned_resource_id)).filter(id => id && id !== 'null'))];
+
+    while (rsel.options.length > 1) rsel.remove(1);
+
+    const sorted = usedIds
+      .filter(id => resMap[id])
+      .map(id => ({ id, name: resMap[id] }))
+      .sort((a,b) => a.name.localeCompare(b.name));
+
+    for (const { id, name } of sorted) {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = name;
+      rsel.appendChild(opt);
+    }
+    console.log('Resource dropdown populated:', rsel.options.length - 1, 'resources from', allTickets.length, 'tickets');
+  } catch(e) { console.error('populateResourceDropdown error:', e); }
+}
+
+// ── Auto-refresh ─────────────────────────────────────────────────────────────
+let autoRefreshInterval = null;
+
+function startAutoRefresh(minutes = 5) {
+  stopAutoRefresh();
+  autoRefreshInterval = setInterval(() => {
+    // Only refresh if on dashboard or tickets page
+    const dashActive = document.getElementById('page-dashboard').classList.contains('active');
+    const ticketsActive = document.getElementById('page-tickets').classList.contains('active');
+    if (dashActive || ticketsActive) {
+      console.log('[auto-refresh] Refreshing tickets...');
+      allTickets = [];
+      loadData(true);
+    }
+  }, minutes * 60 * 1000);
+  console.log(`[auto-refresh] Started — every ${minutes} minutes`);
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+  }
+}
+
+// ── Proxy check ───────────────────────────────────────────────────────────────
+async function checkProxy() {
+  const dot = document.getElementById('proxy-dot');
+  const lbl = document.getElementById('proxy-label');
+  try {
+    const d = await req(proxyURL() + '/health');
+    dot.className = 'dot ok';
+    lbl.textContent = `Connected · ${d.tickets.toLocaleString()} tickets`;
+  } catch {
+    dot.className = 'dot';
+    lbl.textContent = 'Server offline';
+  }
+}
+
+// ── Fetch all tickets (last 6 months, paginated) ──────────────────────────────
+async function refreshTickets() {
+  allTickets = [];
+  await fetchAndShowTickets();
+}
+
+// Aliases for backward compatibility
+async function loadTickets() {
+  if (allTickets.length > 0) { renderTickets(allTickets); return; }
+  await fetchAndShowTickets();
+}
+
+async function fetchAndShowTickets() {
+  const el = document.getElementById('tickets-body');
+  el.innerHTML = '<span class="spinner"></span> Loading...';
+  try {
+    await ensureMapsLoaded();
+    allTickets = await fetchTickets(count => {
+      el.innerHTML = `<span class="spinner"></span> Loading... (${count} tickets so far)`;
+    });
+    renderTickets(allTickets);
+    updateMetrics(allTickets);
+    await populateTicketCompanyFilter();
+  } catch(e) {
+    el.innerHTML = `<div class="msg msg-err">Error: ${e.message} <button class="btn btn-sm" onclick="allTickets=[];fetchAndShowTickets()">Retry</button></div>`;
+  }
+}
+
+async function fetchAndShowDashboard() {
+  const el = document.getElementById('dash-body');
+  el.innerHTML = '<span class="spinner"></span> Loading...';
+  try {
+    await ensureMapsLoaded();
+    allTickets = await fetchTickets(count => {
+      el.innerHTML = `<span class="spinner"></span> Loading... (${count} so far)`;
+    });
+    updateMetrics(allTickets);
+    renderDash();
+    renderTickets(allTickets);
+    await populateTicketCompanyFilter();
+    const label = `${allTickets.length} tickets · ${timeframeLabel()}`;
+    const l1 = document.getElementById('loaded-label');
+    if (l1) l1.textContent = label;
+  } catch(e) {
+    el.innerHTML = `<div class="msg msg-err">Error: ${e.message}</div>`;
+  }
+}
+
+async function ensureMapsLoaded() {
+  const base = window.location.origin;
+  const promises = [];
+  if (Object.keys(companiesMap).length === 0)
+    promises.push(fetch(base + '/api/companies').then(r=>r.json()).then(cos => { for (const co of cos) { companiesMap[co.id] = co.name; companiesMap[String(co.id)] = co.name; } }).catch(()=>{}));
+  if (Object.keys(queuesMap).length === 0)
+    promises.push(fetch(base + '/api/queues').then(r=>r.json()).then(qs => { for (const q of qs) { queuesMap[q.id] = q.name; queuesMap[String(q.id)] = q.name; } }).catch(()=>{}));
+  if (Object.keys(resourcesMap).length === 0)
+    promises.push(fetch(base + '/api/resources').then(r=>r.json()).then(res => { for (const r of res) { const name = `${r.first_name} ${r.last_name}`.trim(); resourcesMap[r.id] = name; resourcesMap[String(r.id)] = name; } }).catch(()=>{}));
+  if (Object.keys(picklistMaps).length === 0)
+    promises.push(fetch(base + '/api/picklists').then(r=>r.json()).then(pl => { picklistMaps = pl || {}; }).catch(()=>{}));
+  if (promises.length > 0) await Promise.all(promises);
+}
+
+async function fetchTickets(onProgress) {
+  // Use tickets-timeframe if on tickets page, otherwise fall back to dashboard timeframe
+  const ticketsSel = document.getElementById('tickets-timeframe');
+  const dashSel = document.getElementById('timeframe');
+  const sel = ticketsSel || dashSel;
+  const val = sel ? parseInt(sel.value) : 180;
+  const days = val === 0 ? 36500 : val;
+  const companyFilter = document.getElementById('filter-company') ? document.getElementById('filter-company').value : '';
+
+  let url = proxyURL() + '/api/tickets?days=' + days + '&limit=10000';
+  if (companyFilter) url += '&company=' + companyFilter;
+
+  if (onProgress) onProgress(0);
+  const data = await req(url);
+  const items = data.items || [];
+  if (onProgress) onProgress(items.length);
+
+  // Update count label
+  const label = document.getElementById('tickets-count-label');
+  if (label) label.textContent = `${items.length} tickets`;
+
+  return items;
+}
+
+// ── Load data (shared between dashboard + tickets) ────────────────────────────
+async function loadData(force = false) {
+  if (allTickets.length > 0 && !force) { await renderAll(); return; }
+
+  allTickets = [];
+  const loading = '<span class="spinner"></span> Loading...';
+  document.getElementById('dash-body').innerHTML    = loading;
+  document.getElementById('tickets-body').innerHTML = loading;
+
+  try {
+    await ensureMapsLoaded();
+    allTickets = await fetchTickets(n => {
+      const msg = `<span class="spinner"></span> Loading... (${n} so far)`;
+      document.getElementById('dash-body').innerHTML    = msg;
+      document.getElementById('tickets-body').innerHTML = msg;
+    });
+    const label = `${allTickets.length} tickets · ${timeframeLabel()}`;
+    const l1 = document.getElementById('loaded-label');
+    if (l1) l1.textContent = label;
+    await renderAll();
+    await populateResourceDropdown();
+  } catch(e) {
+    const err = `<div class="msg msg-err">Error: ${e.message} <button class="btn btn-sm" onclick="allTickets=[];loadData()">Retry</button></div>`;
+    document.getElementById('dash-body').innerHTML    = err;
+    document.getElementById('tickets-body').innerHTML = err;
+  }
+}
+
+async function renderAll() {
+  updateMetrics(allTickets);
+  renderDash();
+  renderTickets(allTickets);
+  await populateTicketCompanyFilter();
+}
+
+async function populateTicketCompanyFilter() {
+  const sel = document.getElementById('filter-company');
+  if (!sel) return;
+  const current = sel.value;
+
+  // Load companiesMap if empty
+  if (Object.keys(companiesMap).length === 0) {
+    try {
+      const cos = await fetch(window.location.origin + '/api/companies').then(r=>r.json()).catch(()=>[]);
+      for (const co of cos) { companiesMap[co.id] = co.name; }
+    } catch(e) {}
+  }
+
+  while (sel.options.length > 1) sel.remove(1);
+  // Get unique companies from loaded tickets
+  const companies = {};
+  for (const t of allTickets) {
+    const id = t.company_id;
+    if (id && !companies[id]) companies[id] = companiesMap[id] || companiesMap[String(id)] || `Co:${id}`;
+  }
+  const sorted = Object.entries(companies).sort((a,b) => a[1].localeCompare(b[1]));
+  for (const [id, name] of sorted) {
+    const opt = document.createElement('option');
+    opt.value = id;
+    opt.textContent = name;
+    sel.appendChild(opt);
+  }
+  if (current) sel.value = current;
+}
+
+function renderDash() {
+  const el = document.getElementById('dash-body');
+  if (!allTickets.length) { el.innerHTML = '<div class="empty">No tickets found.</div>'; return; }
+  const recent = allTickets.slice(0, 10);
+  el.innerHTML = `<table class="ticket-table">
+    <thead><tr>
+      <th class="col-num">Ticket #</th>
+      <th class="col-title">Title</th>
+      <th class="col-company">Account</th>
+      <th class="col-priority">Priority</th>
+      <th class="col-status">Status</th>
+    </tr></thead>
+    <tbody>${recent.map(t => `
+      <tr onclick="openTicket(${t.id})">
+        <td class="col-num" style="font-family:monospace;font-size:11px;color:var(--text2)">#${t.ticket_number||t.ticketNumber||t.id}</td>
+        <td class="col-title" style="font-weight:500">${t.title||'Untitled'}</td>
+        <td class="col-company" style="color:var(--text2);font-size:12px">${coName(t.company_id||t.companyID)}</td>
+        <td class="col-priority">${pBadge(t.priority)}</td>
+        <td class="col-status">${sBadge(t.status)}</td>
+      </tr>`).join('')}
+    </tbody></table>
+    <div style="padding:10px 0;border-top:0.5px solid var(--border);margin-top:4px">
+      <button class="btn btn-sm" onclick="nav('tickets',document.querySelectorAll('.nav-btn')[1]);setTimeout(()=>renderPage(),100)">
+        View all ${allTickets.length} tickets →
+      </button>
+    </div>`;
+}
+
+function renderTickets(tickets) {
+  filteredTickets = tickets;
+  currentPage = 1;
+  renderPage();
+  // Populate dropdowns after tickets render
+  populateResourceDropdown();
+  populateTicketCompanyFilter();
+}
+
+function renderPage() {
+  const el = document.getElementById('tickets-body');
+  if (!filteredTickets.length) { el.innerHTML = '<div class="empty">No tickets found.</div>'; return; }
+
+  const totalPages = Math.ceil(filteredTickets.length / pageSize);
+  const start = (currentPage - 1) * pageSize;
+  const end = Math.min(start + pageSize, filteredTickets.length);
+  const page = filteredTickets.slice(start, end);
+
+  const rows = `<table class="ticket-table">
+    <thead><tr>
+      <th class="col-num">Ticket #</th>
+      <th class="col-title">Title</th>
+      <th class="col-company">Account</th>
+      <th class="col-queue">Queue</th>
+      <th class="col-date">Opened</th>
+      <th class="col-priority">Priority</th>
+      <th class="col-status">Status</th>
+    </tr></thead>
+    <tbody>${page.map(t => `
+      <tr onclick="openTicket(${t.id})">
+        <td class="col-num" style="font-family:monospace;font-size:11px;color:var(--text2)">#${t.ticket_number||t.ticketNumber||t.id}</td>
+        <td class="col-title" style="font-weight:500">${t.title||'Untitled'}</td>
+        <td class="col-company" style="color:var(--text2);font-size:12px">${coName(t.company_id||t.companyID)}</td>
+        <td class="col-queue" style="color:var(--text2);font-size:12px">${qName(t.queue_id||t.queueID)}</td>
+        <td class="col-date" style="color:var(--text2);font-size:12px;white-space:nowrap">${(t.create_date||t.createDate)?new Date(t.create_date||t.createDate).toLocaleDateString():'—'}</td>
+        <td class="col-priority">${pBadge(t.priority)}</td>
+        <td class="col-status">${sBadge(t.status)}</td>
+      </tr>`).join('')}
+    </tbody></table>`;
+
+  const pagination = `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;flex-wrap:wrap;gap:8px;border-top:0.5px solid var(--border);margin-top:8px">
+      <div style="font-size:12px;color:var(--text2)">
+        Showing ${start+1}–${end} of ${filteredTickets.length} tickets
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <select onchange="pageSize=parseInt(this.value);currentPage=1;renderPage()" style="padding:4px 8px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text)">
+          <option value="25" ${pageSize===25?'selected':''}>25 / page</option>
+          <option value="50" ${pageSize===50?'selected':''}>50 / page</option>
+          <option value="100" ${pageSize===100?'selected':''}>100 / page</option>
+          <option value="250" ${pageSize===250?'selected':''}>250 / page</option>
+        </select>
+        <button class="btn btn-sm" onclick="changePage(-1)" ${currentPage===1?'disabled':''} style="${currentPage===1?'opacity:0.4':''}">← Prev</button>
+        <span style="font-size:12px;color:var(--text2)">Page ${currentPage} / ${totalPages}</span>
+        <button class="btn btn-sm" onclick="changePage(1)" ${currentPage===totalPages?'disabled':''} style="${currentPage===totalPages?'opacity:0.4':''}">Next →</button>
+      </div>
+    </div>`;
+
+  el.innerHTML = rows + pagination;
+}
+
+function changePage(dir) {
+  const totalPages = Math.ceil(filteredTickets.length / pageSize);
+  currentPage = Math.max(1, Math.min(currentPage + dir, totalPages));
+  renderPage();
+  document.getElementById('tickets-body').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function filterTickets() {
+  const q  = (document.getElementById('search-q').value||'').toLowerCase();
+  const st = document.getElementById('filter-status').value;
+  const pr = document.getElementById('filter-priority').value;
+  const co = document.getElementById('filter-company') ? document.getElementById('filter-company').value : '';
+  const re = document.getElementById('filter-resource') ? document.getElementById('filter-resource').value : '';
+  const filtered = allTickets.filter(t =>
+    (!q  || (t.title||'').toLowerCase().includes(q) || String(t.ticket_number||t.ticketNumber||'').includes(q)) &&
+    (!st || String(t.status)   === st) &&
+    (!pr || String(t.priority) === pr) &&
+    (!co || String(t.company_id) === co) &&
+    (!re || String(t.assigned_resource_id) === re)
+  );
+  filteredTickets = filtered;
+  currentPage = 1;
+  renderPage();
+}
+
+function updateMetrics(tickets) {
+  const closedStatuses = [5, 14, 16]; // Complete, Billed, Inactive
+  const inProgressStatuses = [8, 10, 20, 21, 24, 23]; // Work In Progress, Dispatched, Assigned, Acknowledged, Scheduled, Shift Handoff
+  const open = tickets.filter(t => !closedStatuses.includes(t.status));
+  document.getElementById('m-total').textContent    = open.length;
+  document.getElementById('m-new').textContent      = tickets.filter(t => t.status === 1).length;
+  document.getElementById('m-progress').textContent = tickets.filter(t => inProgressStatuses.includes(t.status)).length;
+  document.getElementById('m-critical').textContent = tickets.filter(t => t.priority === 4 && !closedStatuses.includes(t.status)).length;
+}
+
+// ── Ticket detail ─────────────────────────────────────────────────────────────
+let currentTicketId = null;
+async function openTicket(id) {
+  currentTicketId = id;
+  document.getElementById('tickets-list').style.display   = 'none';
+  document.getElementById('ticket-detail').style.display  = 'block';
+  document.getElementById('detail-content').innerHTML = '<span class="spinner"></span> Loading...';
+  nav('tickets', document.querySelectorAll('.nav-btn')[1]);
+  try {
+    const res = await GET('/Tickets/' + id);
+    const tk = res.item || res;
+    document.getElementById('detail-content').innerHTML = `
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <span style="font-size:16px;font-weight:500;flex:1">${tk.title||'Untitled'}</span>
+          ${pBadge(tk.priority)} ${sBadge(tk.status)}
+        </div>
+        <div class="field-grid">
+          <span class="fl">Ticket #</span><span class="fv"><a href="https://ww14.autotask.net/Mvc/ServiceDesk/TicketDetail.mvc?ticketId=${tk.id}" target="_blank" style="color:#2AA7DF;text-decoration:none">${tk.ticket_number||tk.ticketNumber||tk.id} ↗</a></span>
+          <span class="fl">Account</span><span class="fv">${coName(tk.company_id||tk.companyID)}</span>
+          <span class="fl">Queue</span><span class="fv">${qName(tk.queue_id||tk.queueID)}</span>
+          <span class="fl">Primary resource</span><span class="fv">${resName(tk.assigned_resource_id||tk.assignedResourceID)}</span>
+          <span class="fl">Secondary resource</span><span class="fv">${resName(tk.secondary_resource_id||tk.secondaryResourceID)}</span>
+          <span class="fl">Issue type</span><span class="fv">${issName(tk.issue_type||tk.issueType)}</span>
+          <span class="fl">Sub-issue type</span><span class="fv">${subName(tk.sub_issue_type||tk.subIssueType)}</span>
+          <span class="fl">Source</span><span class="fv">${srcName(tk.source)}</span>
+          <span class="fl">Created</span><span class="fv">${(tk.create_date||tk.createDate)?new Date(tk.create_date||tk.createDate).toLocaleDateString():'—'}</span>
+          <span class="fl">Due</span><span class="fv">${(tk.due_date||tk.dueDateTime)?new Date(tk.due_date||tk.dueDateTime).toLocaleDateString():'—'}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:6px">Description</div>
+        <div class="desc-box">${tk.description||'No description.'}</div>
+        <div class="section-title">Update ticket</div>
+        <div class="row2">
+          <div class="form-group"><label>Status</label>
+            <select id="u-status">
+              <option value="1" ${tk.status==1?'selected':''}>New</option>
+              <option value="8" ${tk.status==8?'selected':''}>Work in progress</option>
+              <option value="10" ${tk.status==10?'selected':''}>Dispatched</option>
+              <option value="20" ${tk.status==20?'selected':''}>Assigned</option>
+              <option value="21" ${tk.status==21?'selected':''}>Acknowledged</option>
+              <option value="24" ${tk.status==24?'selected':''}>Scheduled</option>
+              <option value="7" ${tk.status==7?'selected':''}>Waiting customer</option>
+              <option value="9" ${tk.status==9?'selected':''}>Waiting materials</option>
+              <option value="12" ${tk.status==12?'selected':''}>Waiting vendor</option>
+              <option value="13" ${tk.status==13?'selected':''}>Waiting approval</option>
+              <option value="17" ${tk.status==17?'selected':''}>On hold</option>
+              <option value="11" ${tk.status==11?'selected':''}>Escalate</option>
+              <option value="5" ${tk.status==5?'selected':''}>Complete</option>
+              <option value="14" ${tk.status==14?'selected':''}>Billed</option>
+              <option value="16" ${tk.status==16?'selected':''}>Inactive</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Priority</label>
+            <select id="u-priority">
+              <option value="4" ${tk.priority==4?'selected':''}>Emergency</option>
+              <option value="1" ${tk.priority==1?'selected':''}>High</option>
+              <option value="2" ${tk.priority==2?'selected':''}>Medium</option>
+              <option value="3" ${tk.priority==3?'selected':''}>Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Add internal note</label><textarea id="u-note" placeholder="Internal note..."></textarea></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="updateTicket(${tk.id})">Save changes</button>
+          <button class="btn btn-ai" id="ai-suggest-btn" data-title="${(tk.title||'').replace(/"/g,'&quot;')}" data-desc="${(tk.description||'').slice(0,400).replace(/"/g,'&quot;').replace(/\n/g,' ')}" onclick="aiSuggestFromBtn(this)">✦ AI suggest next step</button>
+        </div>
+        <div id="update-msg"></div>
+        <div class="section-title">Notes</div>
+        <div id="notes-list"><span class="spinner"></span> Loading notes...</div>
+      </div>`;
+  // Lazy load notes after rendering ticket
+  loadNotes(tk.id, true); // Always force refresh on ticket open
+  } catch(e) {
+    document.getElementById('detail-content').innerHTML = `<div class="msg msg-err">Error: ${e.message}</div>`;
+  }
+}
+
+function closeDetail() {
+  document.getElementById('tickets-list').style.display  = '';
+  document.getElementById('ticket-detail').style.display = 'none';
+}
+
+async function updateTicket(id) {
+  const msg = document.getElementById('update-msg');
+  msg.innerHTML = '<span class="spinner"></span> Saving...';
+  try {
+    await PATCH('/Tickets', { id, status: parseInt(document.getElementById('u-status').value), priority: parseInt(document.getElementById('u-priority').value) });
+    const note = (document.getElementById('u-note').value||'').trim();
+    if (note) {
+      await req(proxyURL() + `/api/tickets/${id}/notes`, {
+        method: 'POST',
+        body: JSON.stringify({ noteType: 1, publish: 1, title: 'Update', description: note })
+      });
+      document.getElementById('u-note').value = '';
+      // Reload notes
+      await loadNotes(id, true);
+    }
+    msg.innerHTML = '<div class="msg msg-ok">Updated successfully.</div>';
+  } catch(e) {
+    msg.innerHTML = `<div class="msg msg-err">Error: ${e.message}</div>`;
+  }
+}
+
+async function loadNotes(ticketId, forceRefresh = false) {
+  const el = document.getElementById('notes-list');
+  if (!el) return;
+  el.innerHTML = '<span class="spinner"></span> Loading notes...';
+  try {
+    const url = proxyURL() + `/api/tickets/${ticketId}/notes` + (forceRefresh ? '?refresh=1' : '');
+    const data = await req(url);
+    const notes = data.items || [];
+    if (!notes.length) {
+      el.innerHTML = '<div class="empty">No notes yet.</div>';
+      return;
+    }
+    el.innerHTML = notes.map(n => `
+      <div style="background:var(--bg2);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:4px;">
+          <span style="font-size:13px;font-weight:500">${n.title||'Note'}</span>
+          <span style="font-size:11px;color:var(--text2)">${n.create_date||n.createDate ? new Date(n.create_date||n.createDate).toLocaleString() : ''}</span>
+        </div>
+        <div style="font-size:13px;white-space:pre-wrap;line-height:1.5">${n.description||''}</div>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = `<div class="msg msg-err">Error loading notes: ${e.message}</div>`;
+  }
+}
+
+// ── Create ticket ─────────────────────────────────────────────────────────────
+async function createTicket() {
+  const msg   = document.getElementById('create-msg');
+  const title = (document.getElementById('c-title').value||'').trim();
+  const desc  = (document.getElementById('c-desc').value||'').trim();
+  const pri   = parseInt(document.getElementById('c-priority').value);
+  const qid   = (document.getElementById('c-queue').value||'').trim();
+  if (!title) { msg.innerHTML = '<div class="msg msg-err">Title is required.</div>'; return; }
+  msg.innerHTML = '<span class="spinner"></span> Creating...';
+  const body = { title, description: desc, priority: pri, status: 1, issuetype: 10 };
+  if (qid) body.queueID = parseInt(qid);
+  try {
+    const res = await POST('/Tickets', body);
+    msg.innerHTML = `<div class="msg msg-ok">Ticket created! ID: ${res.itemId||'—'}</div>`;
+    document.getElementById('c-title').value = '';
+    document.getElementById('c-desc').value  = '';
+  } catch(e) {
+    msg.innerHTML = `<div class="msg msg-err">Error: ${e.message}</div>`;
+  }
+}
+
+// ── Claude API ────────────────────────────────────────────────────────────────
+async function getAnthropicKey() {
+  // Try localStorage first (set when user saves settings)
+  const local = localStorage.getItem('anthropic_key');
+  if (local && local !== '***saved***') return local;
+  // Try field
+  const field = (document.getElementById('s-apikey').value||'').trim();
+  if (field && field !== '***saved***') return field;
+  // Fetch from server DB
+  try {
+    const d = await req(proxyURL() + '/api/settings/anthropic-key');
+    if (d.key) {
+      localStorage.setItem('anthropic_key', d.key);
+      return d.key;
+    }
+  } catch(e) { console.warn('Could not fetch key from server:', e.message); }
+  return '';
+}
+
+async function claudeCall(system, userMsg, maxTokens = 500) {
+  // Route through server proxy to avoid CORS issues and keep API key secure
+  let body;
+  try {
+    body = JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens,
+      system,
+      messages: [{ role: 'user', content: userMsg }]
+    });
+  } catch(jsonErr) {
+    throw new Error('Failed to build request: ' + jsonErr.message);
+  }
+  const r = await fetch(proxyURL() + '/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body
+  });
+  if (!r.ok) {
+    const errText = await r.text();
+    throw new Error(`Server error ${r.status}: ${errText.slice(0,200)}`);
+  }
+  const d = await r.json();
+  if (d.error) throw new Error(d.error);
+  if (!d.content || !d.content[0]) throw new Error('Empty response from Claude');
+  return d.content[0].text;
+}
+
+// ── AI draft ──────────────────────────────────────────────────────────────────
+async function aiDraft() {
+  const desc = (document.getElementById('c-desc').value||'').trim();
+  const msg  = document.getElementById('create-msg');
+  if (!desc) { msg.innerHTML = '<div class="msg msg-err">Add a description first.</div>'; return; }
+  msg.innerHTML = '<div class="msg msg-info"><span class="spinner"></span> AI drafting...</div>';
+  try {
+    const txt = await claudeCall('MSP helpdesk triage. Return ONLY valid JSON: {"title":string,"priority":1|2|3|4}. No markdown.', 'Draft a ticket:\n\n' + desc);
+    const p = JSON.parse(txt.trim());
+    if (p.title)    document.getElementById('c-title').value    = p.title;
+    if (p.priority) document.getElementById('c-priority').value = p.priority;
+    msg.innerHTML = '<div class="msg msg-ok">AI draft applied.</div>';
+  } catch(e) { msg.innerHTML = `<div class="msg msg-err">AI error: ${e.message}</div>`; }
+}
+
+// ── AI triage ─────────────────────────────────────────────────────────────────
+async function runTriage() {
+  const input = (document.getElementById('triage-input').value||'').trim();
+  const out   = document.getElementById('triage-result');
+  if (!input) { out.innerHTML = '<div class="msg msg-err">Paste some text first.</div>'; return; }
+  out.innerHTML = '<div class="msg msg-info"><span class="spinner"></span> Analyzing...</div>';
+  try {
+    const txt = await claudeCall(
+      'MSP helpdesk triage AI. Return ONLY valid JSON: {"title":string,"priority":1|2|3|4,"priorityLabel":string,"category":string,"summary":string,"suggestedNextStep":string}. No markdown.',
+      'Triage this:\n\n' + input, 600
+    );
+    const t = JSON.parse(txt.trim());
+    out.innerHTML = `<div class="card" style="margin-top:14px">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+        <span style="font-size:15px;font-weight:500;flex:1">${t.title}</span>
+        <span class="badge b-${PC[t.priority]||'medium'}">${t.priorityLabel}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">Category</div><div style="font-size:13px;margin-bottom:8px">${t.category}</div>
+      <div style="font-size:12px;color:var(--text2)">Summary</div><div style="font-size:13px;margin-bottom:8px">${t.summary}</div>
+      <div style="font-size:12px;color:var(--text2)">Suggested next step</div><div style="font-size:13px;margin-bottom:14px">${t.suggestedNextStep}</div>
+      <button class="btn btn-primary btn-sm" onclick="prefillCreate(${JSON.stringify(t.title)},${t.priority})">Create this ticket →</button>
+    </div>`;
+  } catch(e) { out.innerHTML = `<div class="msg msg-err">AI error: ${e.message}</div>`; }
+}
+
+function prefillCreate(title, priority) {
+  document.getElementById('c-title').value    = title;
+  document.getElementById('c-priority').value = priority;
+  document.getElementById('c-desc').value     = document.getElementById('triage-input').value||'';
+  nav('create', document.querySelectorAll('.nav-btn')[2]);
+}
+
+// ── AI suggest (ticket detail) ────────────────────────────────────────────────
+function aiSuggestFromBtn(btn) {
+  const title = btn.getAttribute('data-title') || '';
+  const desc = btn.getAttribute('data-desc') || '';
+  aiSuggest(title, desc);
+}
+
+async function aiSuggest(title, desc) {
+  const msg = document.getElementById('update-msg');
+  msg.innerHTML = '<div class="msg msg-info"><span class="spinner"></span> AI analyzing...</div>';
+  try {
+    const txt = await claudeCall('MSP helpdesk assistant. Suggest a concise practical next action. 2-3 sentences.', `Ticket: "${title}"\nDescription: ${desc}\n\nWhat should the tech do next?`);
+    msg.innerHTML = `<div class="msg msg-info"><strong>AI suggestion:</strong> ${txt}</div>`;
+  } catch(e) { msg.innerHTML = `<div class="msg msg-err">AI error: ${e.message}</div>`; }
+}
+
+// ── AI analysis ───────────────────────────────────────────────────────────────
+async function runAnalysis() {
+  const btn    = document.getElementById('analysis-btn');
+  const status = document.getElementById('analysis-status');
+  const out    = document.getElementById('analysis-result');
+  btn.disabled = true;
+  btn.textContent = '✦ Running...';
+  out.innerHTML = '';
+
+  try {
+    // Get analysis parameters
+    const days = parseInt(document.getElementById('analysis-timeframe').value) || 180;
+    const focus = document.getElementById('analysis-focus').value || 'all';
+    const companyFilter = document.getElementById('analysis-company').value || '';
+
+    // Fetch tickets for the selected timeframe directly from DB
+    status.textContent = 'Fetching tickets...';
+    const actualDays = days === 0 ? 36500 : days;
+    console.log('Fetching tickets for days:', actualDays);
+    const url = proxyURL() + `/api/tickets?days=${actualDays}&limit=10000`;
+    const data = await req(url);
+    let tickets = data.items || [];
+
+    // Filter by company if selected
+    if (companyFilter) {
+      tickets = tickets.filter(t => String(t.company_id) === companyFilter);
+    }
+
+    // Filter by queue if selected
+    const queueFilter = document.getElementById('analysis-queue').value || '';
+    if (queueFilter) {
+      tickets = tickets.filter(t => String(t.queue_id) === queueFilter);
+    }
+
+    if (!tickets.length) {
+      status.textContent = '';
+      btn.disabled = false;
+      btn.textContent = '✦ Run analysis';
+      out.innerHTML = '<div class="msg msg-err">No tickets found for the selected criteria.</div>';
+      return;
+    }
+
+    const timeLabel = document.getElementById('analysis-timeframe').options[document.getElementById('analysis-timeframe').selectedIndex].text;
+    const clientLabel = companyFilter ? coName(parseInt(companyFilter)) : 'All clients';
+    const queueFilter2 = document.getElementById('analysis-queue').value || '';
+    const queueLabel = queueFilter2 ? qName(parseInt(queueFilter2)) : 'All departments';
+    status.textContent = `Analyzing ${tickets.length} tickets · ${timeLabel} · ${clientLabel} · ${queueLabel}`;
+
+    // Build exact date range string to pass to Claude
+    const fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - (days === 36500 ? 3650 : days));
+    const toDate = new Date();
+    const dateRangeStr = `${fromDate.toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'})} to ${toDate.toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'})}`;
+
+    const SMAP = picklistMaps.status || {};
+    const PMAP = picklistMaps.priority || {1:'Critical',2:'High',3:'Medium',4:'Low'};
+    const now  = new Date();
+
+    const lines = tickets.map(t =>
+      `#${t.ticketNumber||t.id}|${(t.title||'').slice(0,60)}|${PMAP[t.priority]||t.priority}|${SMAP[t.status]||t.status}|Co:${t.companyID||'?'}|${t.createDate?t.createDate.slice(0,10):''}|${t.dueDateTime&&new Date(t.dueDateTime)<now&&t.status!==11?'OVERDUE':''}`
+    ).join('\n');
+
+    const focusSections = {
+      qbr: `You are producing a formal Quarterly Business Review (QBR) report for Versetal to present to clients or leadership. Structure it as a professional executive report covering:
+1. Quarter at a Glance — stat cards: Total tickets, Resolved, Open, Critical, Avg resolution time
+2. Executive Summary — 3-4 sentences on overall health, key wins, and concerns this quarter
+3. Ticket Volume by Department/Queue — table: Queue/Department | Tickets | % of Total | vs Previous Quarter (estimate trend)
+4. Top Issues This Quarter — table: Issue Category | Count | Severity | Clients Affected
+5. Client Health Summary — table: Client | Tickets | Open | Critical | SLA Status (Good/At Risk/Breached)
+6. SLA Performance — summary of SLA compliance, breaches, and at-risk tickets
+7. Notable Incidents — bullet list of significant incidents, outages, or escalations this quarter
+8. Wins & Improvements — bullet list of problems resolved, recurring issues fixed, improvements made
+9. Recommendations for Next Quarter — table: Priority badge | Area | Recommendation | Expected Outcome
+10. Additional Notes — any emerging trends or items to watch next quarter
+Write in a professional tone suitable for client-facing delivery. Be specific with data.`,
+      all: `Cover all sections: executive summary with stat cards, issue categories table, trends, client breakdown table, SLA risks, correlated issues, and a recommendations table with Priority (color-coded badge), Issue, Recommended Actions (bullet list), Expected Impact (% reduction or efficiency gain). End with Additional Strategic Recommendations bullets.`,
+      trends: `Cover these sections in order:
+1. Executive Summary with stat cards (total tickets, open, critical, in progress)
+2. Issue Trends Over Time — recent activity, status distribution, resolution patterns
+3. Most Common Issue Categories — table: Category | Count | Percentage | Severity Distribution
+4. Emerging Issues — new patterns, anomalies, spikes worth investigating
+5. Recommendations to Address Top Trends — table with these exact columns: Priority (use color-coded badge) | Issue | Recommended Actions (use bullet points) | Expected Impact (include estimated % ticket reduction or time saving). Color-code each row background to match priority: Critical=light red #FADBD8, High=light yellow #FEF9E7, Medium=light blue #D6E8F5, Low=light green #EAF3DE.
+6. Additional Strategic Recommendations — 4-5 bullet points with bold labels covering automation, monitoring, staffing, and tooling improvements.`,
+      clients: `Cover these sections: executive summary with stat cards, full client breakdown table (Client | Total | Open | Critical | Overdue | Avg Resolution Time), most demanding clients analysis, SLA breaches by client, and a per-client recommendations table (Priority badge | Client | Issue | Recommended Actions | Expected Impact).`,
+      sla: `Cover these sections: executive summary with stat cards, overdue tickets table (Ticket# | Client | Title | Priority badge | Days Overdue), high priority stuck in New/In Progress table, SLA breach patterns by client and issue type, and recommendations table (Priority badge | Issue | Recommended Actions | Expected Impact).`,
+      recurring: `Cover these sections: executive summary with stat cards, top 10 recurring issues table (Issue | Count | Clients Affected | Avg Priority), clients with most recurring issues, root cause analysis, and recommendations table (Priority badge | Recurring Issue | Root Cause | Recommended Fix | Expected Impact).`,
+      correlated: `Cover these sections: executive summary with stat cards, correlated issue pairs table (Issue A | Issue B | Co-occurrence Count | Affected Clients), cascading failure patterns, common issue combinations, and recommendations table (Priority badge | Issue Cluster | Recommended Actions | Expected Impact).`
+    };
+
+    const system = `You are a senior MSP analyst for Versetal. Analyze the helpdesk ticket data and produce a detailed HTML report using the Versetal brand design language exactly as specified below.
+
+VERSETAL BRAND COLORS:
+- Navy: #0A2543 (primary — headers, table headers, stat card backgrounds)
+- Navy2: #0D3060 (secondary navy)
+- Green: #5BBF46 (accent — section underlines, stat numbers, highlights)
+- SkyBlue: #2AA7DF (info callouts)
+- Gold: #C8922A (warnings)
+- LightBlue: #D6E8F5 (alternating table rows)
+- White: #FFFFFF
+- Font: Arial
+
+STYLE RULES — follow exactly:
+- Wrapper: <div style="font-family:Arial,sans-serif;color:#1a1a1a;max-width:100%">
+- Report header banner: <div style="background:#0A2543;padding:16px 20px;margin-bottom:24px;border-radius:6px;display:flex;justify-content:space-between;align-items:center"><span style="color:#5BBF46;font-weight:700;font-size:16px;letter-spacing:0.05em">VERSETAL — J.A.R.V.I.S.</span><span style="color:#fff;font-size:13px;opacity:0.8">[Report Title] — [Date Range] — [N tickets]</span></div>
+- Section headings: <h3 style="font-family:Arial;color:#0A2543;border-bottom:3px solid #5BBF46;padding-bottom:6px;margin:24px 0 12px;font-size:15px;text-transform:uppercase;letter-spacing:0.04em">
+- Executive summary box: <div style="background:#0A2543;color:#fff;padding:14px 18px;border-radius:6px;margin-bottom:16px"> with stat labels in white 12px and values in #5BBF46 bold 24px
+- Callout boxes: info=<div style="border-left:4px solid #2AA7DF;background:#e8f4fb;padding:10px 14px;margin:10px 0;border-radius:0 4px 4px 0">, warning=<div style="border-left:4px solid #C8922A;background:#fdf3e3;padding:10px 14px;margin:10px 0;border-radius:0 4px 4px 0">, success=<div style="border-left:4px solid #5BBF46;background:#edf7e8;padding:10px 14px;margin:10px 0;border-radius:0 4px 4px 0">
+- Tables: <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:13px"> 
+- Table headers: <th style="background:#0A2543;color:#ffffff;font-weight:700;padding:10px 12px;text-align:left;font-family:Arial">
+- Table rows alternating: odd=<tr style="background:#ffffff">, even=<tr style="background:#D6E8F5">
+- Table cells: <td style="padding:9px 12px;border-bottom:1px solid #e0e8f0;font-family:Arial">
+- Priority badges: Critical=<span style="background:#FCEBEB;color:#791F1F;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600">Critical</span>, High=<span style="background:#FAECE7;color:#712B13;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600">High</span>, Medium=<span style="background:#FAEEDA;color:#633806;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600">Medium</span>, Low=<span style="background:#EAF3DE;color:#27500A;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600">Low</span>
+- Stat cards row: <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0"> each card: <div style="background:#0A2543;border-radius:6px;padding:14px;text-align:center"><div style="color:#ffffff;font-size:11px;margin-bottom:6px;opacity:0.8">[LABEL]</div><div style="color:#5BBF46;font-size:28px;font-weight:700">[VALUE]</div></div>
+- Bullet lists: <ul style="margin:8px 0;padding-left:20px;font-family:Arial"> with <li style="margin:5px 0;font-size:13px">
+- Close wrapper: </div>
+
+REQUIRED SECTIONS (always include all of these):
+1. Executive Summary — analysis period, ticket count, 3 key findings, priority actions needed
+2. Issue Trends — recent activity, status distribution, resolution patterns
+3. Most Common Issue Categories — table with: Category, Count, Percentage, Severity Distribution
+4. Emerging Issues — new patterns not seen before, anomalies worth investigating
+5. Top Clients by Volume — table with: Client, Total, Open, Critical, Overdue
+6. SLA & Overdue Risks — overdue tickets, high priority stuck in New/In Progress
+7. Correlated Issues — issues appearing together, cascading failures
+8. Recommendations to Address Top Trends — table with: Priority (color-coded), Issue, Recommended Actions (bullet list), Expected Impact (include estimated % ticket reduction or efficiency gain where possible)
+9. Additional Strategic Recommendations — 4-5 broader bullet points with bold labels
+
+${focusSections[focus] || focusSections.all}
+
+Be specific, data-driven, and use actual ticket titles, client names, and counts from the data. Never use generic placeholders.`;
+
+    const userMsg = `${tickets.length} tickets from last 6 months:\n\n${lines}`;
+    const maxChars = 150000;
+
+    let html;
+    if (userMsg.length <= maxChars) {
+      html = await claudeCall(system, userMsg, 8000);
+    } else {
+      // Chunk and summarize
+      const chunkSize = 200; // Reduced to stay under 30k token/min rate limit
+      const chunks = [];
+      for (let i = 0; i < tickets.length; i += chunkSize) chunks.push(tickets.slice(i, i + chunkSize));
+      const summaries = [];
+      for (let i = 0; i < chunks.length; i++) {
+        status.textContent = `Analyzing chunk ${i+1} of ${chunks.length}...`;
+        if (i > 0) await new Promise(r => setTimeout(r, 3000)); // 3s delay between chunks to avoid rate limit
+        const chunkLines = chunks[i].map(t =>
+          `#${t.ticketNumber||t.id}|${(t.title||'').slice(0,60)}|${PMAP[t.priority]||t.priority}|${SMAP[t.status]||t.status}|Co:${t.companyID||'?'}|${t.createDate?t.createDate.slice(0,10):''}|${t.dueDateTime&&new Date(t.dueDateTime)<now&&t.status!==11?'OVERDUE':''}`
+        ).join('\n');
+        const s = await claudeCall('Summarize these MSP tickets into key stats and patterns. Plain text bullet points only. Focus: issue types, company distribution, priorities, overdue items.', chunkLines, 1000);
+        summaries.push(s);
+      }
+      status.textContent = 'Synthesizing...';
+      html = await claudeCall(system, `Combined summary of ${tickets.length} tickets:\n\n${summaries.join('\n\n---\n\n')}`, 4000);
+    }
+
+    status.textContent = `Complete · ${tickets.length} tickets analyzed`;
+    btn.disabled = false;
+    btn.textContent = '✦ Re-run analysis';
+    document.getElementById('export-pdf-btn').style.display = '';
+
+    // Replace whatever header Claude generated with the correct one
+    const focusTitles = {
+      qbr: 'Quarterly Business Review',
+      all: 'Full Analysis Report',
+      trends: 'Trends & Patterns Report',
+      clients: 'Client Breakdown Report',
+      sla: 'SLA & Overdue Risk Report',
+      recurring: 'Recurring Issues Report',
+      correlated: 'Correlated Issues Report'
+    };
+    const reportTitle = focusTitles[focus] || 'Analysis Report';
+    const correctHeader = `<div style="background:#0A2543;padding:16px 20px;margin-bottom:24px;border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <span style="color:#5BBF46;font-weight:700;font-size:16px;letter-spacing:0.05em">VERSETAL — J.A.R.V.I.S.</span>
+      <span style="color:#fff;font-size:13px;opacity:0.8">${reportTitle} — ${dateRangeStr} — ${tickets.length} tickets${clientLabel !== 'All clients' ? ' — ' + clientLabel : ''}</span>
+    </div>`;
+
+    // Strip any existing header div Claude may have added
+    let cleanHtml = html.replace(/<div[^>]*background[^>]*#0[Aa]2543[^>]*>[\s\S]*?<\/div>/i, '');
+
+    out.innerHTML = `<div class="card" style="line-height:1.7;font-size:13px;margin-top:14px">${correctHeader}${cleanHtml}</div>`;
+  } catch(e) {
+    status.textContent = '';
+    btn.disabled = false;
+    btn.textContent = '✦ Run analysis';
+    out.innerHTML = `<div class="msg msg-err">Error: ${e.message}</div>`;
+  }
+}
+
+// ── Settings ──────────────────────────────────────────────────────────────────
+async function saveSettings() {
+  const msg = document.getElementById('settings-msg');
+  msg.innerHTML = '<span class="spinner"></span> Saving & testing...';
+
+  const apiKey  = (document.getElementById('s-apikey').value||'').trim();
+  const proxyVal = (document.getElementById('s-proxy').value||'').trim();
+
+  if (proxyVal) localStorage.setItem('proxy_url', proxyVal);
+
+  try {
+    // Test connection first
+    const d = await req(proxyURL() + '/health');
+    document.getElementById('proxy-dot').className = 'dot ok';
+    document.getElementById('proxy-label').textContent = `Connected · ${d.tickets.toLocaleString()} tickets`;
+
+    // Save API key to server DB if provided
+    if (apiKey && apiKey !== '***saved***') {
+      await req(proxyURL() + '/api/settings', {
+        method: 'POST',
+        body: JSON.stringify({ anthropic_key: apiKey })
+      });
+      // Save to localStorage and mask field
+      localStorage.setItem('anthropic_key', apiKey);
+      document.getElementById('s-apikey').value = '***saved***';
+    }
+
+    msg.innerHTML = `<div class="msg msg-ok">Saved! ${d.tickets.toLocaleString()} tickets in DB · Last sync: ${new Date(d.lastSync).toLocaleString()}</div>`;
+  } catch(e) {
+    msg.innerHTML = `<div class="msg msg-err">Error: ${e.message}</div>`;
+  }
+}
+
+// ── Trigger sync ──────────────────────────────────────────────────────────────
+async function initAnalysisPage() {
+  // If maps are empty, load them directly using window.location.origin
+  if (Object.keys(companiesMap).length === 0) {
+    try {
+      const base = window.location.origin;
+      const [cos, qs] = await Promise.all([
+        fetch(base + '/api/companies').then(r=>r.json()).catch(() => []),
+        fetch(base + '/api/queues').then(r=>r.json()).catch(() => [])
+      ]);
+      for (const co of (Array.isArray(cos) ? cos : [])) companiesMap[co.id] = co.name;
+      for (const q of (Array.isArray(qs) ? qs : [])) queuesMap[q.id] = q.name;
+    } catch(e) { console.warn('initAnalysisPage load error:', e); }
+  }
+
+  // Populate company dropdown
+  const sel = document.getElementById('analysis-company');
+  if (sel) {
+    while (sel.options.length > 1) sel.remove(1);
+    const sorted = Object.entries(companiesMap).sort((a,b) => a[1].localeCompare(b[1]));
+    for (const [id, name] of sorted) {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = name;
+      sel.appendChild(opt);
+    }
+  }
+
+  // Populate queue dropdown
+  const qsel = document.getElementById('analysis-queue');
+  if (qsel) {
+    while (qsel.options.length > 1) qsel.remove(1);
+    const sortedQ = Object.entries(queuesMap).sort((a,b) => a[1].localeCompare(b[1]));
+    for (const [id, name] of sortedQ) {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = name;
+      qsel.appendChild(opt);
+    }
+  }
+}
+
+function exportAnalysisPDF() {
+  // Store current page title
+  const origTitle = document.title;
+  const focus = document.getElementById('analysis-focus').options[document.getElementById('analysis-focus').selectedIndex].text;
+  const client = document.getElementById('analysis-company').options[document.getElementById('analysis-company').selectedIndex].text;
+  const timeframe = document.getElementById('analysis-timeframe').options[document.getElementById('analysis-timeframe').selectedIndex].text;
+  document.title = `JARVIS — ${focus} — ${client} — ${timeframe}`;
+  window.print();
+  document.title = origTitle;
+}
+
+async function triggerLookupSync() {
+  const msg = document.getElementById('settings-msg');
+  msg.innerHTML = '<div class="msg msg-info"><span class="spinner"></span> Syncing companies, queues & picklists...</div>';
+  try {
+    await req(proxyURL() + '/api/sync?type=lookups', { method: 'POST' });
+    msg.innerHTML = '<div class="msg msg-ok">Lookup sync started — reload in a minute to see updated values.</div>';
+  } catch(e) {
+    msg.innerHTML = `<div class="msg msg-err">Error: ${e.message}</div>`;
+  }
+}
+
+async function triggerSync(full) {
+  const msg = document.getElementById('settings-msg');
+  msg.innerHTML = `<div class="msg msg-info"><span class="spinner"></span> ${full ? 'Full' : 'Incremental'} sync started...</div>`;
+  try {
+    const d = await req(proxyURL() + '/api/sync' + (full ? '?full=true' : ''), { method: 'POST' });
+    msg.innerHTML = `<div class="msg msg-ok">${d.message} — check server logs for progress.</div>`;
+  } catch(e) {
+    msg.innerHTML = `<div class="msg msg-err">Error: ${e.message}</div>`;
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+(async function() {
+  // Restore proxy from localStorage
+  const proxy = localStorage.getItem('proxy_url');
+  if (proxy) { const el = document.getElementById('s-proxy'); if (el) el.value = proxy; }
+
+  await checkProxy();
+
+  // Load all lookup maps in parallel
+  try {
+    const [cos, qs, res, pl] = await Promise.all([
+      req(proxyURL() + '/api/companies').catch(() => []),
+      req(proxyURL() + '/api/queues').catch(() => []),
+      req(proxyURL() + '/api/resources').catch(() => []),
+      req(proxyURL() + '/api/picklists').catch(() => ({}))
+    ]);
+    companiesMap = {};
+    for (const co of cos) companiesMap[co.id] = co.name;
+    queuesMap = {};
+    for (const q of qs) queuesMap[q.id] = q.name;
+    resourcesMap = {};
+    for (const r of res) { const name = `${r.first_name} ${r.last_name}`.trim(); resourcesMap[r.id] = name; resourcesMap[String(r.id)] = name; resourcesMap[parseInt(r.id)] = name; }
+    picklistMaps = pl || {};
+    // If analysis page is open, populate its dropdowns now that maps are ready
+    if (document.getElementById('page-analysis').classList.contains('active')) {
+      initAnalysisPage();
+    }
+  } catch(e) { console.warn('Could not load lookups:', e.message); }
+
+  // Load settings from server
+  try {
+    const settings = await req(proxyURL() + '/api/settings');
+    if (settings.anthropic_key) {
+      const el = document.getElementById('s-apikey');
+      if (el) el.value = '***saved***';
+    }
+  } catch { /* server may not have settings yet */ }
+})();
+</script>
+</body>
+</html>

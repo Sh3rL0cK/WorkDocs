@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JARVIS — Project Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#F4F6F9;color:#1A2535;padding:20px}
+h1{font-size:16px;font-weight:700;color:#0A2543;border-bottom:3px solid #5BBF46;padding-bottom:8px;margin-bottom:20px}
+.section{margin-bottom:20px;background:#fff;border-radius:10px;border:0.5px solid rgba(10,37,67,0.12);overflow:hidden;box-shadow:0 1px 4px rgba(10,37,67,0.06)}
+.section-title{font-size:11px;font-weight:600;color:#fff;background:#0A2543;padding:8px 14px;letter-spacing:0.06em;text-transform:uppercase}
+.item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;border-bottom:0.5px solid rgba(10,37,67,0.08);font-size:13px}
+.item:last-child{border-bottom:none}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.bug{background:#FCEBEB;color:#791F1F}
+.feature{background:#E6F1FB;color:#0C447C}
+.parked{background:#EEEDFE;color:#3C3489}
+.done{background:#EAF3DE;color:#27500A}
+.new{background:#FAEEDA;color:#633806}
+.security{background:#F3E8FF;color:#5B21B6}
+.kb{background:#E0F2FE;color:#075985}
+.iam{background:#FEF3C7;color:#92400E}
+.migration{background:#EEEDFE;color:#3C3489}
+.item-text{flex:1;line-height:1.5}
+.item-note{font-size:11px;color:#666;margin-top:3px}
+</style>
+</head>
+<body>
+<h1>VERSETAL — J.A.R.V.I.S. &nbsp;&nbsp;Project Tracker &nbsp;<span style="font-weight:400;color:#666;font-size:12px">Updated March 25, 2026</span></h1>
+
+<div class="section">
+  <div class="section-title">✅ Recently completed</div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">AI triage — full review panel with all fields<div class="item-note">Title, AI-drafted description, priority, status, client (required), contact (live per client), resource + auto role lookup, queue, issue type, sub-issue type (cascades), due date, internal note. AI pre-populates queue and issue type. Creates ticket directly and navigates to detail via live Autotask fetch.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Note timestamps fixed<div class="item-note">createDateTime field mapping corrected. 294 existing notes backfilled. Notes show newest first.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Note formatting improved<div class="item-note">Navy header bar with title, author, timestamp. Workflow rules collapsed into single summary line.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Sub-issue type cascade<div class="item-note">parent_value column added to picklists. Sub-issue types filter by selected issue type.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Overnight server crash fixed<div class="item-note">Cron no longer stops the server. 2h15m timeout, 3-consecutive-ratelimit abort, incremental sync paused 1am–4am, lookup sync moved to 4:30am.</div></div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">AI suggest button on ticket detail</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Export AI analysis to PDF</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Dashboard auto-refresh every 5 minutes</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Timeframe selector on Tickets page</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Anthropic rate limit handling</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Full Versetal brand theme + J.A.R.V.I.S. branding</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Priority and status labels — dynamic from picklists DB</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Filter by resource, client, status, priority on Tickets tab</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">QBR focus mode + queue/client filter on AI Analysis</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">Architecture documentation v1.0</div></div>
+  <div class="item"><span class="badge done">Done</span><div class="item-text">HTTPS with self-signed cert + mixed content fixed</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🐛 Bugs remaining</div>
+  <div class="item"><span class="badge bug">Bug</span><div class="item-text">Historical sync still incomplete<div class="item-note">Running nightly with improved rate limit handling. Stuck on 2021–2022. Check: tail -30 ~/historical-sync.log</div></div></div>
+  <div class="item"><span class="badge bug">Bug</span><div class="item-text">Issue type / sub-issue type blank on older tickets<div class="item-note">Resolves as historical sync completes</div></div></div>
+  <div class="item"><span class="badge bug">Bug</span><div class="item-text">Duplicate element IDs on triage page<div class="item-note">Browser warning — timeframe select has duplicate IDs. Fix during React migration.</div></div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🚀 Features remaining</div>
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Include/exclude closed tickets toggle on AI Analysis</div></div>
+  <div class="item"><span class="badge feature">Feature</span><div class="item-text">Code annotation — JSDoc comments on all functions</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">⏸ Parked</div>
+  <div class="item"><span class="badge parked">Parked</span><div class="item-text">Autotask picklist restructure<div class="item-note">Full taxonomy recommendations documented March 25. Clean up issue types/sub-issue types to match Versetal's service areas. Requires Autotask admin changes.</div></div></div>
+  <div class="item"><span class="badge parked">Parked</span><div class="item-text">Reassign ticket from detail view</div></div>
+  <div class="item"><span class="badge parked">Parked</span><div class="item-text">Sync time entries<div class="item-note">Hours logged per ticket — billing and utilization. Not a priority yet.</div></div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🔐 Planned — Security Dashboard</div>
+  <div class="item"><span class="badge security">Security</span><div class="item-text">SentinelOne integration<div class="item-note">Threat data, incident counts, agent status, detection trends per client</div></div></div>
+  <div class="item"><span class="badge security">Security</span><div class="item-note">Rapid7 integration<div class="item-note">Vulnerability data, InsightIDR incidents, risk scores per client</div></div></div>
+  <div class="item"><span class="badge security">Security</span><div class="item-text">Security dashboard page — unified posture per client</div></div>
+  <div class="item"><span class="badge security">Security</span><div class="item-text">Security AI analysis focus mode</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🆕 Planned — Assets & Inventory</div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Import Autotask Configuration Items (CIs)</div></div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Link tickets to assets via configurationItemID</div></div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Inventory management per client — hardware, licenses, warranties</div></div>
+  <div class="item"><span class="badge new">New</span><div class="item-text">Warranty expiry alerts on dashboard</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">🆕 Planned — Employee Access & IAM</div>
+  <div class="item"><span class="badge iam">IAM</span><div class="item-text">Active employee directory with access tracking</div></div>
+  <div class="item"><span class="badge iam">IAM</span><div class="item-text">Onboarding / offboarding workflows</div></div>
+  <div class="item"><span class="badge iam">IAM</span><div class="item-text">Access request and approval workflows</div></div>
+  <div class="item"><span class="badge iam">IAM</span><div class="item-text">Device assignment tracking per user</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">📚 Planned — Knowledge Base</div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">Per-client environment documentation</div></div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">Internal SOPs by department</div></div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">Engineer runbooks and how-to guides</div></div>
+  <div class="item"><span class="badge kb">KB</span><div class="item-text">AI-assisted article creation from ticket history</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">⚡ Planned — React Migration</div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Set up Git repo, freeze HTML as v1.0</div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Scaffold React + Vite frontend</div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Fix duplicate element ID bugs</div></div>
+  <div class="item"><span class="badge migration">Migration</span><div class="item-text">Mobile responsive mode</div></div>
+</div>
+
+</body>
+</html>
