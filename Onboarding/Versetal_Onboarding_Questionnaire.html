@@ -961,19 +961,103 @@ body {
   </div>
 </div>
 
+
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 6  — Microsoft 365 & Cloud Services
+     SECTION 6  — Help Desk Scope
      ═══════════════════════════════════════════════════════ -->
 <div class="section-card" id="sec6">
   <div class="section-header" onclick="toggleSection('sec6')">
     <div class="section-num">6</div>
-    <div class="section-title">Microsoft 365 &amp; Cloud Services<span class="na-badge">NOT APPLICABLE</span></div>
+    <div class="section-title">Help Desk Scope<span class="na-badge">NOT APPLICABLE</span></div>
     <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec6')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
     <div class="section-rule"></div>
-    <div class="subsection-title">6.1 — Microsoft 365</div>
+    <div class="note-box">This section captures the information needed to accurately scope and price a Help Desk SOW. Please be as specific as possible — ticket volumes, tier breakdown, and coverage requirements directly affect staffing and SLA commitments.</div>
+
+    <div class="subsection-title">6.1 — Users &amp; Coverage</div>
+    <div class="field-grid">
+      <div class="field"><label>Total Users Requiring Help Desk Support</label><input name="hd_user_count" type="number" placeholder="0"/></div>
+      <div class="field"><label>User Locations / Time Zones</label><input name="hd_timezones" placeholder="e.g. Boston EST, London GMT, remote workers"/></div>
+      <div class="field"><label>Non-English Speaking Users?</label><select name="hd_languages"><option value="">—</option><option>No — English only</option><option>Yes — specify below</option></select></div>
+      <div class="field"><label>Languages Required</label><input name="hd_languages_detail" placeholder="e.g. Spanish, French, Mandarin"/></div>
+      <div class="field"><label>Required Coverage Hours</label>
+        <select name="hd_coverage"><option value="">—</option><option>Mon–Fri 8am–5pm (local)</option><option>Mon–Fri 7am–7pm</option><option>Mon–Fri 6am–10pm</option><option>24/5</option><option>24/7/365</option></select>
+      </div>
+      <div class="field"><label>After-Hours / On-Call Required?</label><select name="hd_oncall"><option value="">—</option><option>Yes — P1 only</option><option>Yes — all priorities</option><option>No</option></select></div>
+      <div class="field"><label>VIP / Executive Users Requiring Priority Handling?</label><select name="hd_vip"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Number of VIP Users</label><input name="hd_vip_count" type="number" placeholder="0"/></div>
+    </div>
+
+    <div class="subsection-title">6.2 — Ticket Volume &amp; Complexity</div>
+    <div class="field-grid">
+      <div class="field"><label>Average Tickets per Month</label><input name="hd_tickets_month" placeholder="e.g. ~250/month"/></div>
+      <div class="field"><label>Peak Ticket Periods</label><input name="hd_peak" placeholder="e.g. Monday mornings, month-end, after software updates"/></div>
+      <div class="field"><label>Estimated L1 Ticket % (password resets, how-to)</label><input name="hd_l1_pct" placeholder="e.g. 60%"/></div>
+      <div class="field"><label>Estimated L2 Ticket % (software issues, config)</label><input name="hd_l2_pct" placeholder="e.g. 30%"/></div>
+      <div class="field"><label>Estimated L3 Ticket % (infrastructure, escalations)</label><input name="hd_l3_pct" placeholder="e.g. 10%"/></div>
+      <div class="field"><label>Known Recurring / Chronic Issues</label><input name="hd_recurring" placeholder="e.g. VPN drops, specific printer, known app instability"/></div>
+    </div>
+
+    <div class="subsection-title">6.3 — Supported Applications &amp; Scope</div>
+    <div class="note-box">List the applications the help desk will be expected to support end-users on. Bespoke or complex apps may require additional scoping.</div>
+    <div class="dyn-table-wrap">
+      <table class="dyn-table" id="tbl_hd_apps">
+        <thead><tr><th>Application / System</th><th>Vendor</th><th># Users</th><th>Support Level Required</th><th>Notes / Complexity</th><th style="width:32px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn" onclick="addRow('tbl_hd_apps',5)">＋ Add Application</button>
+
+    <div class="subsection-title">6.4 — Channels &amp; Communication</div>
+    <div class="field-grid">
+      <div class="field"><label>How Do Users Contact Help Desk?</label>
+        <select name="hd_channel"><option value="">—</option><option>Email only</option><option>Phone only</option><option>Ticketing portal</option><option>Microsoft Teams</option><option>Multiple channels</option></select>
+      </div>
+      <div class="field"><label>Ticketing System in Use (or preferred)</label><input name="hd_ticketing" placeholder="e.g. ServiceNow, Freshdesk, Autotask, new deployment"/></div>
+      <div class="field"><label>Self-Service Portal / Knowledge Base Wanted?</label><select name="hd_kb"><option value="">—</option><option>Yes — existing KB to migrate</option><option>Yes — build from scratch</option><option>No</option></select></div>
+      <div class="field"><label>User Satisfaction (CSAT) Surveys Required?</label><select name="hd_csat"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+    </div>
+
+    <div class="subsection-title">6.5 — Onboarding, Offboarding &amp; Provisioning</div>
+    <div class="field-grid">
+      <div class="field"><label>Average New Starters per Month</label><input name="hd_onboard_mo" type="number" placeholder="0"/></div>
+      <div class="field"><label>Average Leavers per Month</label><input name="hd_offboard_mo" type="number" placeholder="0"/></div>
+      <div class="field"><label>Device Provisioning in Scope?</label><select name="hd_provisioning"><option value="">—</option><option>Yes — full setup &amp; imaging</option><option>Yes — MDM enrol only</option><option>No — handled internally</option></select></div>
+      <div class="field"><label>Remote / Shipped Device Deployments?</label><select name="hd_remote_deploy"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      <div class="field"><label>Account Creation / Access Provisioning in Scope?</label><select name="hd_access_prov"><option value="">—</option><option>Yes — full AD/M365/app provisioning</option><option>Partially</option><option>No</option></select></div>
+      <div class="field"><label>Approval Workflows Required?</label><select name="hd_approvals"><option value="">—</option><option>Yes — manager approval for access/software</option><option>No</option></select></div>
+    </div>
+
+    <div class="subsection-title">6.6 — Escalation &amp; Governance</div>
+    <div class="field-grid">
+      <div class="field"><label>Internal L3 / Infrastructure Contact at Client</label><input name="hd_l3_contact" placeholder="Name and role of who Versetal escalates to"/></div>
+      <div class="field"><label>Escalation Response Expectation</label><input name="hd_l3_sla" placeholder="e.g. L3 response within 2 hours during business hours"/></div>
+      <div class="field"><label>Reporting Cadence Required</label>
+        <select name="hd_reporting"><option value="">—</option><option>Weekly ticket summary</option><option>Monthly SLA report</option><option>Quarterly business review</option><option>On-demand only</option><option>Multiple</option></select>
+      </div>
+      <div class="field"><label>Service Review Meeting Frequency</label>
+        <select name="hd_review_freq"><option value="">—</option><option>Monthly</option><option>Quarterly</option><option>Ad-hoc</option><option>Not required</option></select>
+      </div>
+      <div class="field span2"><label>Any Specific SOW Exclusions or Out-of-Scope Items to Note</label><textarea name="hd_exclusions" placeholder="e.g. no server support, no physical on-site visits, specific apps excluded..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 7  — Microsoft 365 & Cloud Services
+     ═══════════════════════════════════════════════════════ -->
+<div class="section-card" id="sec7">
+  <div class="section-header" onclick="toggleSection('sec7')">
+    <div class="section-num">7</div>
+    <div class="section-title">Microsoft 365 &amp; Cloud Services<span class="na-badge">NOT APPLICABLE</span></div>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec7')" title="Mark entire section as Not Applicable">N/A</button>
+    <div class="section-chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-rule"></div>
+    <div class="subsection-title">7.1 — Microsoft 365</div>
     <div class="field-grid">
       <div class="field"><label>Tenant Name / Primary Domain</label><input name="m365_tenant" placeholder="company.onmicrosoft.com"/></div>
       <div class="field"><label>License Plan(s)</label><input name="m365_licenses" placeholder="e.g. Microsoft 365 Business Premium"/></div>
@@ -987,7 +1071,7 @@ body {
       <div class="field"><label>Shared / Resource Mailboxes (approx.)</label><input name="m365_shared" type="number" placeholder="0"/></div>
     </div>
 
-    <div class="subsection-title">6.2 — Azure Subscriptions</div>
+    <div class="subsection-title">7.2 — Azure Subscriptions</div>
     <div class="dyn-table-wrap">
       <table class="dyn-table" id="tbl_azure">
         <thead><tr><th>Subscription Name</th><th>Subscription ID</th><th>Purpose</th><th>Spend/mo (approx.)</th><th>Admin Contact</th><th style="width:32px"></th></tr></thead>
@@ -1004,7 +1088,7 @@ body {
       <div class="field"><label>Migration Timeline</label><input name="cloud_migration_timeline" placeholder="e.g. 12–18 months, next fiscal year"/></div>
     </div>
 
-    <div class="subsection-title">6.3 — Other Cloud Platforms</div>
+    <div class="subsection-title">7.3 — Other Cloud Platforms</div>
     <div class="dyn-table-wrap">
       <table class="dyn-table" id="tbl_cloud">
         <thead><tr><th>Cloud Platform</th><th>Services Used</th><th># Resources</th><th>Admin Contact</th><th>Monthly Cost</th><th style="width:32px"></th></tr></thead>
@@ -1019,18 +1103,18 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 7  — SaaS & Line-of-Business Applications
+     SECTION 8  — SaaS & Line-of-Business Applications
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec7">
-  <div class="section-header" onclick="toggleSection('sec7')">
-    <div class="section-num">7</div>
+<div class="section-card" id="sec8">
+  <div class="section-header" onclick="toggleSection('sec8')">
+    <div class="section-num">8</div>
     <div class="section-title">SaaS &amp; Line-of-Business Applications<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec7')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec8')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
     <div class="section-rule"></div>
-    <div class="subsection-title">7.1 — SaaS Application Inventory</div>
+    <div class="subsection-title">8.1 — SaaS Application Inventory</div>
     <div class="note-box">List all cloud/SaaS applications used by the business.</div>
     <div class="dyn-table-wrap">
       <table class="dyn-table" id="tbl_saas">
@@ -1040,7 +1124,7 @@ body {
     </div>
     <button type="button" class="add-row-btn" onclick="addRow('tbl_saas',6)">＋ Add Application</button>
 
-    <div class="subsection-title">7.2 — Locally-Installed / Line-of-Business Applications</div>
+    <div class="subsection-title">8.2 — Locally-Installed / Line-of-Business Applications</div>
     <div class="note-box">List applications installed locally on servers or workstations — <strong>not</strong> cloud/SaaS. Examples: practice management software, CAD tools, ERP clients, custom in-house apps, legacy line-of-business software.</div>
     <div class="dyn-table-wrap">
       <table class="dyn-table" id="tbl_lob">
@@ -1056,7 +1140,7 @@ body {
       <div class="field"><label>Any Custom / In-House Developed Applications?</label><select name="lob_custom"><option value="">—</option><option>Yes</option><option>No</option></select></div>
     </div>
 
-    <div class="subsection-title">7.3 — Key Business Systems</div>
+    <div class="subsection-title">8.3 — Key Business Systems</div>
     <table class="yn-table">
       <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>System Category</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
       <tbody>
@@ -1073,7 +1157,7 @@ body {
       <div class="field span2"><label>Describe Any Critical LOB / Industry-Specific Applications</label><textarea name="saas_lob_desc" placeholder="Application name, vendor, version, purpose..."></textarea></div>
     </div>
 
-    <div class="subsection-title">7.4 — Communications &amp; Collaboration</div>
+    <div class="subsection-title">8.4 — Communications &amp; Collaboration</div>
     <div class="field-grid">
       <div class="field"><label>Primary Email Platform</label><input name="comm_email" placeholder="e.g. M365, Google Workspace"/></div>
       <div class="field"><label>Video / UC Platform</label><input name="comm_uc" placeholder="e.g. Teams, Zoom, Webex"/></div>
@@ -1085,18 +1169,18 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 8  — Databases & Data Management
+     SECTION 9  — Databases & Data Management
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec8">
-  <div class="section-header" onclick="toggleSection('sec8')">
-    <div class="section-num">8</div>
+<div class="section-card" id="sec9">
+  <div class="section-header" onclick="toggleSection('sec9')">
+    <div class="section-num">9</div>
     <div class="section-title">Databases &amp; Data Management<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec8')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec9')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
     <div class="section-rule"></div>
-    <div class="subsection-title">8.1 — Database Servers</div>
+    <div class="subsection-title">9.1 — Database Servers</div>
     <div class="dyn-table-wrap">
       <table class="dyn-table" id="tbl_db">
         <thead><tr><th>DB Engine</th><th>Version</th><th>Hosting</th><th># Databases</th><th>Size (approx.)</th><th>Backup Method</th><th style="width:32px"></th></tr></thead>
@@ -1112,7 +1196,7 @@ body {
       <div class="field"><label>Database Admin Access</label><input name="db_admins" placeholder="Who holds DB admin rights?"/></div>
     </div>
 
-    <div class="subsection-title">8.2 — Compliance</div>
+    <div class="subsection-title">9.2 — Compliance</div>
     <table class="yn-table">
       <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>Framework / Requirement</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
       <tbody>
@@ -1133,18 +1217,18 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 9  — Backup, DR & Business Continuity
+     SECTION 10  — Backup, DR & Business Continuity
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec9">
-  <div class="section-header" onclick="toggleSection('sec9')">
-    <div class="section-num">9</div>
+<div class="section-card" id="sec10">
+  <div class="section-header" onclick="toggleSection('sec10')">
+    <div class="section-num">10</div>
     <div class="section-title">Backup, Disaster Recovery &amp; Business Continuity<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec9')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec10')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
     <div class="section-rule"></div>
-    <div class="subsection-title">9.1 — Backup Configuration</div>
+    <div class="subsection-title">10.1 — Backup Configuration</div>
     <div class="dyn-table-wrap">
       <table class="dyn-table" id="tbl_backup">
         <thead><tr><th>What Is Backed Up</th><th>Backup Tool / Vendor</th><th>Frequency</th><th>Retention</th><th>Offsite / Cloud?</th><th>Last Tested</th><th style="width:32px"></th></tr></thead>
@@ -1160,7 +1244,7 @@ body {
       </div>
     </div>
 
-    <div class="subsection-title">9.2 — Recovery Objectives</div>
+    <div class="subsection-title">10.2 — Recovery Objectives</div>
     <div class="field-grid">
       <div class="field"><label>Recovery Time Objective (RTO)</label><input name="dr_rto" placeholder="e.g. 4 hours, same-day"/></div>
       <div class="field"><label>Recovery Point Objective (RPO)</label><input name="dr_rpo" placeholder="e.g. 1 hour, overnight"/></div>
@@ -1173,18 +1257,18 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 10 — Security & Monitoring
+     SECTION 11 — Security & Monitoring
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec10">
-  <div class="section-header" onclick="toggleSection('sec10')">
-    <div class="section-num">10</div>
+<div class="section-card" id="sec11">
+  <div class="section-header" onclick="toggleSection('sec11')">
+    <div class="section-num">11</div>
     <div class="section-title">Security &amp; Monitoring<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec10')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec11')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
     <div class="section-rule"></div>
-    <div class="subsection-title">10.1 — Security Posture</div>
+    <div class="subsection-title">11.1 — Security Posture</div>
     <table class="yn-table">
       <colgroup><col class="yn-q"/><col class="yn-opt"/><col class="yn-opt"/><col class="yn-opt"/></colgroup><thead><tr><th>Question</th><th class="yn-opt">Yes</th><th class="yn-opt">No</th><th class="yn-opt">N/A</th></tr></thead>
       <tbody>
@@ -1215,7 +1299,7 @@ body {
       <div class="field span2"><label>Previous Incident Description (if applicable)</label><textarea name="sec_incident_desc" placeholder="Brief description of any prior incidents or breaches..."></textarea></div>
     </div>
 
-    <div class="subsection-title">10.2 — Physical Security</div>
+    <div class="subsection-title">11.2 — Physical Security</div>
     <div class="field-grid">
       <div class="field"><label>Server Room / Closet Locked?</label><select name="phys_lock"><option value="">—</option><option>Yes</option><option>No</option></select></div>
       <div class="field"><label>Physical Access Control System?</label><input name="phys_access" placeholder="e.g. badge reader, keypad, none"/></div>
@@ -1226,18 +1310,18 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 11 — Printing, Peripherals & Hardware
+     SECTION 12 — Printing, Peripherals & Hardware
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec11">
-  <div class="section-header" onclick="toggleSection('sec11')">
-    <div class="section-num">11</div>
+<div class="section-card" id="sec12">
+  <div class="section-header" onclick="toggleSection('sec12')">
+    <div class="section-num">12</div>
     <div class="section-title">Printing, Peripherals &amp; Misc Hardware<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec11')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec12')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
     <div class="section-rule"></div>
-    <div class="subsection-title">11.1 — Printers &amp; Copiers</div>
+    <div class="subsection-title">12.1 — Printers &amp; Copiers</div>
     <div class="dyn-table-wrap">
       <table class="dyn-table" id="tbl_printers">
         <thead><tr><th>Make / Model</th><th>Location</th><th>Network or Local?</th><th>Managed Print / Lease?</th><th>Support Contact</th><th style="width:32px"></th></tr></thead>
@@ -1246,7 +1330,7 @@ body {
     </div>
     <button type="button" class="add-row-btn" onclick="addRow('tbl_printers',5)">＋ Add Printer</button>
 
-    <div class="subsection-title">11.2 — Other Hardware</div>
+    <div class="subsection-title">12.2 — Other Hardware</div>
     <div class="field-grid">
       <div class="field"><label>Barcode Scanners / POS Hardware?</label><input name="hw_pos" placeholder="Make, model, quantity"/></div>
       <div class="field"><label>IP Cameras / NVR Systems?</label><input name="hw_cctv" placeholder="Make, model, quantity"/></div>
@@ -1259,13 +1343,13 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 12 — Current Vendors & Contracts
+     SECTION 13 — Current Vendors & Contracts
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec12">
-  <div class="section-header" onclick="toggleSection('sec12')">
-    <div class="section-num">12</div>
+<div class="section-card" id="sec13">
+  <div class="section-header" onclick="toggleSection('sec13')">
+    <div class="section-num">13</div>
     <div class="section-title">Current Vendors &amp; Contracts<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec12')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec13')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
@@ -1282,13 +1366,13 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 13 — Documentation & Credentials
+     SECTION 14 — Documentation & Credentials
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec13">
-  <div class="section-header" onclick="toggleSection('sec13')">
-    <div class="section-num">13</div>
+<div class="section-card" id="sec14">
+  <div class="section-header" onclick="toggleSection('sec14')">
+    <div class="section-num">14</div>
     <div class="section-title">Documentation &amp; Credentials<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec13')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec14')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
@@ -1313,19 +1397,19 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 14 — IT Operations & Support
+     SECTION 15 — IT Operations & Support
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec14">
-  <div class="section-header" onclick="toggleSection('sec14')">
-    <div class="section-num">14</div>
+<div class="section-card" id="sec15">
+  <div class="section-header" onclick="toggleSection('sec15')">
+    <div class="section-num">15</div>
     <div class="section-title">IT Operations &amp; Support<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec14')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec15')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
     <div class="section-rule"></div>
 
-    <div class="subsection-title">14.1 — Current Support Model</div>
+    <div class="subsection-title">15.1 — Current Support Model</div>
     <div class="field-grid">
       <div class="field"><label>Current MSP / NOC Provider</label><input name="ops_current_msp" placeholder="Company name or 'In-house'"/></div>
       <div class="field"><label>MSP Contract End Date</label><input name="ops_msp_end" type="date"/></div>
@@ -1336,7 +1420,7 @@ body {
       <div class="field span2"><label>Current Support Gaps / Pain Points</label><textarea name="ops_gaps" placeholder="What's not working well with your current IT support situation?"></textarea></div>
     </div>
 
-    <div class="subsection-title">14.2 — Help Desk &amp; Ticketing</div>
+    <div class="subsection-title">15.2 — Help Desk &amp; Ticketing</div>
     <div class="field-grid">
       <div class="field"><label>Ticketing System in Use</label><input name="ops_ticketing" placeholder="e.g. ServiceNow, Zendesk, Freshdesk, email only"/></div>
       <div class="field"><label>How Do Users Request Support?</label>
@@ -1346,7 +1430,7 @@ body {
       <div class="field"><label>Satisfied with Current Response Times?</label><select name="ops_response_sat"><option value="">—</option><option>Yes</option><option>Partially</option><option>No</option></select></div>
     </div>
 
-    <div class="subsection-title">14.3 — SLA &amp; Service Expectations</div>
+    <div class="subsection-title">15.3 — SLA &amp; Service Expectations</div>
     <div class="field-grid">
       <div class="field"><label>Target Response Time (P1 Critical)</label><input name="ops_sla_p1" placeholder="e.g. 15 minutes, 1 hour"/></div>
       <div class="field"><label>Target Resolution Time (P1 Critical)</label><input name="ops_sla_res" placeholder="e.g. 4 hours, same business day"/></div>
@@ -1363,19 +1447,19 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 15 — Strategic Goals & Future Plans
+     SECTION 16 — Strategic Goals & Future Plans
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec15">
-  <div class="section-header" onclick="toggleSection('sec15')">
-    <div class="section-num">15</div>
+<div class="section-card" id="sec16">
+  <div class="section-header" onclick="toggleSection('sec16')">
+    <div class="section-num">16</div>
     <div class="section-title">Strategic Goals &amp; Future Plans<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec15')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec16')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
     <div class="section-rule"></div>
 
-    <div class="subsection-title">15.1 — Upcoming Projects (6–12 Months)</div>
+    <div class="subsection-title">16.1 — Upcoming Projects (6–12 Months)</div>
     <div class="note-box">List any planned projects, initiatives, or changes in the next 6–12 months.</div>
     <div class="dyn-table-wrap">
       <table class="dyn-table" id="tbl_projects">
@@ -1385,14 +1469,14 @@ body {
     </div>
     <button type="button" class="add-row-btn" onclick="addRow('tbl_projects',5)">＋ Add Project</button>
 
-    <div class="subsection-title">15.2 — IT Goals (1–3 Years)</div>
+    <div class="subsection-title">16.2 — IT Goals (1–3 Years)</div>
     <div class="field-grid">
       <div class="field span2"><label>Primary IT Goals Over the Next 1–3 Years</label><textarea name="goals_1_3yr" placeholder="e.g. full cloud migration, zero-trust rollout, ERP upgrade, SOC 2 certification..."></textarea></div>
       <div class="field"><label>New Software / Automation Initiatives Planned?</label><input name="goals_automation" placeholder="e.g. workflow automation, AI tools, new ERP"/></div>
       <div class="field"><label>Office Expansions / Relocations Planned?</label><select name="goals_expansion"><option value="">—</option><option>Yes</option><option>No</option><option>Under consideration</option></select></div>
     </div>
 
-    <div class="subsection-title">15.3 — Budget &amp; Decision Process</div>
+    <div class="subsection-title">16.3 — Budget &amp; Decision Process</div>
     <div class="field-grid">
       <div class="field"><label>How Are IT Investment Decisions Made?</label><input name="budget_process" placeholder="e.g. annual budget cycle, CFO approval, board sign-off"/></div>
       <div class="field"><label>Who Else Is Involved in Decision-Making?</label><input name="budget_stakeholders" placeholder="e.g. CEO, CFO, Procurement, IT steering committee"/></div>
@@ -1404,20 +1488,20 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 16 — Data & Analytics (Optional)
+     SECTION 17 — Data & Analytics (Optional)
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec16">
-  <div class="section-header" onclick="toggleSection('sec16')">
-    <div class="section-num">16</div>
+<div class="section-card" id="sec17">
+  <div class="section-header" onclick="toggleSection('sec17')">
+    <div class="section-num">17</div>
     <div class="section-title">Data &amp; Analytics<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec16')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec17')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
     <div class="section-rule"></div>
     <div class="note-box">This section is optional — complete it only if your organisation has significant data engineering, analytics, or BI requirements.</div>
 
-    <div class="subsection-title">16.1 — Data Strategy &amp; Objectives</div>
+    <div class="subsection-title">17.1 — Data Strategy &amp; Objectives</div>
     <div class="field-grid">
       <div class="field span2"><label>Primary Business Objectives Driving Data Initiatives</label><textarea name="da_objectives" placeholder="e.g. improve reporting, enable predictive analytics, consolidate data silos..."></textarea></div>
       <div class="field"><label>Types of Data Managed</label><input name="da_data_types" placeholder="e.g. Structured, Unstructured, Semi-structured, Streaming"/></div>
@@ -1430,7 +1514,7 @@ body {
       </div>
     </div>
 
-    <div class="subsection-title">16.2 — Data Sources &amp; Ingestion</div>
+    <div class="subsection-title">17.2 — Data Sources &amp; Ingestion</div>
     <div class="field-grid">
       <div class="field span2"><label>Primary Sources of Critical Data</label><input name="da_sources" placeholder="e.g. CRM, ERP, IoT sensors, third-party APIs, flat files, databases"/></div>
       <div class="field"><label>Data Formats in Use</label><input name="da_formats" placeholder="e.g. CSV, JSON, XML, Parquet, database tables"/></div>
@@ -1439,7 +1523,7 @@ body {
       </div>
     </div>
 
-    <div class="subsection-title">16.3 — Current Data Platform &amp; Architecture</div>
+    <div class="subsection-title">17.3 — Current Data Platform &amp; Architecture</div>
     <div class="field-grid">
       <div class="field"><label>Current Data Architecture</label>
         <select name="da_architecture"><option value="">—</option><option>On-premises only</option><option>Cloud-native</option><option>Hybrid</option><option>No formal architecture</option></select>
@@ -1451,7 +1535,7 @@ body {
       <div class="field"><label>Cloud Provider(s) for Data</label><input name="da_cloud" placeholder="e.g. Azure, AWS, GCP, multi-cloud"/></div>
     </div>
 
-    <div class="subsection-title">16.4 — Data Team &amp; Governance</div>
+    <div class="subsection-title">17.4 — Data Team &amp; Governance</div>
     <div class="field-grid">
       <div class="field"><label>Size of Internal Data / Analytics Team</label><input name="da_team_size" placeholder="e.g. 2 data engineers, 1 analyst, no dedicated team"/></div>
       <div class="field"><label>Technical Skills Available</label><input name="da_skills" placeholder="e.g. SQL, Python, Spark, dbt, Power BI"/></div>
@@ -1463,7 +1547,7 @@ body {
       <div class="field"><label>Data Compliance Requirements</label><input name="da_compliance" placeholder="e.g. GDPR, CCPA, HIPAA data residency, SOC 2"/></div>
     </div>
 
-    <div class="subsection-title">16.5 — Pain Points &amp; Goals</div>
+    <div class="subsection-title">17.5 — Pain Points &amp; Goals</div>
     <div class="field-grid">
       <div class="field span2"><label>Primary Challenges in Current Data Management</label><textarea name="da_pain" placeholder="e.g. siloed data, slow reporting, poor data quality, lack of self-service BI..."></textarea></div>
       <div class="field span2"><label>Specific Analytics Outcomes / Use Cases Desired</label><textarea name="da_use_cases" placeholder="e.g. predictive churn, customer segmentation, real-time dashboards, supply chain visibility..."></textarea></div>
@@ -1474,13 +1558,13 @@ body {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 17 — Additional Notes & Special Requirements
+     SECTION 18 — Additional Notes & Special Requirements
      ═══════════════════════════════════════════════════════ -->
-<div class="section-card" id="sec17">
-  <div class="section-header" onclick="toggleSection('sec17')">
-    <div class="section-num">17</div>
+<div class="section-card" id="sec18">
+  <div class="section-header" onclick="toggleSection('sec18')">
+    <div class="section-num">18</div>
     <div class="section-title">Additional Notes &amp; Special Requirements<span class="na-badge">NOT APPLICABLE</span></div>
-    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec17')" title="Mark entire section as Not Applicable">N/A</button>
+    <button type="button" class="na-btn" onclick="event.stopPropagation();toggleNA('sec18')" title="Mark entire section as Not Applicable">N/A</button>
     <div class="section-chevron">▾</div>
   </div>
   <div class="section-body">
@@ -1680,8 +1764,8 @@ function addContact(containerId, title, seeded = false) {
  * No progress data is stored anywhere.
  */
 // ── PROGRESS (declared before seeding so updateProgress is available) ──────
-const sections = ['sec1','sec2','sec3','sec4','sec5','sec6','sec7','sec8','sec9','sec10','sec11','sec12','sec13','sec14','sec15','sec16','sec17'];
-const secLabels = ['Company','Network','Servers','Identity','Endpoints','M365','Apps / SaaS','Databases','Backup','Security','Hardware','Vendors','Docs','IT Ops','Strategy','Data & Analytics','Notes'];
+const sections = ['sec1','sec2','sec3','sec4','sec5','sec6','sec7','sec8','sec9','sec10','sec11','sec12','sec13','sec14','sec15','sec16','sec17','sec18'];
+const secLabels = ['Company','Network','Servers','Identity','Endpoints','Help Desk','M365','Apps / SaaS','Databases','Backup','Security','Hardware','Vendors','Docs','IT Ops','Strategy','Data & Analytics','Notes'];
 
 // Build section pills
 const psDiv = document.getElementById('progressSections');
@@ -1741,7 +1825,7 @@ addContact('contacts-exec', 'Owner / CEO', true);
 addContact('contacts-other', 'Finance / Accounts Payable Contact', true);
 
 ['tbl_firewall','tbl_switches','tbl_subnets','tbl_servers','tbl_azure',
- 'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors','tbl_projects'].forEach(id => {
+ 'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors','tbl_projects','tbl_hd_apps'].forEach(id => {
   const cols = document.querySelector(`#${id} thead tr`).children.length;
   addRow(id, cols, true);
   addRow(id, cols, true);
@@ -1768,7 +1852,7 @@ function clearForm() {
   addContact('contacts-exec', 'Owner / CEO');
   addContact('contacts-other', 'Finance / Accounts Payable Contact');
   ['tbl_firewall','tbl_switches','tbl_subnets','tbl_servers','tbl_azure',
-   'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors','tbl_projects'].forEach(id => {
+   'tbl_saas','tbl_lob','tbl_db','tbl_backup','tbl_printers','tbl_vendors','tbl_projects','tbl_hd_apps'].forEach(id => {
     const cols = document.querySelector(`#${id} thead tr`).children.length;
     addRow(id, cols);
     addRow(id, cols);
@@ -2318,10 +2402,38 @@ async function generatePDF(combinedMode = false) {
 
     }
 
-    // ── SECTION 6 ───────────────────────────────────────────────────
-    if(isSectionNA('sec6')){sectionNA(6,'Microsoft 365 & Cloud Services');}else{
+        // ── SECTION 6 ──────────────────────────────────────────────────
+    if(isSectionNA('sec6')){sectionNA(6,'Help Desk Scope');}else{
     newPage();
-    sectionHeader(6, 'Microsoft 365 & Cloud Services');
+    sectionHeader(6, 'Help Desk Scope');
+    subHeader('6.1 — Users & Coverage');
+    fieldRow2('Users Requiring HD Support', getVal('hd_user_count'), 'Locations / Time Zones', getVal('hd_timezones'));
+    fieldRow2('Non-English Users', getVal('hd_languages'), 'Languages Required', getVal('hd_languages_detail'));
+    fieldRow2('Coverage Hours', getVal('hd_coverage'), 'After-Hours / On-Call', getVal('hd_oncall'));
+    fieldRow2('VIP / Executive Users', getVal('hd_vip'), 'VIP User Count', getVal('hd_vip_count'));
+    subHeader('6.2 — Ticket Volume & Complexity');
+    fieldRow2('Avg Tickets / Month', getVal('hd_tickets_month'), 'Peak Ticket Periods', getVal('hd_peak'));
+    fieldRow2('L1 % (basic/how-to)', getVal('hd_l1_pct'), 'L2 % (software/config)', getVal('hd_l2_pct'));
+    fieldRow2('L3 % (infrastructure)', getVal('hd_l3_pct'), 'Known Recurring Issues', getVal('hd_recurring'));
+    subHeader('6.3 — Supported Applications');
+    drawTable(['Application','Vendor','# Users','Support Level','Notes'], getTableData('tbl_hd_apps'), [38,28,16,34,66]);
+    subHeader('6.4 — Channels & Communication');
+    fieldRow2('Contact Channel(s)', getVal('hd_channel'), 'Ticketing System', getVal('hd_ticketing'));
+    fieldRow2('Self-Service / KB', getVal('hd_kb'), 'CSAT Surveys', getVal('hd_csat'));
+    subHeader('6.5 — Onboarding, Offboarding & Provisioning');
+    fieldRow2('New Starters / Month', getVal('hd_onboard_mo'), 'Leavers / Month', getVal('hd_offboard_mo'));
+    fieldRow2('Device Provisioning', getVal('hd_provisioning'), 'Remote Deployments', getVal('hd_remote_deploy'));
+    fieldRow2('Access Provisioning', getVal('hd_access_prov'), 'Approval Workflows', getVal('hd_approvals'));
+    subHeader('6.6 — Escalation & Governance');
+    fieldRow2('Internal L3 Contact', getVal('hd_l3_contact'), 'L3 Escalation SLA', getVal('hd_l3_sla'));
+    fieldRow2('Reporting Cadence', getVal('hd_reporting'), 'Review Frequency', getVal('hd_review_freq'));
+    fieldRow1('Out-of-Scope / Exclusions', getVal('hd_exclusions'));
+    }
+
+    // ── SECTION 7 ───────────────────────────────────────────────────
+    if(isSectionNA('sec7')){sectionNA(7,'Microsoft 365 & Cloud Services');}else{
+    newPage();
+    sectionHeader(7, 'Microsoft 365 & Cloud Services');
     subHeader('6.1 — Microsoft 365');
     fieldRow2('Tenant Domain', getVal('m365_tenant'), 'License Plan(s)', getVal('m365_licenses'));
     fieldRow2('Licensed Users', getVal('m365_users'), 'CSP / Reseller', getVal('m365_csp'));
@@ -2336,10 +2448,10 @@ async function generatePDF(combinedMode = false) {
 
     }
 
-    // ── SECTION 7 ───────────────────────────────────────────────────
-    if(isSectionNA('sec7')){sectionNA(7,'SaaS & Line-of-Business Applications');}else{
+    // ── SECTION 8 ───────────────────────────────────────────────────
+    if(isSectionNA('sec8')){sectionNA(8,'SaaS & Line-of-Business Applications');}else{
     newPage();
-    sectionHeader(7, 'SaaS & Line-of-Business Applications');
+    sectionHeader(8, 'SaaS & Line-of-Business Applications');
     subHeader('7.1 — SaaS Application Inventory');
     drawTable(['Application','Vendor','Purpose','Users','SSO?','Admin Contact'], getTableData('tbl_saas'), [32,26,36,14,14,60]);
 
@@ -2363,10 +2475,10 @@ async function generatePDF(combinedMode = false) {
 
     }
 
-    // ── SECTION 8 ───────────────────────────────────────────────────
-    if(isSectionNA('sec8')){sectionNA(8,'Databases & Data Management');}else{
+    // ── SECTION 9 ───────────────────────────────────────────────────
+    if(isSectionNA('sec9')){sectionNA(9,'Databases & Data Management');}else{
     newPage();
-    sectionHeader(8, 'Databases & Data Management');
+    sectionHeader(9, 'Databases & Data Management');
     subHeader('8.1 — Database Servers');
     drawTable(['Engine','Version','Hosting','# DBs','Size','Backup Method'], getTableData('tbl_db'), [26,20,36,16,24,60]);
     fieldRow2('Clusters / Always On', getVal('db_clusters'), 'Retention Policy', getVal('db_retention'));
@@ -2382,10 +2494,10 @@ async function generatePDF(combinedMode = false) {
 
     }
 
-    // ── SECTION 9 ───────────────────────────────────────────────────
-    if(isSectionNA('sec9')){sectionNA(9,'Backup, Disaster Recovery & Business Continuity');}else{
+    // ── SECTION 10 ───────────────────────────────────────────────────
+    if(isSectionNA('sec10')){sectionNA(10,'Backup, Disaster Recovery & Business Continuity');}else{
     newPage();
-    sectionHeader(9, 'Backup, Disaster Recovery & Business Continuity');
+    sectionHeader(10, 'Backup, Disaster Recovery & Business Continuity');
     subHeader('9.1 — Backup Configuration');
     drawTable(['What Is Backed Up','Tool / Vendor','Frequency','Retention','Offsite?','Last Tested'], getTableData('tbl_backup'), [36,30,18,18,20,60]);
 
@@ -2396,10 +2508,10 @@ async function generatePDF(combinedMode = false) {
 
     }
 
-    // ── SECTION 10 ──────────────────────────────────────────────────
-    if(isSectionNA('sec10')){sectionNA(10,'Security & Monitoring');}else{
+    // ── SECTION 11 ──────────────────────────────────────────────────
+    if(isSectionNA('sec11')){sectionNA(11,'Security & Monitoring');}else{
     newPage();
-    sectionHeader(10, 'Security & Monitoring');
+    sectionHeader(11, 'Security & Monitoring');
     subHeader('10.1 — Security Posture');
     drawYNTable([
       'Security awareness training?','Phishing simulation?','SIEM / log aggregation?',
@@ -2416,10 +2528,10 @@ async function generatePDF(combinedMode = false) {
 
     }
 
-    // ── SECTION 11 ──────────────────────────────────────────────────
-    if(isSectionNA('sec11')){sectionNA(11,'Printing, Peripherals & Misc Hardware');}else{
+    // ── SECTION 12 ──────────────────────────────────────────────────
+    if(isSectionNA('sec12')){sectionNA(12,'Printing, Peripherals & Misc Hardware');}else{
     newPage();
-    sectionHeader(11, 'Printing, Peripherals & Misc Hardware');
+    sectionHeader(12, 'Printing, Peripherals & Misc Hardware');
     subHeader('11.1 — Printers & Copiers');
     drawTable(['Make / Model','Location','Network/Local','Managed Print?','Support Contact'], getTableData('tbl_printers'), [38,30,24,28,62]);
 
@@ -2430,17 +2542,17 @@ async function generatePDF(combinedMode = false) {
 
     }
 
-    // ── SECTION 12 ──────────────────────────────────────────────────
-    if(isSectionNA('sec12')){sectionNA(12,'Current Vendors & Contracts');}else{
+    // ── SECTION 13 ──────────────────────────────────────────────────
+    if(isSectionNA('sec13')){sectionNA(13,'Current Vendors & Contracts');}else{
     newPage();
-    sectionHeader(12, 'Current Vendors & Contracts');
+    sectionHeader(13, 'Current Vendors & Contracts');
     drawTable(['Vendor / Supplier','Service','Contract End','Account #','Contact at Vendor'], getTableData('tbl_vendors'), [36,42,24,20,60]);
 
     }
 
-    // ── SECTION 13 ──────────────────────────────────────────────────
-    if(isSectionNA('sec13')){sectionNA(13,'Documentation & Credentials');}else{
-    sectionHeader(13, 'Documentation & Credentials');
+    // ── SECTION 14 ──────────────────────────────────────────────────
+    if(isSectionNA('sec14')){sectionNA(14,'Documentation & Credentials');}else{
+    sectionHeader(14, 'Documentation & Credentials');
     drawYNTable([
       'Network diagram exists?','Asset / inventory list maintained?',
       'Password manager with shared creds?','IT runbook / SOPs documented?',
@@ -2451,10 +2563,10 @@ async function generatePDF(combinedMode = false) {
 
     }
 
-    // ── SECTION 17 ──────────────────────────────────────────────────
-    if(isSectionNA('sec17')){sectionNA(17,'Additional Notes & Special Requirements');}else{
+    // ── SECTION 18 ──────────────────────────────────────────────────
+    if(isSectionNA('sec18')){sectionNA(18,'Additional Notes & Special Requirements');}else{
     newPage();
-    sectionHeader(17, 'Additional Notes & Special Requirements');
+    sectionHeader(18, 'Additional Notes & Special Requirements');
     fieldRow1('Known Issues / Pain Points', getVal('notes_pain'));
     fieldRow1('Upcoming Projects / Changes', getVal('notes_projects'));
     fieldRow1('Regulatory / Industry Requirements', getVal('notes_reqs'));
@@ -2462,10 +2574,10 @@ async function generatePDF(combinedMode = false) {
 
     }
 
-    // ── SECTION 14 ──────────────────────────────────────────────────
-    if(isSectionNA('sec14')){sectionNA(14,'IT Operations & Support');}else{
+    // ── SECTION 15 ──────────────────────────────────────────────────
+    if(isSectionNA('sec15')){sectionNA(15,'IT Operations & Support');}else{
     newPage();
-    sectionHeader(14, 'IT Operations & Support');
+    sectionHeader(15, 'IT Operations & Support');
     subHeader('15.1 — Current Support Model');
     fieldRow2('Current MSP / NOC Provider', getVal('ops_current_msp'), 'MSP Contract End Date', getVal('ops_msp_end'));
     fieldRow2('24/7 Monitoring', getVal('ops_247'), 'Coverage Required', getVal('ops_coverage'));
@@ -2479,10 +2591,10 @@ async function generatePDF(combinedMode = false) {
     fieldRow2('Engagement Model', getVal('ops_engagement'), 'Challenging Areas', getVal('ops_challenges'));
     }
 
-    // ── SECTION 15 ──────────────────────────────────────────────────
-    if(isSectionNA('sec15')){sectionNA(15,'Strategic Goals & Future Plans');}else{
+    // ── SECTION 16 ──────────────────────────────────────────────────
+    if(isSectionNA('sec16')){sectionNA(16,'Strategic Goals & Future Plans');}else{
     newPage();
-    sectionHeader(15, 'Strategic Goals & Future Plans');
+    sectionHeader(16, 'Strategic Goals & Future Plans');
     subHeader('16.1 — Upcoming Projects (6-12 Months)');
     drawTable(['Project / Initiative','Category','Timeline','Budget?','Notes'], getTableData('tbl_projects'), [46,30,26,18,62]);
     subHeader('16.2 — IT Goals (1-3 Years)');
@@ -2494,10 +2606,10 @@ async function generatePDF(combinedMode = false) {
     fieldRow1('Vendor Evaluation Process', getVal('budget_eval'));
     }
 
-    // ── SECTION 16 ──────────────────────────────────────────────────
-    if(isSectionNA('sec16')){sectionNA(16,'Data & Analytics (Optional)');}else{
+    // ── SECTION 17 ──────────────────────────────────────────────────
+    if(isSectionNA('sec17')){sectionNA(17,'Data & Analytics (Optional)');}else{
     newPage();
-    sectionHeader(16, 'Data & Analytics');
+    sectionHeader(17, 'Data & Analytics');
     subHeader('17.1 — Data Strategy & Objectives');
     fieldRow1('Business Objectives Driving Data Initiatives', getVal('da_objectives'));
     fieldRow2('Estimated Data Volume', getVal('da_volume'), 'Expected Growth Rate', getVal('da_growth'));
@@ -2984,7 +3096,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S6: M365 & Cloud ──
-    if (isSectionNA('sec6')) {
+    if (isSectionNA('sec7')) {
       XLSX.utils.book_append_sheet(wb, naSheet('6 — Microsoft 365 & Cloud'), '6 M365 Cloud');
     } else {
       const rows = [
@@ -3006,8 +3118,47 @@ async function generateExcel(combinedMode = false) {
       XLSX.utils.book_append_sheet(wb, buildSheet('6 — Microsoft 365 & Cloud', rows), '6 M365 Cloud');
     }
 
+    // ── S6: Help Desk Scope ──
+    if (isSectionNA('sec6')) {
+      XLSX.utils.book_append_sheet(wb, naSheet('6 — Help Desk Scope'), '6 Help Desk');
+    } else {
+      const rows = [
+        ['Users Requiring HD Support', getVal('hd_user_count')],
+        ['User Locations / Time Zones', getVal('hd_timezones')],
+        ['Non-English Users', getVal('hd_languages')],
+        ['Languages Required', getVal('hd_languages_detail')],
+        ['Coverage Hours Required', getVal('hd_coverage')],
+        ['After-Hours / On-Call', getVal('hd_oncall')],
+        ['VIP / Executive Users', getVal('hd_vip')],
+        ['VIP User Count', getVal('hd_vip_count')],
+        ['Avg Tickets / Month', getVal('hd_tickets_month')],
+        ['Peak Ticket Periods', getVal('hd_peak')],
+        ['L1 Ticket % (basic/how-to)', getVal('hd_l1_pct')],
+        ['L2 Ticket % (software/config)', getVal('hd_l2_pct')],
+        ['L3 Ticket % (infrastructure)', getVal('hd_l3_pct')],
+        ['Known Recurring Issues', getVal('hd_recurring')],
+        ['__TABLE__', tableHeaders('tbl_hd_apps'), ...tableRows('tbl_hd_apps')],
+        ['Contact Channel(s)', getVal('hd_channel')],
+        ['Ticketing System', getVal('hd_ticketing')],
+        ['Self-Service / KB Portal', getVal('hd_kb')],
+        ['CSAT Surveys Required', getVal('hd_csat')],
+        ['New Starters / Month', getVal('hd_onboard_mo')],
+        ['Leavers / Month', getVal('hd_offboard_mo')],
+        ['Device Provisioning', getVal('hd_provisioning')],
+        ['Remote Device Deployments', getVal('hd_remote_deploy')],
+        ['Access Provisioning', getVal('hd_access_prov')],
+        ['Approval Workflows', getVal('hd_approvals')],
+        ['Internal L3 Contact', getVal('hd_l3_contact')],
+        ['L3 Escalation SLA', getVal('hd_l3_sla')],
+        ['Reporting Cadence', getVal('hd_reporting')],
+        ['Service Review Frequency', getVal('hd_review_freq')],
+        ['Out-of-Scope / Exclusions', getVal('hd_exclusions')],
+      ];
+      XLSX.utils.book_append_sheet(wb, buildSheet('6 — Help Desk Scope', rows), '6 Help Desk');
+    }
+
     // ── S7: Apps / SaaS ──
-    if (isSectionNA('sec7')) {
+    if (isSectionNA('sec8')) {
       XLSX.utils.book_append_sheet(wb, naSheet('7 — Apps / SaaS & LOB Applications'), '7 Apps SaaS');
     } else {
       const rows = [
@@ -3035,7 +3186,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S8: Databases ──
-    if (isSectionNA('sec8')) {
+    if (isSectionNA('sec9')) {
       XLSX.utils.book_append_sheet(wb, naSheet('8 — Databases & Data Management'), '8 Databases');
     } else {
       const rows = [
@@ -3058,7 +3209,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S9: Backup & DR ──
-    if (isSectionNA('sec9')) {
+    if (isSectionNA('sec10')) {
       XLSX.utils.book_append_sheet(wb, naSheet('9 — Backup, DR & Business Continuity'), '9 Backup DR');
     } else {
       const rows = [
@@ -3076,7 +3227,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S10: Security ──
-    if (isSectionNA('sec10')) {
+    if (isSectionNA('sec11')) {
       XLSX.utils.book_append_sheet(wb, naSheet('10 — Security & Monitoring'), '10 Security');
     } else {
       const rows = [
@@ -3109,7 +3260,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S11: Hardware ──
-    if (isSectionNA('sec11')) {
+    if (isSectionNA('sec12')) {
       XLSX.utils.book_append_sheet(wb, naSheet('11 — Printing, Peripherals & Hardware'), '11 Hardware');
     } else {
       const rows = [
@@ -3125,7 +3276,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S12: Vendors ──
-    if (isSectionNA('sec12')) {
+    if (isSectionNA('sec13')) {
       XLSX.utils.book_append_sheet(wb, naSheet('12 — Current Vendors & Contracts'), '12 Vendors');
     } else {
       const rows = [['__TABLE__', tableHeaders('tbl_vendors'), ...tableRows('tbl_vendors')]];
@@ -3133,7 +3284,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S13: Documentation ──
-    if (isSectionNA('sec13')) {
+    if (isSectionNA('sec14')) {
       XLSX.utils.book_append_sheet(wb, naSheet('13 — Documentation & Credentials'), '13 Docs');
     } else {
       const rows = [
@@ -3151,7 +3302,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S14: IT Operations ──
-    if (isSectionNA('sec14')) {
+    if (isSectionNA('sec15')) {
       XLSX.utils.book_append_sheet(wb, naSheet('14 — IT Operations & Support'), '14 IT Ops');
     } else {
       const rows = [
@@ -3175,7 +3326,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S15: Strategic Goals ──
-    if (isSectionNA('sec15')) {
+    if (isSectionNA('sec16')) {
       XLSX.utils.book_append_sheet(wb, naSheet('15 — Strategic Goals & Future Plans'), '15 Strategy');
     } else {
       const rows = [
@@ -3193,7 +3344,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S16: Data & Analytics ──
-    if (isSectionNA('sec16')) {
+    if (isSectionNA('sec17')) {
       XLSX.utils.book_append_sheet(wb, naSheet('16 — Data & Analytics'), '16 Data Analytics');
     } else {
       const rows = [
@@ -3226,7 +3377,7 @@ async function generateExcel(combinedMode = false) {
     }
 
     // ── S17: Additional Notes ──
-    if (isSectionNA('sec17')) {
+    if (isSectionNA('sec18')) {
       XLSX.utils.book_append_sheet(wb, naSheet('17 — Additional Notes'), '17 Notes');
     } else {
       const rows = [
